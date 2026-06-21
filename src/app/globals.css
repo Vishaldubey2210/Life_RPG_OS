@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+@theme inline {
+  --color-bg-primary: #08080F;
+  --color-bg-secondary: #0F0F1A;
+  --color-bg-card: #13131F;
+  --color-bg-elevated: #1A1A2E;
+  --color-accent-purple: #7C3AED;
+  --color-accent-purple-light: #9F67FF;
+  --color-accent-gold: #F59E0B;
+  --color-accent-green: #22C55E;
+  --color-accent-red: #EF4444;
+  --color-accent-blue: #3B82F6;
+  --color-text-primary: #F1F0FF;
+  --color-text-secondary: #9B99B8;
+  --color-text-muted: #5C5A7A;
+  --color-border: #1E1E35;
+  --color-border-bright: #2E2E50;
+  --font-display: 'Oxanium', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+:root {
+  --bg-primary: #08080F;
+  --bg-secondary: #0F0F1A;
+  --bg-card: #13131F;
+  --bg-elevated: #1A1A2E;
+  --accent-purple: #7C3AED;
+  --accent-purple-light: #9F67FF;
+  --accent-gold: #F59E0B;
+  --accent-green: #22C55E;
+  --accent-red: #EF4444;
+  --accent-blue: #3B82F6;
+  --text-primary: #F1F0FF;
+  --text-secondary: #9B99B8;
+  --text-muted: #5C5A7A;
+  --border: #1E1E35;
+  --border-bright: #2E2E50;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+.font-display { font-family: 'Oxanium', sans-serif; }
+
+/* XP bar animation */
+@keyframes xp-fill {
+  from { width: 0%; }
+}
+.xp-bar-fill { animation: xp-fill 0.8s ease-out; }
+
+/* Level up flash */
+@keyframes level-up-flash {
+  0% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.level-up-animation { animation: level-up-flash 0.5s ease-out; }
+
+/* Quest complete pulse */
+@keyframes quest-complete {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); box-shadow: 0 0 30px #22C55E55; }
+  100% { transform: scale(1); }
+}
+.quest-complete { animation: quest-complete 0.4s ease-out; }
+
+/* Streak fire pulse */
+@keyframes fire-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+.fire-pulse { animation: fire-pulse 1.5s ease-in-out infinite; }
+
+/* Card hover glow */
+.card-glow:hover {
+  box-shadow: 0 0 20px #7C3AED33;
+  border-color: #7C3AED66;
+  transition: all 0.2s ease;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
