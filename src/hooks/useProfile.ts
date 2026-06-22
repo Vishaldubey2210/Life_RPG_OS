@@ -96,7 +96,9 @@ export function useProfile(): UseProfileReturn {
   }, [supabase])
 
   useEffect(() => {
-    fetchAll()
+    Promise.resolve().then(() => {
+      fetchAll()
+    })
   }, [fetchAll])
 
   return {

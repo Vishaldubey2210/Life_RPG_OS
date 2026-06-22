@@ -27,6 +27,8 @@ function WeekHeatmap({ completionPct }: { completionPct: number }) {
   const today = new Date().getDay()
   const adjustedToday = today === 0 ? 6 : today - 1
 
+  const opacities = [0.15, 0.35, 0.2, 0.45, 0.3, 0.5, 0.25]
+
   return (
     <div>
       <div className="text-xs mb-2 font-medium" style={{ color: '#9B99B8' }}>7-Day Activity</div>
@@ -42,7 +44,7 @@ function WeekHeatmap({ completionPct }: { completionPct: number }) {
                   background: isToday
                     ? '#7C3AED'
                     : isPast
-                    ? `rgba(124,58,237,${Math.random() * 0.5 + 0.1})`
+                    ? `rgba(124,58,237,${opacities[i % opacities.length]})`
                     : '#1E1E35',
                   border: isToday ? '1px solid #9F67FF' : '1px solid transparent',
                 }}
