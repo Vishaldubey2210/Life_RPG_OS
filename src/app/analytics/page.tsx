@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { BarChart2, Calendar, TrendingUp, Clock, RefreshCw } from 'lucide-react'
+import { BarChart2, Calendar, TrendingUp, Clock, RefreshCw, Loader2 } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'

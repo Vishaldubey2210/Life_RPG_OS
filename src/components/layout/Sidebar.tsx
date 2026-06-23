@@ -9,14 +9,22 @@ import {
   Users,
   BarChart2,
   Trophy,
+  Bot,
   LogOut,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-const NAV_ITEMS = [
+interface NavItem {
+  href: string
+  icon: React.ComponentType<{ size?: number }>
+  label: string
+}
+
+const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/quests',       icon: Zap,             label: 'Quests' },
   { href: '/skills',       icon: TreePine,        label: 'Skill Tree' },
+  { href: '/coach',        icon: Bot,             label: 'AI Coach' },
   { href: '/party',        icon: Users,           label: 'Party' },
   { href: '/analytics',    icon: BarChart2,       label: 'Analytics' },
   { href: '/achievements', icon: Trophy,          label: 'Achievements' },
@@ -26,9 +34,15 @@ interface SidebarProps {
   userAvatar?: string
   userName?: string
   userLevel?: number
+  completedToday?: number
 }
 
-export default function Sidebar({ userAvatar = '⚔️', userName = 'Adventurer', userLevel = 1 }: SidebarProps) {
+export default function Sidebar({
+  userAvatar = '⚔️',
+  userName = 'Adventurer',
+  userLevel = 1,
+  completedToday,
+}: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -64,11 +78,14 @@ export default function Sidebar({ userAvatar = '⚔️', userName = 'Adventurer'
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
+          const isDashboard = href === '/dashboard'
+          const showBadge = isDashboard && completedToday !== undefined && completedToday > 0
+
           return (
             <Link
               key={href}
               href={href}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 relative"
               style={{
                 background: active ? '#7C3AED22' : 'transparent',
                 color: active ? '#9F67FF' : '#9B99B8',
@@ -88,7 +105,28 @@ export default function Sidebar({ userAvatar = '⚔️', userName = 'Adventurer'
               }}
             >
               <Icon size={18} />
-              {label}
+              <span className="flex-1">{label}</span>
+              {/* Completion badge on Dashboard */}
+              {showBadge && (
+                <span
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                  style={{
+                    background: '#22C55E',
+                    color: '#0F0F1A',
+                    fontFamily: 'Oxanium, sans-serif',
+                    fontSize: 10,
+                  }}
+                >
+                  {completedToday}
+                </span>
+              )}
+              {/* AI Coach purple glow dot */}
+              {href === '/coach' && !active && (
+                <span
+                  className="w-2 h-2 rounded-full flex-shrink-0"
+                  style={{ background: '#7C3AED', boxShadow: '0 0 6px #7C3AED' }}
+                />
+              )}
             </Link>
           )
         })}
@@ -109,7 +147,6 @@ export default function Sidebar({ userAvatar = '⚔️', userName = 'Adventurer'
               Level {userLevel}
             </div>
           </div>
-          {/* Level badge */}
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0"
             style={{ background: '#F59E0B22', color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}

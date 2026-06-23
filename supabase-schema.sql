@@ -270,3 +270,32 @@ begin
   );
 end;
 $$;
+
+-- 7. Get Today Summary Function
+create or replace function public.get_today_summary(p_user_id uuid)
+returns json as $$
+declare
+  v_total_habits integer;
+  v_completed_today integer;
+  v_total_xp_today integer;
+begin
+  select count(*) into v_total_habits 
+  from public.habits 
+  where user_id = p_user_id and is_active = true;
+  
+  select count(*), coalesce(sum(xp_earned), 0) 
+  into v_completed_today, v_total_xp_today
+  from public.habit_completions 
+  where user_id = p_user_id 
+  and completed_at::date = current_date;
+  
+  return json_build_object(
+    'total_habits', v_total_habits,
+    'completed_today', v_completed_today,
+    'total_xp_today', v_total_xp_today,
+    'completion_rate', case when v_total_habits > 0 
+      then round((v_completed_today::numeric / v_total_habits) * 100)
+      else 0 end
+  );
+end;
+$$ language plpgsql security definer;

@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Swords, Users, Chest } from 'lucide-react'
+import { Swords, Users, Package } from 'lucide-react'
 import { toast } from 'sonner'
 import Sidebar from '@/components/layout/Sidebar'
 import { useProfile } from '@/hooks/useProfile'
@@ -204,7 +204,7 @@ export default function PartyPage() {
                       onMouseEnter={(e) => (e.currentTarget.style.background = '#16A34A')}
                       onMouseLeave={(e) => (e.currentTarget.style.background = '#22C55E')}
                     >
-                      <Chest size={18} />
+                      <Package size={18} />
                       Claim Boss Chest
                     </button>
                   )}
