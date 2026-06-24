@@ -26,6 +26,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/skills',       icon: TreePine,        label: 'Skill Tree' },
   { href: '/coach',        icon: Bot,             label: 'AI Coach' },
   { href: '/party',        icon: Users,           label: 'Party' },
+  { href: '/leaderboard',  icon: Trophy,          label: 'Leaderboard' },
   { href: '/analytics',    icon: BarChart2,       label: 'Analytics' },
   { href: '/achievements', icon: Trophy,          label: 'Achievements' },
 ]
