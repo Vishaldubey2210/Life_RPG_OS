@@ -3,12 +3,23 @@
 import { useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
+export interface NewAchievement {
+  key: string
+  name: string
+  emoji: string
+  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+  xp_reward: number
+  description: string
+}
+
 export interface CompleteHabitResult {
+  success: boolean
   xp_earned: number
   leveled_up: boolean
   new_level: number
   streak: number
   multiplier: number
+  new_achievements: NewAchievement[]
 }
 
 interface UseCompleteHabitReturn {

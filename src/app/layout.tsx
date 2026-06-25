@@ -3,8 +3,13 @@ import './globals.css'
 import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
-  title: 'Life RPG OS',
-  description: 'Treat life like a game — build habits, gain XP, level up your life',
+  title: 'Life RPG OS — Treat Life Like a Game',
+  description: 'Gamify your habits, earn XP, level up your life stats, and compete with friends. The ultimate life operating system.',
+  openGraph: {
+    title: 'Life RPG OS',
+    description: 'Your life. Gamified.',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({

@@ -6,12 +6,16 @@ import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Trophy } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
 import StatBar from '@/components/ui/StatBar'
 import XPBar from '@/components/ui/XPBar'
 import QuestCard from '@/components/ui/QuestCard'
-import LevelUpModal from '@/components/ui/LevelUpModal'
+import LevelUpScreen from '@/components/ui/LevelUpScreen'
+import HPBar from '@/components/ui/HPBar'
+import StreakDisplay from '@/components/ui/StreakDisplay'
+import PerfectDayBanner from '@/components/ui/PerfectDayBanner'
+import AchievementUnlockModal, { NewAchievement } from '@/components/achievements/AchievementUnlockModal'
 import { useProfile } from '@/hooks/useProfile'
 import { useCompleteHabit } from '@/hooks/useCompleteHabit'
 import { createClient } from '@/lib/supabase/client'
@@ -104,6 +108,9 @@ export default function DashboardPage() {
   const [completedLocally, setCompletedLocally] = useState<string[]>([])
   const [recentActivity, setRecentActivity] = useState<RecentCompletion[]>([])
   const [xpToday, setXpToday] = useState(0)
+  const [pendingAchievements, setPendingAchievements] = useState<NewAchievement[]>([])
+  const [showPerfectDay, setShowPerfectDay] = useState(false)
+  const [recentBadges, setRecentBadges] = useState<{ key: string; name: string; emoji: string; rarity: string; earned_at: string }[]>([])
 
   const allCompleted = [...completions_today, ...completedLocally]
 
@@ -148,6 +155,33 @@ export default function DashboardPage() {
     if (!loading) fetchActivity()
   }, [loading, supabase])
 
+  // Fetch recent achievements
+  useEffect(() => {
+    async function fetchBadges() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data } = await supabase
+        .from('user_achievements')
+        .select('achievement_key, earned_at, achievement_definitions(name, emoji, rarity)')
+        .eq('user_id', user.id)
+        .order('earned_at', { ascending: false })
+        .limit(3)
+      if (data) {
+        setRecentBadges(data.map((d: Record<string, unknown>) => {
+          const def = d.achievement_definitions as { name: string; emoji: string; rarity: string } | null
+          return {
+            key: d.achievement_key as string,
+            name: def?.name ?? '',
+            emoji: def?.emoji ?? '🏆',
+            rarity: def?.rarity ?? 'common',
+            earned_at: d.earned_at as string,
+          }
+        }))
+      }
+    }
+    if (!loading) fetchBadges()
+  }, [loading, supabase])
+
   async function handleComplete(habitId: string) {
     if (allCompleted.includes(habitId)) return
     setCompletedLocally((prev) => [...prev, habitId])
@@ -167,7 +201,17 @@ export default function DashboardPage() {
       setLevelUpModal(true)
     }
 
+    if (result.new_achievements && result.new_achievements.length > 0) {
+      setPendingAchievements(result.new_achievements)
+    }
+
     refetch()
+
+    // Check perfect day
+    const newCompleted = [...allCompleted, habitId]
+    if (habits.length > 0 && newCompleted.length >= habits.length) {
+      setShowPerfectDay(true)
+    }
   }
 
   const completionPct = habits.length > 0 ? (allCompleted.length / habits.length) * 100 : 0
@@ -289,24 +333,11 @@ export default function DashboardPage() {
 
                 {/* HP Bar */}
                 <div className="mb-4">
-                  <div className="flex justify-between text-xs mb-1">
-                    <span style={{ color: '#9B99B8' }}>❤️ HP</span>
-                    <span style={{ color: '#EF4444', fontFamily: 'Oxanium, sans-serif' }}>
-                      {profile?.hp ?? 100}/{profile?.hp_max ?? 100}
-                    </span>
-                  </div>
-                  <div className="h-2.5 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
-                    <motion.div
-                      className="h-full rounded-full"
-                      style={{
-                        background: 'linear-gradient(90deg, #EF4444, #F87171)',
-                        width: `${((profile?.hp ?? 100) / (profile?.hp_max ?? 100)) * 100}%`,
-                      }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${((profile?.hp ?? 100) / (profile?.hp_max ?? 100)) * 100}%` }}
-                      transition={{ duration: 0.8 }}
-                    />
-                  </div>
+                  <HPBar
+                    hp={profile?.hp ?? 100}
+                    hpMax={profile?.hp_max ?? 100}
+                    showFloatUp
+                  />
                 </div>
 
                 {/* XP Bar */}
@@ -333,18 +364,8 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Streak */}
-                <div
-                  className="mt-5 flex items-center justify-between p-3 rounded-xl"
-                  style={{ background: '#0F0F1A', border: '1px solid #1E1E35' }}
-                >
-                  <span className="text-sm" style={{ color: '#9B99B8' }}>Daily Streak</span>
-                  <span
-                    className={`text-xl font-bold flex items-center gap-1 ${(profile?.streak ?? 0) > 0 ? 'fire-pulse' : ''}`}
-                    style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}
-                  >
-                    {(profile?.streak ?? 0) > 0 ? '🔥' : '💤'}
-                    {profile?.streak ?? 0}
-                  </span>
+                <div className="mt-5">
+                  <StreakDisplay streak={profile?.streak ?? 0} />
                 </div>
               </motion.div>
 
@@ -484,6 +505,37 @@ export default function DashboardPage() {
                 transition={{ duration: 0.4, delay: 0.2 }}
                 className="space-y-5"
               >
+                {/* Recent Achievements widget */}
+                {recentBadges.length > 0 && (
+                  <div
+                    className="rounded-2xl p-5"
+                    style={{ background: '#13131F', border: '1px solid #F59E0B22' }}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Trophy size={14} style={{ color: '#F59E0B' }} />
+                        <span className="text-sm font-bold font-display" style={{ color: '#F1F0FF' }}>Recent Badges</span>
+                      </div>
+                      <Link href="/achievements" className="text-xs transition-colors" style={{ color: '#7C3AED' }}
+                        onMouseEnter={e => (e.currentTarget.style.color = '#9F67FF')}
+                        onMouseLeave={e => (e.currentTarget.style.color = '#7C3AED')}
+                      >
+                        See All →
+                      </Link>
+                    </div>
+                    <div className="space-y-2">
+                      {recentBadges.map(badge => (
+                        <div key={badge.key} className="flex items-center gap-2.5 py-1">
+                          <span className="text-xl">{badge.emoji}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-semibold truncate" style={{ color: '#F1F0FF' }}>{badge.name}</div>
+                            <div className="text-xs" style={{ color: '#5C5A7A' }}>{new Date(badge.earned_at).toLocaleDateString()}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {/* Weekly heatmap */}
                 <div
                   className="rounded-2xl p-5"
@@ -591,10 +643,18 @@ export default function DashboardPage() {
         </main>
       </div>
 
-      <LevelUpModal
+      <LevelUpScreen
         isOpen={levelUpModal}
         newLevel={newLevel}
         onClose={() => setLevelUpModal(false)}
+      />
+      <PerfectDayBanner
+        show={showPerfectDay}
+        onDismiss={() => setShowPerfectDay(false)}
+      />
+      <AchievementUnlockModal
+        achievements={pendingAchievements}
+        onAllDismissed={() => setPendingAchievements([])}
       />
     </>
   )

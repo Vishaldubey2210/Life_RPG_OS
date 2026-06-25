@@ -11,6 +11,7 @@ import {
   Trophy,
   Bot,
   LogOut,
+  Settings,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -29,7 +30,9 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/leaderboard',  icon: Trophy,          label: 'Leaderboard' },
   { href: '/analytics',    icon: BarChart2,       label: 'Analytics' },
   { href: '/achievements', icon: Trophy,          label: 'Achievements' },
+  { href: '/settings',     icon: Settings,        label: 'Settings' },
 ]
+
 
 interface SidebarProps {
   userAvatar?: string
