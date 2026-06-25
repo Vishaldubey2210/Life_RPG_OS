@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk'
+import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { COACH_SYSTEM_PROMPT, buildUserContext } from '@/lib/coach'
@@ -40,26 +40,27 @@ export async function POST(request: Request) {
     )
     const systemWithContext = COACH_SYSTEM_PROMPT + '\n\n' + userContext
 
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
     })
 
-    const stream = await anthropic.messages.stream({
-      model: 'claude-sonnet-4-6',
+    const stream = await groq.chat.completions.create({
+      model: 'llama-3.1-70b-versatile',
       max_tokens: 1024,
-      system: systemWithContext,
-      messages,
+      messages: [
+        { role: 'system', content: systemWithContext },
+        ...messages,
+      ],
+      stream: true,
     })
 
     const encoder = new TextEncoder()
     const readable = new ReadableStream({
       async start(controller) {
         for await (const chunk of stream) {
-          if (
-            chunk.type === 'content_block_delta' &&
-            chunk.delta.type === 'text_delta'
-          ) {
-            controller.enqueue(encoder.encode(chunk.delta.text))
+          const content = chunk.choices[0]?.delta?.content || ''
+          if (content) {
+            controller.enqueue(encoder.encode(content))
           }
         }
         controller.close()

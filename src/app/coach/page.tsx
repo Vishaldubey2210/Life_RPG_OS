@@ -158,13 +158,13 @@ export default function CoachPage() {
       }
     } catch (err) {
       console.error(err)
-      toast.error('Coach is unavailable. Check your ANTHROPIC_API_KEY.')
+      toast.error('Coach is unavailable. Check your GROQ_API_KEY.')
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
           content:
-            '⚠️ I seem to be offline right now. Make sure `ANTHROPIC_API_KEY` is set in `.env.local`.',
+            '⚠️ I seem to be offline right now. Make sure `GROQ_API_KEY` is set in `.env.local`.',
         },
       ])
     } finally {

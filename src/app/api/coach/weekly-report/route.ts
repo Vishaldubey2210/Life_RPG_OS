@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk'
+import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { buildUserContext } from '@/lib/coach'
@@ -48,19 +48,20 @@ export async function POST() {
       completions ?? []
     )
 
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
     })
 
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+    const message = await groq.chat.completions.create({
+      model: 'llama-3.1-70b-versatile',
       max_tokens: 2048,
-      system: userContext,
-      messages: [{ role: 'user', content: WEEKLY_REPORT_PROMPT }],
+      messages: [
+        { role: 'system', content: userContext },
+        { role: 'user', content: WEEKLY_REPORT_PROMPT }
+      ],
     })
 
-    const reportText =
-      message.content[0].type === 'text' ? message.content[0].text : ''
+    const reportText = message.choices[0]?.message?.content || ''
 
     return NextResponse.json({ report: reportText })
   } catch (error) {

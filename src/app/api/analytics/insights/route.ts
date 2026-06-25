@@ -1,4 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk'
+import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
@@ -44,12 +44,12 @@ Completions last 7 days: ${last7Days.length}
 Top quest categories: ${habits.map((h: { stat_category: string }) => h.stat_category).join(', ')}
     `.trim()
 
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
     })
 
-    const message = await anthropic.messages.create({
-      model: 'claude-opus-4-5',
+    const message = await groq.chat.completions.create({
+      model: 'llama-3.1-70b-versatile',
       max_tokens: 600,
       messages: [
         {
@@ -82,7 +82,7 @@ Format as JSON array ONLY (no markdown, no explanation):
       ],
     })
 
-    const raw = message.content[0].type === 'text' ? message.content[0].text : '[]'
+    const raw = message.choices[0]?.message?.content || '[]'
 
     // Extract JSON from response
     const jsonMatch = raw.match(/\[[\s\S]*\]/)
