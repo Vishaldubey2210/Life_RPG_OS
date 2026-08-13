@@ -98,3 +98,32 @@ create table public.stats (
   cha integer default 1  -- Social connections & communication
 );
 ```
+
+### 3. `habits` Table
+Defines active quests, difficulty tier, XP yield, and associated stat boost domain.
+
+```sql
+create table public.habits (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  name text not null,
+  difficulty text not null, -- 'easy', 'medium', 'hard'
+  xp_reward integer not null,
+  stat_category text not null, -- 'str', 'int', 'wis', 'vit', 'gold', 'cha'
+  emoji text default '📋',
+  is_active boolean default true not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+```
+
+### 4. `habit_completions` Table
+Logs completion timestamps for quests, driving historical charts, streaks, and analytics.
+
+```sql
+create table public.habit_completions (
+  id uuid default gen_random_uuid() primary key,
+  habit_id uuid references public.habits(id) on delete cascade not null,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  completed_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+```
