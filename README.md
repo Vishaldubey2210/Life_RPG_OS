@@ -127,3 +127,44 @@ create table public.habit_completions (
   completed_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 ```
+
+### 5. `achievement_definitions` & `user_achievements` Tables
+Defines systemic milestones, badges, rarity, requirement triggers, and unlocked user trophies.
+
+```sql
+create table if not exists public.achievement_definitions (
+  id uuid default uuid_generate_v4() primary key,
+  key text unique not null,
+  name text not null,
+  description text not null,
+  emoji text not null,
+  rarity text default 'common' check (rarity in ('common','rare','epic','legendary')),
+  category text check (category in ('streaks','xp','level','social','quests','stats','special','seasonal')),
+  requirement_type text not null,
+  requirement_value integer not null default 1,
+  xp_reward integer default 50
+);
+
+create table if not exists public.user_achievements (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade,
+  achievement_key text references public.achievement_definitions(key),
+  earned_at timestamptz default now(),
+  unique(user_id, achievement_key)
+);
+```
+
+### 6. `daily_stats_snapshots` Table
+Snapshots user stats on a daily basis to generate analytics charts and power week-over-week performance tracking.
+
+```sql
+create table if not exists public.daily_stats_snapshots (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade,
+  snapshot_date date not null default current_date,
+  str integer default 0, int integer default 0, wis integer default 0,
+  vit integer default 0, gold integer default 0, cha integer default 0,
+  level integer default 1, total_xp integer default 0, quests_completed integer default 0,
+  unique(user_id, snapshot_date)
+);
+```
