@@ -58,3 +58,43 @@ In the journey of life, productivity can feel like a grind. **Life RPG OS** re-e
 | **Drag & Drop** | [@dnd-kit](https://dndkit.com/) | Accessible drag-and-drop primitives for habit organization |
 | **Icons & Notifications** | [Lucide React](https://lucide.dev/) & [Sonner](https://sonner.emilkowal.ski/) | Beautiful icon set and toast notification banners |
 | **Celebrations** | [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) | Visual particle confetti bursts upon quest completions |
+
+---
+
+## 🗄️ Database Architecture & Schema
+
+Life RPG OS relies on a robust PostgreSQL schema implemented on Supabase with strict Row Level Security (RLS) policies.
+
+### 1. `profiles` Table
+Stores user profile information, experience, level progression, and current active streak.
+
+```sql
+create table public.profiles (
+  id uuid references auth.users on delete cascade primary key,
+  display_name text not null,
+  avatar_emoji text default '⚔️',
+  level integer default 1,
+  xp integer default 0,
+  xp_to_next integer default 100,
+  hp integer default 100,
+  hp_max integer default 100,
+  streak integer default 0,
+  onboarding_completed boolean default false,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+```
+
+### 2. `stats` Table
+Tracks character attributes representing different domains of personal growth.
+
+```sql
+create table public.stats (
+  user_id uuid references public.profiles(id) on delete cascade primary key,
+  str integer default 1, -- Physical fitness & discipline
+  int integer default 1, -- Learning, reading & coding
+  wis integer default 1, -- Mindfulness, mental clarity & focus
+  vit integer default 1, -- Health, sleep & nutrition
+  gold integer default 1, -- Financial habits & economy
+  cha integer default 1  -- Social connections & communication
+);
+```
