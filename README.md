@@ -217,3 +217,17 @@ const stream = await groq.chat.completions.create({
   stream: true,
 })
 ```
+
+---
+
+## 👥 Multiplayer Parties & 💑 Couple Mode
+
+### 👥 Co-Op Parties
+- **Party Creation & Joining**: Users can generate a unique 6-character invitation code to build adventuring guilds with up to 6 members.
+- **Realtime Synchronization**: Uses Supabase Realtime subscriptions to push immediate party updates whenever a teammate completes a quest or levels up.
+- **Guild Leaderboards**: Ranks party members by weekly XP contributions.
+
+### 💑 Couple Mode
+- **Dual-Player Guild**: Form a dedicated 2-person squad with your partner.
+- **Shared Accountability**: View your partner's active quests, daily completion percentage, and streak status.
+- **Milestone Rewards**: Unlock special dual-achievements such as *Power Couple* upon completing joint habits.
