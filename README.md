@@ -41,3 +41,20 @@ In the journey of life, productivity can feel like a grind. **Life RPG OS** re-e
 ### 🏆 Achievements & Badges
 - **Tiered Badges**: Earn Common, Rare, Epic, and Legendary achievements.
 - **Special Milestones**: Unlock badges for streak milestones (3-day, 7-day, 30-day, 100-day), XP thresholds, and special time-based quests (Night Owl, Early Bird, Monday Warrior).
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend Framework** | [Next.js 16](https://nextjs.org/) (App Router) | High-performance React framework with server and client components |
+| **UI Library** | [React 19](https://react.dev/) | Modern UI primitives with server action integration |
+| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) | Next-generation utility-first CSS engine |
+| **Animations** | [Framer Motion](https://www.framer.com/motion/) | Smooth animations for micro-interactions, level-ups, and modals |
+| **Backend & Database** | [Supabase](https://supabase.com/) | PostgreSQL database, Auth, Row Level Security (RLS), and Realtime |
+| **AI Integration** | [Groq SDK](https://groq.com/) | Ultra-fast inference running `llama-3.1-70b-versatile` |
+| **Analytics & Data Vis** | [Recharts](https://recharts.org/) | Responsive SVG charts for tracking stat progression over time |
+| **Drag & Drop** | [@dnd-kit](https://dndkit.com/) | Accessible drag-and-drop primitives for habit organization |
+| **Icons & Notifications** | [Lucide React](https://lucide.dev/) & [Sonner](https://sonner.emilkowal.ski/) | Beautiful icon set and toast notification banners |
+| **Celebrations** | [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti) | Visual particle confetti bursts upon quest completions |
