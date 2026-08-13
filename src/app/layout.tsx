@@ -1,10 +1,23 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { Toaster } from 'sonner'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#7C3AED',
+}
 
 export const metadata: Metadata = {
   title: 'Life RPG OS — Treat Life Like a Game',
   description: 'Gamify your habits, earn XP, level up your life stats, and compete with friends. The ultimate life operating system.',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Life RPG OS',
+  },
   openGraph: {
     title: 'Life RPG OS',
     description: 'Your life. Gamified.',
