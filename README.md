@@ -168,3 +168,24 @@ create table if not exists public.daily_stats_snapshots (
   unique(user_id, snapshot_date)
 );
 ```
+
+---
+
+## ⚙️ PostgreSQL Stored Procedures (RPCs)
+
+Life RPG OS utilizes atomic PostgreSQL stored procedures to guarantee real-time state integrity, instant level-up mechanics, streak calculations, and achievement evaluations.
+
+### `complete_habit(p_habit_id uuid)` RPC Function
+- Validates user identity via Supabase Auth (`auth.uid()`).
+- Verifies quest active state and prevents duplicate completions on the same day.
+- Dynamically computes streak multipliers:
+  - **3+ Day Streak**: `1.25x` XP bonus.
+  - **7+ Day Streak**: `1.50x` XP bonus.
+- Awards XP and stat boosts to the profile (`STR`, `INT`, `WIS`, `VIT`, `GOLD`, `CHA`).
+- Evaluates level progression: if `XP >= XP_to_next`, increments level, recalculates next threshold, and resets HP.
+- Calls `check_and_award_achievements()` automatically to check if any achievement triggers were satisfied.
+- Returns a JSON response containing `xp_earned`, `multiplier`, `streak`, `leveled_up`, and `new_achievements`.
+
+```sql
+select public.complete_habit('your-habit-uuid-here');
+```
