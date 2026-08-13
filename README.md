@@ -268,3 +268,44 @@ Execute the SQL files in your Supabase SQL Editor in the following sequence:
 ```bash
 npm install
 ```
+
+---
+
+## 🏃 Running the Application
+
+### Development Server
+Run the local Next.js development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to start your RPG journey!
+
+### Production Build & Linting
+Validate type safety and compile optimized production assets:
+
+```bash
+# Run ESLint validation
+npm run lint
+
+# Build production bundle
+npm run build
+
+# Start production server
+npm run start
+```
+
+---
+
+## 📜 License & Acknowledgments
+
+Distributed under the MIT License. See `LICENSE` for more details.
+
+Built with ❤️ by [Vishal Dubey](https://github.com/Vishaldubey2210).
+
+---
+
+<p align="center">
+  <b>Level Up Your Life Everyday ⚔️✨</b>
+</p>
