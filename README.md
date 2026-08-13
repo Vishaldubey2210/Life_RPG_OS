@@ -231,3 +231,40 @@ const stream = await groq.chat.completions.create({
 - **Dual-Player Guild**: Form a dedicated 2-person squad with your partner.
 - **Shared Accountability**: View your partner's active quests, daily completion percentage, and streak status.
 - **Milestone Rewards**: Unlock special dual-achievements such as *Power Couple* upon completing joint habits.
+
+---
+
+## ⚡ Getting Started & Installation Guide
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) v18.0.0 or higher
+- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
+- A [Supabase](https://supabase.com/) project account
+- A [Groq API](https://groq.com/) key (for AI Coach features)
+
+### 1. Repository Setup
+```bash
+git clone https://github.com/Vishaldubey2210/Life_RPG_OS.git
+cd Life_RPG_OS
+```
+
+### 2. Environment Variables Configuration
+Create a `.env.local` file in the root directory:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+GROQ_API_KEY=gsk_your_groq_api_key_here
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 3. Database Migration
+Execute the SQL files in your Supabase SQL Editor in the following sequence:
+1. Run `supabase-schema.sql` (Creates core tables: `profiles`, `stats`, `habits`, `habit_completions`, triggers, and `complete_habit` RPC).
+2. Run `supabase-day4.sql` (Creates `achievement_definitions`, `user_achievements`, `daily_stats_snapshots`, and `check_and_award_achievements` RPC).
+
+### 4. Install Dependencies
+```bash
+npm install
+```
