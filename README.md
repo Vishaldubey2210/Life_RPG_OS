@@ -189,3 +189,31 @@ Life RPG OS utilizes atomic PostgreSQL stored procedures to guarantee real-time 
 ```sql
 select public.complete_habit('your-habit-uuid-here');
 ```
+
+---
+
+## 🤖 AI Growth Coach (Groq Integration)
+
+Life RPG OS features a built-in AI Personal Coach that acts as an in-game questgiver, mentor, and productivity strategist.
+
+### Architecture & Prompt Context Injection
+The coach route (`/api/coach`) fetches the user's active context from PostgreSQL:
+1. **Profile Level & Current Streak**
+2. **Current RPG Stats** (`STR`, `INT`, `WIS`, `VIT`, `GOLD`, `CHA`)
+3. **Active Quests & Weekly Completion History**
+
+This structured context is injected dynamically into the system prompt. The model delivers gamified, realistic, and actionable advice via streaming responses using server-sent events (`TextEncoder` stream).
+
+```typescript
+// AI Coach invocation example
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+
+const stream = await groq.chat.completions.create({
+  model: 'llama-3.1-70b-versatile',
+  messages: [
+    { role: 'system', content: systemWithUserRPGContext },
+    ...userMessages
+  ],
+  stream: true,
+})
+```
