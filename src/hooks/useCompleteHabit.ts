@@ -38,12 +38,19 @@ export function useCompleteHabit(): UseCompleteHabitReturn {
 
       const { data, error } = await supabase.rpc('complete_habit', { p_habit_id: habitId })
       if (error) throw error
+      // Boss progress is intentionally best-effort: a completed habit must never fail
+      // just because the optional party raid is unavailable or has already ended.
+      const { error: bossError } = await supabase.rpc('contribute_to_active_boss')
+      if (bossError && bossError.code !== 'PGRST202') {
+        console.warn('Could not add boss battle contribution:', bossError.message)
+      }
       return data as CompleteHabitResult
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] })
       queryClient.invalidateQueries({ queryKey: ['habits'] })
       queryClient.invalidateQueries({ queryKey: ['completions'] })
+      queryClient.invalidateQueries({ queryKey: ['boss-battle'] })
     },
   })
 
