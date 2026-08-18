@@ -1,95 +1,105 @@
-# ⚔️ Life RPG OS ⚔️
+# ⚔️ Life RPG OS
 
-> **Level up your Life, one Habit and Quest at a time.**
+> Turn daily habits into quests. Earn XP, build streaks, and level up your real life.
 
-**🎉 Production Ready v1.0 - All Days 1-7 features implemented and fully tested!**
+[**Open the live app →**](https://life-rpg-os-chi.vercel.app/)
 
-Welcome to **Life RPG OS**! Life RPG OS is an immersive, gamified productivity platform that transforms your daily habits, routines, and goals into an RPG (Role-Playing Game) adventure. Complete quests, build streaks, level up your character, allocate attribute points, form co-op parties, link with your partner in Couple Mode, receive personalized growth mentorship from an AI Coach, and share your achievements with the world.
+Life RPG OS is a gamified habit and personal-growth platform. It combines daily quests, RPG-style character progression, social accountability, analytics, and AI coaching in one responsive web app.
 
-**Features:**
-✅ Character & progression system | ✅ Habit tracking with XP | ✅ 100+ achievements
-✅ Party & couple systems | ✅ AI coaching | ✅ Admin dashboard | ✅ PWA + Push notifications
-✅ Error tracking | ✅ Rate limiting | ✅ Production-ready security
+## Live preview
 
----
+**Production URL:** [life-rpg-os-chi.vercel.app](https://life-rpg-os-chi.vercel.app/)
 
-## 🚀 Quick Links
+| Landing page | Authentication |
+| --- | --- |
+| ![Life RPG OS landing page](./public/screenshots/preview-01.png) | ![Life RPG OS authentication screen](./public/screenshots/preview-02.png) |
+| Dashboard | Quest management |
+| ![Life RPG OS dashboard](./public/screenshots/preview-03.png) | ![Life RPG OS quest management](./public/screenshots/preview-04.png) |
+| Analytics | Social features |
+| ![Life RPG OS analytics](./public/screenshots/preview-05.png) | ![Life RPG OS social features](./public/screenshots/preview-06.png) |
 
-- **Live Demo**: [coming soon]
-- **Docs**: [FEATURES.md](./FEATURES.md) | [API.md](./API.md) | [DEPLOYMENT.md](./DEPLOYMENT.md)
-- **GitHub**: [@Vishaldubey2210](https://github.com/Vishaldubey2210/Life_RPG_OS)
+## What is included
 
----
+- **Authentication and onboarding** — Email/password and Google sign-in, character creation, profile, and stat setup.
+- **Quest system** — Create and complete habits as quests, gain XP, maintain streaks, and level up.
+- **RPG progression** — Six core stats, health, XP bars, level-up effects, achievements, and skill-tree progression.
+- **AI coach** — Context-aware coaching and weekly reports powered by Groq.
+- **Social accountability** — Parties, invite links, couple mode, leaderboards, and shareable progress cards.
+- **Insights** — Analytics, achievement history, trend views, and daily progress tracking.
+- **Admin tools** — Admin access controls, feedback management, live app configuration, and error-log viewer.
+- **PWA support** — Install prompt, web manifest, service worker, and optional push notifications.
 
-## Welcome to the Adventure
+## Project status
 
-In the journey of life, productivity can feel like a grind. **Life RPG OS** re-engineers your daily task management into an engaging fantasy adventure. Whether you are studying, going to the gym, or working on code, every action yields XP, Gold, and Stat boosts.
+| Area | Status |
+| --- | --- |
+| Next.js app | Deployed on Vercel |
+| Authentication and database | Supabase Cloud |
+| Production URL | [Open app](https://life-rpg-os-chi.vercel.app/) |
+| Build verification | `npm run build` passes locally |
+| Scheduled jobs | Daily metrics, reminder, and weekly snapshot endpoints configured in `vercel.json` |
 
-**Core Features:**
-*   **Gamified Daily Tracker**: Turn mundane tasks into epic Quests with difficulty scaling.
-*   **RPG Stats System**: Grow your character's 6 primary stats (STR, INT, WIS, VIT, GOLD, CHA).
-*   **Social Integration**: Party with friends, or link with a partner in Couple Mode.
-*   **AI Coach**: Powered by Groq, get dynamically tailored advice based on your real-life stats.
-*   **Admin Dashboard**: Comprehensive system management with user controls & analytics.
-*   **Progressive Web App (PWA)**: Install directly on your phone's home screen for native-like performance.
-*   **Enterprise Security**: Row-level database security, rate limiting, error tracking.
-*   **Viral Sharing & Referrals**: Share screenshot-worthy XP progress cards and earn 200 XP bonuses.
+Before inviting users, complete the database migrations and production authentication settings listed below.
 
----
+## Tech stack
 
-## ✨ Key Features
+- [Next.js 16](https://nextjs.org/) + React 19 + TypeScript
+- Tailwind CSS 4 + Framer Motion
+- Supabase Auth, Postgres, RLS, and Realtime
+- TanStack Query for client-side data caching
+- Groq for AI coaching
+- Recharts for analytics
+- Vercel OG for sharing cards
+- `next-pwa` and Web Push APIs
 
-### 📰 High-Converting Landing Page (`/`)
-- **Hero Section**: Starfield background animation, value proposition, CTA buttons, and floating character preview card.
-- **Social Proof**: Auto-scrolling infinite marquee of user testimonials and reviews.
-- **6-Module Feature Showcase**: Interactive cards detailing XP progression, skill tree, AI coach, party system, couple mode, and leaderboards.
-- **3-Step Onboarding Preview**: Clear walkthrough from character creation to leveling up.
-- **Transparent Pricing**: Adventurer (Free), Hero (Pro), and Legend (Guild) pricing tiers.
-- **FAQ Accordion & CTA**: Answers to top user queries and quick email signup form.
+## Run locally
 
-### 📱 Progressive Web App (PWA) & Push Notifications
-- **Installable Web App**: PWA manifest with multi-resolution maskable icons (72x72 to 512x512).
-- **Service Worker (`sw.js`)**: Background caching and web push notification event handlers.
-- **Custom Install Prompt**: In-app banner inviting users to add the app to their home screen.
-- **Automated Daily Reminders**: Vercel cron job running at 8 PM IST to remind users to protect their streaks.
+```bash
+npm install
+npm run dev
+```
 
-### 📤 Viral Sharing & Referral System
-- **Dynamic XP Cards**: Powered by `@vercel/og`, generating shareable 400x700px image cards of user stats.
-- **Native Mobile Share**: One-click sharing via Web Share API with image fallback.
-- **Referral Rewards**: Unique invite codes (`/invite/[code]`) granting **200 bonus XP** to both referrer and new player.
-- **Achievement Share Cards**: High-res share cards generated when legendary achievements are unlocked.
+Create `.env.local` with the required values:
 
-### 🔍 Complete SEO Suite
-- **Dynamic OpenGraph Images**: Automatically generated social media preview cards for user profile URLs (`/profile/[username]`).
-- **Structured Data**: JSON-LD `SoftwareApplication` schema for Google search rich snippets.
-- **Sitemap & Robots**: Automated `sitemap.xml` and `robots.txt` generation for optimal search crawler indexing.
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+GROQ_API_KEY=your-groq-key
+CRON_SECRET=a-long-random-string
+```
 
-### 🎯 Quests & Habits System
-- **Difficulty Scaling**: Quests categorized by Easy, Medium, and Hard, granting scaling XP and Gold rewards.
-- **Stat Boosts**: Completing tasks raises specific RPG attributes (`STR`, `INT`, `WIS`, `VIT`, `CHA`).
-- **Streak Multipliers**: Maintain daily completion streaks to unlock streak multipliers (up to 1.5x XP).
-- **Auto Level-Up**: XP triggers automatic level ups with maximum HP resets and celebratory visual feedback.
+Never commit `.env.local` or server-only keys.
 
-### 👥 Multiplayer Co-Op Parties & Couple Mode
-- **Party Hub**: Create or join adventuring parties with friends using unique invite codes.
-- **Couple Mode**: Connect with your partner to embark on joint life quests and shared weekly report cards.
+## Supabase setup
 
-### 🤖 AI Coach Mentorship
-- **Groq AI Integration**: Powered by `llama-3.1-70b-versatile`.
-- **Context-Aware Recommendations**: Analyzes your actual user stats, habit completions, and active streaks to give tailored encouragement, tips, and strategic growth plans.
+Run these scripts in the Supabase SQL Editor, in order:
 
----
+1. `supabase-schema.sql`
+2. `supabase-day4.sql`
+3. `supabase-day5-referral.sql`
+4. `supabase-day6-admin.sql`
 
-## 🛠️ Technology Stack
+Then configure Supabase Auth:
 
-| Layer | Technology | Description |
-| :--- | :--- | :--- |
-| **Frontend Framework** | [Next.js 16](https://nextjs.org/) (App Router) | High-performance React framework with server and client components |
-| **UI Library** | [React 19](https://react.dev/) | Modern UI primitives with server action integration |
-| **PWA & Image Gen** | [next-pwa](https://www.npmjs.com/package/next-pwa) & [@vercel/og](https://vercel.com/docs/functions/og-image-generation) | Installable PWA support & dynamic OpenGraph card generation |
-| **Push Notifications** | [web-push](https://www.npmjs.com/package/web-push) | Standardized VAPID Web Push protocol for browser notifications |
-| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) | Next-generation utility-first CSS engine |
-| **Animations** | [Framer Motion](https://www.framer.com/motion/) | Smooth animations for micro-interactions, level-ups, and modals |
-| **Backend & Database** | [Supabase](https://supabase.com/) | PostgreSQL database, Auth, Row Level Security (RLS), and Realtime |
-| **AI Integration** | [Groq SDK](https://groq.com/) | Ultra-fast inference running `llama-3.1-70b-versatile` |
-| **Analytics & Data Vis** | [Recharts](https://recharts.org/) | Responsive SVG charts for tracking stat progression over time |
+- Enable Email/Password authentication.
+- Set the Site URL to your Vercel production URL.
+- Add both `http://localhost:3000/**` and `https://your-domain.vercel.app/**` under Redirect URLs.
+- Configure Google OAuth in Supabase and Google Cloud if Google sign-in is enabled.
+
+## Deploy
+
+The app is designed for Vercel deployment:
+
+1. Import the GitHub repository in Vercel.
+2. Use the default Next.js build settings (`npm run build`).
+3. Add the environment variables above in Vercel for Production and Preview.
+4. Set `NEXT_PUBLIC_APP_URL` to the Vercel production URL.
+5. Update Supabase Auth Site URL and Redirect URLs, then redeploy.
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for the deployment checklist, [FEATURES.md](./FEATURES.md) for product details, and [API.md](./API.md) for API notes.
+
+## License
+
+Private project — all rights reserved.
