@@ -1,6 +1,5 @@
-'use client'
-
 import { useState } from 'react'
+import { Bell } from 'lucide-react'
 
 export function PushPermission() {
   const [dismissed, setDismissed] = useState(false)
@@ -45,7 +44,22 @@ export function PushPermission() {
         marginBottom: 20,
       }}
     >
-      <span style={{ fontSize: 24 }}>🔔</span>
+      <div
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: 10,
+          background: '#7C3AED22',
+          border: '1px solid #7C3AED44',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexShrink: 0,
+          color: '#9F67FF',
+        }}
+      >
+        <Bell size={18} />
+      </div>
       <div style={{ flex: 1 }}>
         <p
           style={{

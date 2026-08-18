@@ -1,7 +1,6 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Swords, Download, X } from 'lucide-react'
 
 export function InstallPrompt() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,7 +54,20 @@ export function InstallPrompt() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-              <span style={{ fontSize: 28 }}>⚔️</span>
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: 'linear-gradient(135deg, #7C3AED, #F59E0B)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <Swords size={18} color="#fff" />
+              </div>
               <div style={{ flex: 1 }}>
                 <p style={{ fontFamily: "'Oxanium', sans-serif", fontWeight: 600, color: '#F1F0FF', margin: 0 }}>
                   Add to Home Screen
@@ -66,9 +78,9 @@ export function InstallPrompt() {
               </div>
               <button
                 onClick={() => setShowPrompt(false)}
-                style={{ background: 'none', border: 'none', color: '#5C5A7A', cursor: 'pointer', fontSize: 16 }}
+                style={{ background: 'none', border: 'none', color: '#5C5A7A', cursor: 'pointer', padding: 4 }}
               >
-                ✕
+                <X size={16} />
               </button>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
@@ -99,9 +111,14 @@ export function InstallPrompt() {
                   fontSize: 13,
                   fontWeight: 600,
                   cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
                 }}
               >
-                Install ⚡
+                <Download size={14} />
+                <span>Install App</span>
               </button>
             </div>
           </div>

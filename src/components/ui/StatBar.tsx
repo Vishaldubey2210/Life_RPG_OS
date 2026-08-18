@@ -1,10 +1,9 @@
-'use client'
-
+import React from 'react'
 import { motion } from 'framer-motion'
 
 interface StatBarProps {
   label: string
-  icon: string
+  icon: React.ReactNode
   value: number
   maxValue: number
   color: string

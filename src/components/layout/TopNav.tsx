@@ -17,16 +17,18 @@ import {
   Settings,
   ChevronDown,
   Menu,
+  Swords,
+  UserCircle2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import NotificationBell from './NotificationBell'
 
 const NAV_ITEMS = [
-  { href: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard',   emoji: '🏠' },
-  { href: '/quests',       icon: Zap,             label: 'Quests',      emoji: '⚡' },
-  { href: '/party',        icon: Users,           label: 'Party',       emoji: '👥' },
-  { href: '/leaderboard',  icon: Trophy,          label: 'Leaderboard', emoji: '🏆' },
-  { href: '/coach',        icon: Bot,             label: 'Coach',       emoji: '🤖' },
+  { href: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/quests',       icon: Zap,             label: 'Quests' },
+  { href: '/party',        icon: Users,           label: 'Party' },
+  { href: '/leaderboard',  icon: Trophy,          label: 'Leaderboard' },
+  { href: '/coach',        icon: Bot,             label: 'Coach' },
 ]
 
 const PAGE_TITLES: Record<string, string> = {
@@ -46,7 +48,7 @@ interface TopNavProps {
   userLevel?: number
 }
 
-export default function TopNav({ userAvatar = '⚔️', userName = 'Adventurer', userLevel = 1 }: TopNavProps) {
+export default function TopNav({ userAvatar, userName = 'Adventurer', userLevel = 1 }: TopNavProps) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -106,7 +108,16 @@ export default function TopNav({ userAvatar = '⚔️', userName = 'Adventurer',
               onMouseEnter={(e) => (e.currentTarget.style.background = '#7C3AED22')}
               onMouseLeave={(e) => { if (!userMenuOpen) e.currentTarget.style.background = 'transparent' }}
             >
-              <span className="text-xl">{userAvatar}</span>
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+              >
+                {userAvatar ? (
+                  <span className="text-base leading-none">{userAvatar}</span>
+                ) : (
+                  <UserCircle2 size={18} color="#9F67FF" />
+                )}
+              </div>
               <div className="text-left hidden lg:block">
                 <div className="text-xs font-semibold" style={{ color: '#F1F0FF', fontFamily: 'Oxanium, sans-serif' }}>
                   {userName}
@@ -190,7 +201,12 @@ export default function TopNav({ userAvatar = '⚔️', userName = 'Adventurer',
         </button>
 
         <div className="flex items-center gap-2">
-          <span className="text-lg">⚔️</span>
+          <div
+            className="w-7 h-7 rounded-md flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, #7C3AED, #F59E0B)' }}
+          >
+            <Swords size={14} color="#fff" />
+          </div>
           <span className="text-sm font-bold" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}>
             Life RPG OS
           </span>
@@ -220,7 +236,16 @@ export default function TopNav({ userAvatar = '⚔️', userName = 'Adventurer',
             >
               <div className="px-6 py-5 border-b" style={{ borderColor: '#1E1E35' }}>
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{userAvatar}</span>
+                  <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+                  >
+                    {userAvatar ? (
+                      <span className="text-xl leading-none">{userAvatar}</span>
+                    ) : (
+                      <UserCircle2 size={20} color="#9F67FF" />
+                    )}
+                  </div>
                   <div>
                     <div className="text-sm font-bold" style={{ color: '#F1F0FF', fontFamily: 'Oxanium, sans-serif' }}>
                       {userName}
@@ -275,7 +300,7 @@ export default function TopNav({ userAvatar = '⚔️', userName = 'Adventurer',
           height: 64,
         }}
       >
-        {NAV_ITEMS.map(({ href, emoji, label }) => {
+        {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
           return (
             <Link
@@ -284,7 +309,7 @@ export default function TopNav({ userAvatar = '⚔️', userName = 'Adventurer',
               className="flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-200"
               style={{ color: active ? '#9F67FF' : '#5C5A7A' }}
             >
-              <span className="text-xl leading-none">{emoji}</span>
+              <Icon size={20} />
               <span
                 className="text-xs"
                 style={{

@@ -6,7 +6,26 @@ import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, Trophy } from 'lucide-react'
+import {
+  ArrowRight,
+  Trophy,
+  Dumbbell,
+  Brain,
+  Wind,
+  Heart,
+  Coins,
+  Mic2,
+  Zap,
+  CheckCircle2,
+  Flame,
+  CalendarDays,
+  Star,
+  ClipboardList,
+  Map,
+  Bot,
+  HandHeart,
+  Swords,
+} from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
 import StatBar from '@/components/ui/StatBar'
 import XPBar from '@/components/ui/XPBar'
@@ -21,16 +40,19 @@ import { useCompleteHabit } from '@/hooks/useCompleteHabit'
 import { createClient } from '@/lib/supabase/client'
 
 const STAT_CONFIG = [
-  { key: 'str',  label: 'STR',  icon: '💪', color: '#EF4444' },
-  { key: 'int',  label: 'INT',  icon: '🧠', color: '#3B82F6' },
-  { key: 'wis',  label: 'WIS',  icon: '🧘', color: '#22C55E' },
-  { key: 'vit',  label: 'VIT',  icon: '❤️', color: '#EF4444' },
-  { key: 'gold', label: 'GOLD', icon: '💰', color: '#F59E0B' },
-  { key: 'cha',  label: 'CHA',  icon: '🗣️', color: '#9F67FF' },
+  { key: 'str',  label: 'STR',  icon: Dumbbell,  color: '#EF4444' },
+  { key: 'int',  label: 'INT',  icon: Brain,      color: '#3B82F6' },
+  { key: 'wis',  label: 'WIS',  icon: Wind,       color: '#22C55E' },
+  { key: 'vit',  label: 'VIT',  icon: Heart,      color: '#EF4444' },
+  { key: 'gold', label: 'GOLD', icon: Coins,      color: '#F59E0B' },
+  { key: 'cha',  label: 'CHA',  icon: Mic2,       color: '#9F67FF' },
 ]
 
-const CATEGORY_ICONS: Record<string, string> = {
-  str: '💪', int: '🧠', wis: '🧘', vit: '❤️', gold: '💰', cha: '🗣️',
+const CATEGORY_ICON_COMPONENTS: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
+  str: Dumbbell, int: Brain, wis: Wind, vit: Heart, gold: Coins, cha: Mic2,
+}
+const CATEGORY_ICON_COLORS: Record<string, string> = {
+  str: '#EF4444', int: '#3B82F6', wis: '#22C55E', vit: '#EF4444', gold: '#F59E0B', cha: '#9F67FF',
 }
 
 function timeAgo(dateStr: string): string {
@@ -223,7 +245,12 @@ export default function DashboardPage() {
     return (
       <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
         <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">⚔️</div>
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse"
+            style={{ background: 'linear-gradient(135deg, #7C3AED, #F59E0B)', boxShadow: '0 0 20px #7C3AED44' }}
+          >
+            <Swords size={28} color="#fff" />
+          </div>
           <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
             Loading your realm...
           </div>
@@ -255,7 +282,10 @@ export default function DashboardPage() {
                 className="text-2xl font-bold mb-1"
                 style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
               >
-                Welcome back, {profile?.display_name ?? 'Adventurer'} 👋
+                Welcome back, {profile?.display_name ?? 'Adventurer'}
+                <span className="inline-block ml-2">
+                  <HandHeart size={24} style={{ display: 'inline', verticalAlign: 'middle', color: '#9F67FF' }} />
+                </span>
               </h1>
               <p style={{ color: '#5C5A7A' }}>{dateStr}</p>
             </div>
@@ -268,15 +298,10 @@ export default function DashboardPage() {
               className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
             >
               {[
-                { icon: '⚡', label: 'XP Today', value: xpToday, color: '#7C3AED' },
-                {
-                  icon: '✅',
-                  label: 'Quests Done',
-                  value: `${allCompleted.length} / ${habits.length}`,
-                  color: '#22C55E',
-                },
-                { icon: '🔥', label: 'Best Streak', value: `${bestStreak}d`, color: '#F59E0B' },
-                { icon: '📅', label: 'Day Streak', value: `${profile?.streak ?? 0}d`, color: '#EC4899' },
+                { Icon: Zap,           label: 'XP Today',    value: xpToday,                              color: '#7C3AED' },
+                { Icon: CheckCircle2,  label: 'Quests Done', value: `${allCompleted.length} / ${habits.length}`, color: '#22C55E' },
+                { Icon: Flame,         label: 'Best Streak', value: `${bestStreak}d`,                     color: '#F59E0B' },
+                { Icon: CalendarDays,  label: 'Day Streak',  value: `${profile?.streak ?? 0}d`,           color: '#EC4899' },
               ].map((stat) => (
                 <div
                   key={stat.label}
@@ -284,10 +309,10 @@ export default function DashboardPage() {
                   style={{ background: '#13131F', border: '1px solid #1E1E35' }}
                 >
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ background: `${stat.color}15` }}
                   >
-                    {stat.icon}
+                    <stat.Icon size={18} style={{ color: stat.color }} />
                   </div>
                   <div>
                     <div
@@ -316,7 +341,15 @@ export default function DashboardPage() {
               >
                 {/* Avatar */}
                 <div className="text-center mb-4">
-                  <div className="text-6xl mb-2">{profile?.avatar_emoji ?? '⚔️'}</div>
+                  <div
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-2 text-5xl"
+                    style={{
+                      background: profile?.avatar_emoji ? 'transparent' : 'linear-gradient(135deg, #7C3AED22, #F59E0B22)',
+                      border: '2px solid #7C3AED33',
+                    }}
+                  >
+                    {profile?.avatar_emoji ?? <Swords size={40} style={{ color: '#7C3AED' }} />}
+                  </div>
                   <h2
                     className="text-xl font-bold"
                     style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
@@ -354,7 +387,7 @@ export default function DashboardPage() {
                   {STAT_CONFIG.map((s) => (
                     <StatBar
                       key={s.key}
-                      icon={s.icon}
+                      icon={<s.icon size={14} />}
                       label={s.label}
                       value={stats ? (stats as unknown as Record<string, number>)[s.key] ?? 0 : 0}
                       maxValue={100}
@@ -402,7 +435,12 @@ export default function DashboardPage() {
 
                 {habits.length === 0 ? (
                   <div className="text-center py-12">
-                    <div className="text-4xl mb-3">🗺️</div>
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                      style={{ background: '#1E1E35' }}
+                    >
+                      <Map size={24} style={{ color: '#5C5A7A' }} />
+                    </div>
                     <p className="text-sm" style={{ color: '#5C5A7A' }}>No quests yet!</p>
                     <Link
                       href="/quests"
@@ -466,15 +504,27 @@ export default function DashboardPage() {
                     </h3>
                     <div className="space-y-2">
                       {recentActivity.map((entry) => {
-                        const catIcon = CATEGORY_ICONS[entry.habit?.stat_category ?? ''] ?? '📋'
                         return (
                           <div
                             key={entry.id}
                             className="flex items-center gap-2.5 py-1.5"
                           >
-                            <span className="text-base w-6 text-center flex-shrink-0">
-                              {entry.habit?.emoji ?? catIcon}
-                            </span>
+                            <div
+                              className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
+                              style={{
+                                background: (CATEGORY_ICON_COLORS[entry.habit?.stat_category ?? ''] ?? '#5C5A7A') + '20',
+                                color: CATEGORY_ICON_COLORS[entry.habit?.stat_category ?? ''] ?? '#5C5A7A',
+                              }}
+                            >
+                              {entry.habit?.emoji ? (
+                                <span className="text-sm leading-none">{entry.habit.emoji}</span>
+                              ) : (
+                                (() => {
+                                  const IconComp = CATEGORY_ICON_COMPONENTS[entry.habit?.stat_category ?? ''] ?? ClipboardList
+                                  return <IconComp size={12} />
+                                })()
+                              )}
+                            </div>
                             <span
                               className="text-xs flex-1 truncate"
                               style={{ color: '#C4C2D8' }}
@@ -556,11 +606,17 @@ export default function DashboardPage() {
                       boxShadow: '0 0 20px #F59E0B11',
                     }}
                   >
-                    <div className="text-sm font-semibold mb-2" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}>
-                      🔥 Active Buff
+                    <div className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}>
+                      <Flame size={14} style={{ color: '#F59E0B' }} />
+                      Active Buff
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="text-2xl fire-pulse">🔥</div>
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center fire-pulse"
+                        style={{ background: '#F59E0B18', border: '1px solid #F59E0B44' }}
+                      >
+                        <Flame size={20} style={{ color: '#F59E0B' }} />
+                      </div>
                       <div>
                         <div className="text-sm font-medium" style={{ color: '#F1F0FF' }}>1.25× XP Multiplier</div>
                         <div className="text-xs" style={{ color: '#5C5A7A' }}>
@@ -581,17 +637,22 @@ export default function DashboardPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { label: 'Level',    value: profile?.level ?? 1,     icon: '⭐', color: '#F59E0B' },
-                      { label: 'Streak',   value: `${profile?.streak ?? 0}d`, icon: '🔥', color: '#F59E0B' },
-                      { label: 'Total XP', value: profile?.xp ?? 0,        icon: '⚡', color: '#7C3AED' },
-                      { label: 'Quests',   value: habits.length,             icon: '📋', color: '#3B82F6' },
+                      { label: 'Level',    value: profile?.level ?? 1,     Icon: Star,          color: '#F59E0B' },
+                      { label: 'Streak',   value: `${profile?.streak ?? 0}d`, Icon: Flame,     color: '#F59E0B' },
+                      { label: 'Total XP', value: profile?.xp ?? 0,        Icon: Zap,          color: '#7C3AED' },
+                      { label: 'Quests',   value: habits.length,             Icon: ClipboardList, color: '#3B82F6' },
                     ].map((stat) => (
                       <div
                         key={stat.label}
                         className="p-3 rounded-xl text-center"
                         style={{ background: '#0F0F1A', border: '1px solid #1E1E35' }}
                       >
-                        <div className="text-lg">{stat.icon}</div>
+                        <div
+                          className="w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-1"
+                          style={{ background: `${stat.color}15` }}
+                        >
+                          <stat.Icon size={15} style={{ color: stat.color }} />
+                        </div>
                         <div
                           className="text-lg font-bold"
                           style={{ fontFamily: 'Oxanium, sans-serif', color: stat.color }}
@@ -622,7 +683,12 @@ export default function DashboardPage() {
                   }}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">🤖</span>
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+                    >
+                      <Bot size={20} style={{ color: '#9F67FF' }} />
+                    </div>
                     <div className="flex-1">
                       <div
                         className="font-bold text-sm"

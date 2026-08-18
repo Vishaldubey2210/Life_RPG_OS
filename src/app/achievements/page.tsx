@@ -1,10 +1,20 @@
-'use client'
-
-export const dynamic = 'force-dynamic'
-
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Lock, CheckCircle2, ChevronRight, Trophy } from 'lucide-react'
+import {
+  Lock,
+  CheckCircle2,
+  ChevronRight,
+  Trophy,
+  Flame,
+  Zap,
+  Swords,
+  BarChart2,
+  Users,
+  Star,
+  Shield,
+  Sparkles,
+  Crown,
+} from 'lucide-react'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
 import { useProfile } from '@/hooks/useProfile'
@@ -31,16 +41,22 @@ interface EarnedAchievement {
 type FilterTab = 'all' | 'streaks' | 'xp' | 'quests' | 'stats' | 'social' | 'special' | 'hidden'
 
 const RARITY_CONFIG = {
-  common:    { label: 'Common',    color: '#9B99B8', bg: '#9B99B815', border: '#3E3E5A',   glow: 'none',                       icon: '⚪' },
-  rare:      { label: 'Rare',      color: '#3B82F6', bg: '#3B82F615', border: '#3B82F644', glow: '0 0 20px #3B82F622',         icon: '🔵' },
-  epic:      { label: 'Epic',      color: '#7C3AED', bg: '#7C3AED15', border: '#7C3AED55', glow: '0 0 25px #7C3AED33',         icon: '🟣' },
-  legendary: { label: 'Legendary', color: '#F59E0B', bg: '#F59E0B10', border: '#F59E0B55', glow: '0 0 30px #F59E0B33',         icon: '🟡' },
+  common:    { label: 'Common',    color: '#9B99B8', bg: '#9B99B815', border: '#3E3E5A',   glow: 'none',                       Icon: Shield },
+  rare:      { label: 'Rare',      color: '#3B82F6', bg: '#3B82F615', border: '#3B82F644', glow: '0 0 20px #3B82F622',         Icon: Zap },
+  epic:      { label: 'Epic',      color: '#7C3AED', bg: '#7C3AED15', border: '#7C3AED55', glow: '0 0 25px #7C3AED33',         Icon: Sparkles },
+  legendary: { label: 'Legendary', color: '#F59E0B', bg: '#F59E0B10', border: '#F59E0B55', glow: '0 0 30px #F59E0B33',         Icon: Crown },
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  all: '🏆 All', streaks: '🔥 Streaks', xp: '⚡ XP', quests: '⚔️ Quests',
-  stats: '📊 Stats', social: '👥 Social', special: '⭐ Special', hidden: '🔒 Hidden',
-}
+const CATEGORY_TABS: Array<{ key: FilterTab; label: string; Icon: React.ComponentType<{ size?: number }> }> = [
+  { key: 'all',      label: 'All',      Icon: Trophy },
+  { key: 'streaks',  label: 'Streaks',  Icon: Flame },
+  { key: 'xp',       label: 'XP',       Icon: Zap },
+  { key: 'quests',   label: 'Quests',   Icon: Swords },
+  { key: 'stats',    label: 'Stats',    Icon: BarChart2 },
+  { key: 'social',   label: 'Social',   Icon: Users },
+  { key: 'special',  label: 'Special',  Icon: Star },
+  { key: 'hidden',   label: 'Hidden',   Icon: Lock },
+]
 
 function getRequirementHint(def: AchievementDef, totalQuests: number, profile: { level: number; streak: number; xp: number } | null): { text: string; progress: number; max: number } | null {
   if (def.requirement_type === 'quests_completed') {
@@ -200,21 +216,26 @@ export default function AchievementsPage() {
             <div className="flex-1 min-w-0">
               {/* Filter tabs */}
               <div className="flex flex-wrap gap-2 mb-6">
-                {(Object.keys(CATEGORY_LABELS) as FilterTab[]).map(tab => (
-                  <button
-                    key={tab}
-                    onClick={() => setFilter(tab)}
-                    className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200"
-                    style={{
-                      background: filter === tab ? '#7C3AED' : '#13131F',
-                      color: filter === tab ? '#fff' : '#9B99B8',
-                      border: `1px solid ${filter === tab ? '#7C3AED' : '#1E1E35'}`,
-                      fontFamily: 'Oxanium, sans-serif',
-                    }}
-                  >
-                    {CATEGORY_LABELS[tab]}
-                  </button>
-                ))}
+                {CATEGORY_TABS.map(tab => {
+                  const active = filter === tab.key
+                  const IconComp = tab.Icon
+                  return (
+                    <button
+                      key={tab.key}
+                      onClick={() => setFilter(tab.key)}
+                      className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 flex items-center gap-1.5"
+                      style={{
+                        background: active ? '#7C3AED' : '#13131F',
+                        color: active ? '#fff' : '#9B99B8',
+                        border: `1px solid ${active ? '#7C3AED' : '#1E1E35'}`,
+                        fontFamily: 'Oxanium, sans-serif',
+                      }}
+                    >
+                      <IconComp size={13} />
+                      <span>{tab.label}</span>
+                    </button>
+                  )
+                })}
               </div>
 
               {/* Achievement grid */}
@@ -247,7 +268,7 @@ export default function AchievementsPage() {
                         {/* Rarity label */}
                         <div className="flex items-center justify-between mb-3">
                           <span
-                            className="text-xs font-bold px-2 py-0.5 rounded-full"
+                            className="text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1"
                             style={{
                               background: cfg.bg,
                               color: cfg.color,
@@ -255,7 +276,7 @@ export default function AchievementsPage() {
                               border: `1px solid ${cfg.border}`,
                             }}
                           >
-                            {cfg.icon} {cfg.label}
+                            <cfg.Icon size={11} /> {cfg.label}
                           </span>
                           {isUnlocked && (
                             <CheckCircle2 size={14} style={{ color: '#22C55E' }} />
@@ -342,10 +363,14 @@ export default function AchievementsPage() {
                 <div className="space-y-3">
                   {rarityStats.map(r => {
                     const cfg = RARITY_CONFIG[r.rarity]
+                    const IconComp = cfg.Icon
                     return (
                       <div key={r.rarity}>
                         <div className="flex justify-between text-xs mb-1">
-                          <span style={{ color: cfg.color }}>{cfg.icon} {cfg.label}</span>
+                          <span className="flex items-center gap-1.5" style={{ color: cfg.color }}>
+                            <IconComp size={12} />
+                            <span>{cfg.label}</span>
+                          </span>
                           <span style={{ color: '#9B99B8', fontFamily: 'Oxanium, sans-serif' }}>
                             {r.earned}/{r.total}
                           </span>

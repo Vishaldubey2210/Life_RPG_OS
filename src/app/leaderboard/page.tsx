@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Trophy, Flame, Users, Globe, Swords, Clock } from 'lucide-react'
+import { Trophy, Flame, Users, Globe, Swords, Clock, Crown, Medal, Zap, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
 import TopNav from '@/components/layout/TopNav'
@@ -18,7 +18,7 @@ const CURRENT_SEASON = {
   number: 1,
   startDate: '2025-01-01',
   endDate: '2025-12-31',
-  rewards: ['Legendary Crown Badge 👑', 'Season 1 Title ⚔️', '1000 Bonus XP ⚡'],
+  rewards: ['Legendary Crown Badge', 'Season 1 Title', '1000 Bonus XP'],
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -55,12 +55,12 @@ function weekProgress(): number {
   return Math.min(100, ((now - weekStart) / (weekEnd - weekStart)) * 100)
 }
 
-function getRankStyle(rank: number): { bg: string; color: string; icon: string } {
-  if (rank === 1) return { bg: '#F59E0B22', color: '#F59E0B', icon: '👑' }
-  if (rank === 2) return { bg: '#9CA3AF22', color: '#9CA3AF', icon: '🥈' }
-  if (rank === 3) return { bg: '#B45309AA', color: '#B45309', icon: '🥉' }
-  if (rank <= 10) return { bg: '#7C3AED22', color: '#9F67FF', icon: `#${rank}` }
-  return { bg: '#1E1E35', color: '#9B99B8', icon: `#${rank}` }
+function getRankStyle(rank: number): { bg: string; color: string; content: React.ReactNode } {
+  if (rank === 1) return { bg: '#F59E0B22', color: '#F59E0B', content: <Crown size={18} /> }
+  if (rank === 2) return { bg: '#9CA3AF22', color: '#9CA3AF', content: <Medal size={18} /> }
+  if (rank === 3) return { bg: '#B45309AA', color: '#B45309', content: <Medal size={18} /> }
+  if (rank <= 10) return { bg: '#7C3AED22', color: '#9F67FF', content: `#${rank}` }
+  return { bg: '#1E1E35', color: '#9B99B8', content: `#${rank}` }
 }
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
@@ -98,7 +98,11 @@ function Podium({ entries }: { entries: LeaderboardEntry[] }) {
   ]
 
   const heights = ['80px', '110px', '60px']
-  const crowns = ['🥈', '👑', '🥉']
+  const icons = [
+    <Medal key="silver" size={24} style={{ color: '#9CA3AF' }} />,
+    <Crown key="gold" size={28} style={{ color: '#F59E0B' }} />,
+    <Medal key="bronze" size={22} style={{ color: '#B45309' }} />,
+  ]
   const glows = ['#9CA3AF', '#F59E0B', '#B45309']
   const rankNums = [2, 1, 3]
 
@@ -116,7 +120,7 @@ function Podium({ entries }: { entries: LeaderboardEntry[] }) {
             className="flex-1 max-w-[160px] flex flex-col items-center"
           >
             {/* Crown & Avatar */}
-            <div className="text-2xl mb-1">{crowns[i]}</div>
+            <div className="mb-2 flex items-center justify-center">{icons[i]}</div>
             <div
               className={`text-4xl mb-2 ${isFirst ? 'text-5xl' : ''}`}
               style={{ filter: isFirst ? `drop-shadow(0 0 12px ${glows[i]}88)` : undefined }}
@@ -124,13 +128,13 @@ function Podium({ entries }: { entries: LeaderboardEntry[] }) {
               {entry.avatar_emoji}
             </div>
             <div
-              className="text-xs font-semibold truncate w-full text-center mb-2"
+              className="text-xs font-semibold truncate w-full text-center mb-1"
               style={{ color: '#F1F0FF', fontFamily: 'Oxanium, sans-serif' }}
             >
               {entry.display_name}
             </div>
-            <div className="text-xs mb-2" style={{ color: glows[i] }}>
-              ⚡ {entry.xp_earned} XP
+            <div className="text-xs mb-2 flex items-center gap-1 font-bold" style={{ color: glows[i], fontFamily: 'Oxanium, sans-serif' }}>
+              <Zap size={11} /> {entry.xp_earned} XP
             </div>
 
             {/* Podium platform */}
@@ -166,7 +170,7 @@ function LeaderboardRow({
   isCurrentUser: boolean
   maxXp: number
 }) {
-  const { bg, color, icon } = getRankStyle(entry.rank)
+  const { bg, color, content } = getRankStyle(entry.rank)
   const pct = maxXp > 0 ? (entry.xp_earned / maxXp) * 100 : 0
 
   return (
@@ -186,7 +190,7 @@ function LeaderboardRow({
         className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0"
         style={{ background: bg, color, fontFamily: 'Oxanium, sans-serif', fontSize: entry.rank > 9 ? 11 : 14 }}
       >
-        {icon}
+        {content}
       </div>
 
       {/* Avatar + Name */}
@@ -237,8 +241,9 @@ function LeaderboardRow({
 
       {/* Streak */}
       <div className="text-center min-w-[50px] flex-shrink-0">
-        <div className="text-sm font-bold" style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
-          🔥{entry.streak}
+        <div className="text-sm font-bold flex items-center justify-center gap-1" style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
+          <Flame size={13} style={{ color: '#F59E0B' }} />
+          <span>{entry.streak}</span>
         </div>
         <div className="text-xs" style={{ color: '#5C5A7A' }}>streak</div>
       </div>

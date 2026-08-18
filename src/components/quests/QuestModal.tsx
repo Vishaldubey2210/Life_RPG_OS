@@ -1,16 +1,14 @@
-'use client'
-
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Loader2 } from 'lucide-react'
+import { X, Loader2, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Zap } from 'lucide-react'
 
 const CATEGORIES = [
-  { key: 'str',  label: 'Strength',     icon: '💪', color: '#EF4444' },
-  { key: 'int',  label: 'Intelligence', icon: '🧠', color: '#3B82F6' },
-  { key: 'wis',  label: 'Wisdom',       icon: '🧘', color: '#8B5CF6' },
-  { key: 'vit',  label: 'Vitality',     icon: '❤️', color: '#22C55E' },
-  { key: 'gold', label: 'Wealth',       icon: '💰', color: '#F59E0B' },
-  { key: 'cha',  label: 'Charisma',     icon: '🗣️', color: '#EC4899' },
+  { key: 'str',  label: 'Strength',     icon: Dumbbell, color: '#EF4444' },
+  { key: 'int',  label: 'Intelligence', icon: Brain,    color: '#3B82F6' },
+  { key: 'wis',  label: 'Wisdom',       icon: Wind,     color: '#8B5CF6' },
+  { key: 'vit',  label: 'Vitality',     icon: Heart,    color: '#22C55E' },
+  { key: 'gold', label: 'Wealth',       icon: Coins,    color: '#F59E0B' },
+  { key: 'cha',  label: 'Charisma',     icon: Mic2,     color: '#EC4899' },
 ]
 
 const DIFFICULTIES = [
@@ -200,19 +198,25 @@ export default function QuestModal({
                 <div className="grid grid-cols-3 gap-2">
                   {CATEGORIES.map((cat) => {
                     const active = category === cat.key
+                    const IconComp = cat.icon
                     return (
                       <button
                         key={cat.key}
                         type="button"
                         onClick={() => setCategory(cat.key)}
-                        className="p-3 rounded-xl flex flex-col items-center gap-1 transition-all duration-150 text-center"
+                        className="p-3 rounded-xl flex flex-col items-center gap-1.5 transition-all duration-150 text-center"
                         style={{
                           background: active ? `${cat.color}22` : '#0F0F1A',
                           border: `1px solid ${active ? cat.color : '#1E1E35'}`,
                           boxShadow: active ? `0 0 12px ${cat.color}33` : 'none',
                         }}
                       >
-                        <span className="text-xl">{cat.icon}</span>
+                        <div
+                          className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ background: `${cat.color}15`, color: cat.color }}
+                        >
+                          <IconComp size={16} />
+                        </div>
                         <span className="text-xs font-medium" style={{ color: active ? cat.color : '#9B99B8' }}>
                           {cat.label}
                         </span>
@@ -224,8 +228,11 @@ export default function QuestModal({
 
               {/* Difficulty Picker */}
               <div>
-                <label className="block text-sm mb-2 font-medium" style={{ color: '#9B99B8' }}>
-                  Difficulty — <span style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>⚡ {currentXP} XP reward</span>
+                <label className="block text-sm mb-2 font-medium flex items-center gap-1.5" style={{ color: '#9B99B8' }}>
+                  <span>Difficulty —</span>
+                  <span className="inline-flex items-center gap-1" style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
+                    <Zap size={12} /> {currentXP} XP reward
+                  </span>
                 </label>
                 <div className="grid grid-cols-4 gap-2">
                   {DIFFICULTIES.map((d) => {

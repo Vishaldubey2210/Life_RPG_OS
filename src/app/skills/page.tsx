@@ -1,13 +1,28 @@
-'use client'
-
-export const dynamic = 'force-dynamic'
-
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+  TreePine,
+  Dumbbell,
+  Brain,
+  Wind,
+  Heart,
+  Coins,
+  Mic2,
+  Sparkles,
+} from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
 import { useProfile } from '@/hooks/useProfile'
 import { SKILL_TREES, SKILL_TREE_ORDER, SkillNode } from '@/lib/skillTree'
 import { Stats } from '@/hooks/useProfile'
+
+const BRANCH_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
+  strength: Dumbbell,
+  intelligence: Brain,
+  wisdom: Wind,
+  vitality: Heart,
+  wealth: Coins,
+  charisma: Mic2,
+}
 
 const NODE_SIZE = 80
 const NODE_GAP = 120
@@ -238,7 +253,12 @@ export default function SkillsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
         <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">🌳</div>
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse"
+            style={{ background: '#22C55E22', border: '1px solid #22C55E44' }}
+          >
+            <TreePine size={28} style={{ color: '#22C55E' }} />
+          </div>
           <div
             className="text-sm"
             style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}
@@ -272,7 +292,7 @@ export default function SkillsPage() {
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -282,10 +302,11 @@ export default function SkillsPage() {
           {/* Header */}
           <div className="mb-8">
             <h1
-              className="text-3xl font-bold mb-1"
+              className="text-3xl font-bold mb-1 flex items-center gap-2.5"
               style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
             >
-              Skill Tree 🌳
+              <span>Skill Tree</span>
+              <TreePine size={26} style={{ color: '#22C55E' }} />
             </h1>
             <p style={{ color: '#9B99B8' }}>Unlock your potential — complete quests to raise stats</p>
           </div>
@@ -298,6 +319,7 @@ export default function SkillsPage() {
                 {SKILL_TREE_ORDER.map((key) => {
                   const b = SKILL_TREES[key]
                   const active = selectedBranch === key
+                  const IconComp = BRANCH_ICONS[key] ?? Sparkles
                   return (
                     <button
                       key={key}
@@ -310,8 +332,8 @@ export default function SkillsPage() {
                         boxShadow: active ? `0 0 12px ${b.color}33` : 'none',
                       }}
                     >
-                      <span>{b.icon}</span>
-                      {b.label}
+                      <IconComp size={16} />
+                      <span>{b.label}</span>
                     </button>
                   )
                 })}
@@ -334,7 +356,19 @@ export default function SkillsPage() {
                 >
                   {/* Branch header */}
                   <div className="text-center mb-8">
-                    <div className="text-5xl mb-2">{branch?.icon}</div>
+                    <div
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                      style={{
+                        background: `${branch?.color}20`,
+                        border: `1px solid ${branch?.color}44`,
+                        color: branch?.color,
+                      }}
+                    >
+                      {(() => {
+                        const IconComp = BRANCH_ICONS[selectedBranch] ?? Sparkles
+                        return <IconComp size={32} />
+                      })()}
+                    </div>
                     <h2
                       className="text-2xl font-bold"
                       style={{ fontFamily: 'Oxanium, sans-serif', color: branch?.color }}
@@ -410,9 +444,15 @@ export default function SkillsPage() {
                     const b = SKILL_TREES[key]
                     const sv = getStatValue(stats, b.statKey)
                     const unlocked = b.nodes.filter((n) => isNodeUnlocked(n, sv)).length
+                    const IconComp = BRANCH_ICONS[key] ?? Sparkles
                     return (
                       <div key={key} className="flex items-center gap-3">
-                        <span className="text-lg w-7 text-center">{b.icon}</span>
+                        <div
+                          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ background: `${b.color}15`, color: b.color }}
+                        >
+                          <IconComp size={14} />
+                        </div>
                         <div className="flex-1">
                           <div className="flex justify-between text-xs mb-1">
                             <span style={{ color: '#9B99B8' }}>{b.label}</span>

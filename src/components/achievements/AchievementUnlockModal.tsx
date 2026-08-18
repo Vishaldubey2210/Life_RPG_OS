@@ -1,7 +1,6 @@
-'use client'
-
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Shield, Zap, Sparkles, Crown, Trophy } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 export interface NewAchievement {
@@ -19,10 +18,10 @@ interface AchievementUnlockModalProps {
 }
 
 const RARITY_STYLES = {
-  common:    { label: 'COMMON ACHIEVEMENT',    color: '#9B99B8', glow: 'rgba(155,153,184,0.3)',  bg: '#1A1A2E', border: '#3E3E5A' },
-  rare:      { label: '⚡ RARE ACHIEVEMENT',    color: '#3B82F6', glow: 'rgba(59,130,246,0.3)',   bg: '#1A1E2E', border: '#3B82F644' },
-  epic:      { label: '🔮 EPIC ACHIEVEMENT',   color: '#7C3AED', glow: 'rgba(124,58,237,0.4)',   bg: '#1A1630', border: '#7C3AED55' },
-  legendary: { label: '👑 LEGENDARY ACHIEVEMENT', color: '#F59E0B', glow: 'rgba(245,158,11,0.5)', bg: '#1F1A10', border: '#F59E0B55' },
+  common:    { label: 'COMMON ACHIEVEMENT',    Icon: Shield,   color: '#9B99B8', glow: 'rgba(155,153,184,0.3)',  bg: '#1A1A2E', border: '#3E3E5A' },
+  rare:      { label: 'RARE ACHIEVEMENT',      Icon: Zap,      color: '#3B82F6', glow: 'rgba(59,130,246,0.3)',   bg: '#1A1E2E', border: '#3B82F644' },
+  epic:      { label: 'EPIC ACHIEVEMENT',      Icon: Sparkles, color: '#9F67FF', glow: 'rgba(124,58,237,0.4)',   bg: '#1A1630', border: '#7C3AED55' },
+  legendary: { label: 'LEGENDARY ACHIEVEMENT', Icon: Crown,    color: '#F59E0B', glow: 'rgba(245,158,11,0.5)', bg: '#1F1A10', border: '#F59E0B55' },
 }
 
 export default function AchievementUnlockModal({ achievements, onAllDismissed }: AchievementUnlockModalProps) {
@@ -115,21 +114,27 @@ export default function AchievementUnlockModal({ achievements, onAllDismissed }:
           >
             {/* Rarity banner */}
             <div
-              className="absolute top-0 left-0 right-0 py-1.5 text-xs font-bold tracking-widest rounded-t-3xl"
+              className="absolute top-0 left-0 right-0 py-1.5 text-xs font-bold tracking-widest rounded-t-3xl flex items-center justify-center gap-1.5"
               style={{ background: style.color + '22', color: style.color, fontFamily: 'Oxanium, sans-serif' }}
             >
-              {style.label}
+              <style.Icon size={12} />
+              <span>{style.label}</span>
             </div>
 
             <div className="mt-6">
-              {/* Emoji */}
+              {/* Emoji or Trophy fallback */}
               <motion.div
-                className="text-7xl mb-4"
+                className="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-4 text-5xl"
+                style={{
+                  background: `${style.color}15`,
+                  border: `1px solid ${style.color}44`,
+                  boxShadow: `0 0 30px ${style.glow}`,
+                }}
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.15, type: 'spring', stiffness: 300, damping: 14 }}
               >
-                {current.emoji}
+                {current.emoji ? current.emoji : <Trophy size={40} style={{ color: style.color }} />}
               </motion.div>
 
               {/* Name */}
@@ -162,7 +167,8 @@ export default function AchievementUnlockModal({ achievements, onAllDismissed }:
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.4, type: 'spring' }}
               >
-                ⚡ +{current.xp_reward} XP earned
+                <Zap size={14} style={{ color: '#F59E0B' }} />
+                <span>+{current.xp_reward} XP earned</span>
               </motion.div>
 
               {/* Dismiss hint */}

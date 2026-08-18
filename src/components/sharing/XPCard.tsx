@@ -25,12 +25,12 @@ export function XPCard({
   stats,
 }: XPCardProps) {
   const statList = [
-    { label: '💪 STR', val: stats.strength, color: '#EF4444' },
-    { label: '🧠 INT', val: stats.intelligence, color: '#3B82F6' },
-    { label: '🧘 WIS', val: stats.wisdom, color: '#8B5CF6' },
-    { label: '❤️ VIT', val: stats.vitality, color: '#22C55E' },
-    { label: '💰 GOLD', val: stats.gold, color: '#F59E0B' },
-    { label: '🗣️ CHA', val: stats.charisma, color: '#EC4899' },
+    { label: 'STR', val: stats.strength, color: '#EF4444' },
+    { label: 'INT', val: stats.intelligence, color: '#3B82F6' },
+    { label: 'WIS', val: stats.wisdom, color: '#8B5CF6' },
+    { label: 'VIT', val: stats.vitality, color: '#22C55E' },
+    { label: 'GOLD', val: stats.gold, color: '#F59E0B' },
+    { label: 'CHA', val: stats.charisma, color: '#EC4899' },
   ]
 
   return (
@@ -59,13 +59,14 @@ export function XPCard({
           color: '#5C5A7A',
           fontSize: 12,
           fontFamily: "'Oxanium', sans-serif",
+          letterSpacing: '0.05em',
         }}
       >
-        ⚔️ Life RPG OS
+        LIFE RPG OS
       </div>
 
       {/* Avatar */}
-      <div style={{ fontSize: 72, marginTop: 24 }}>{avatarEmoji || '⚔️'}</div>
+      <div style={{ fontSize: 64, marginTop: 24 }}>{avatarEmoji || '👑'}</div>
 
       {/* Name + Level */}
       <div
@@ -81,7 +82,7 @@ export function XPCard({
       </div>
       <div
         style={{
-          background: '#7C3AED',
+          background: 'linear-gradient(135deg, #7C3AED, #9F67FF)',
           color: 'white',
           padding: '4px 16px',
           borderRadius: 20,
@@ -89,6 +90,7 @@ export function XPCard({
           fontWeight: 700,
           marginTop: 8,
           fontFamily: "'Oxanium', sans-serif",
+          boxShadow: '0 0 15px rgba(124,58,237,0.4)',
         }}
       >
         Level {level}
@@ -98,13 +100,14 @@ export function XPCard({
       <div
         style={{
           color: '#F59E0B',
-          fontSize: 44,
+          fontSize: 40,
           fontWeight: 800,
           marginTop: 20,
           fontFamily: "'Oxanium', sans-serif",
+          textShadow: '0 0 20px rgba(245,158,11,0.3)',
         }}
       >
-        ⚡ {totalXp.toLocaleString()} XP
+        {totalXp.toLocaleString()} XP
       </div>
 
       {/* Stats */}
@@ -121,9 +124,10 @@ export function XPCard({
           <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span
               style={{
-                color: '#9B99B8',
+                color: item.color,
                 fontSize: 12,
-                width: 65,
+                fontWeight: 700,
+                width: 45,
                 fontFamily: "'Oxanium', sans-serif",
               }}
             >
@@ -172,7 +176,7 @@ export function XPCard({
           fontFamily: "'Oxanium', sans-serif",
         }}
       >
-        🔥 {streakDays} Day Streak
+        {streakDays} Day Streak 🔥
       </div>
 
       {/* Footer */}

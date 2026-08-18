@@ -1,21 +1,34 @@
-'use client'
-
-export const dynamic = 'force-dynamic'
-
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Trash2, BarChart2 } from 'lucide-react'
+import {
+  Send,
+  Trash2,
+  BarChart2,
+  Bot,
+  Target,
+  HelpCircle,
+  Trophy,
+  Zap,
+  Dumbbell,
+  Brain,
+  Wind,
+  Heart,
+  Coins,
+  Mic2,
+  Flame,
+  Swords,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import Sidebar from '@/components/layout/Sidebar'
 import WeeklyReportModal from '@/components/coach/WeeklyReportModal'
 import { useProfile } from '@/hooks/useProfile'
 
 const SUGGESTED_QUESTIONS = [
-  { text: 'What should I focus on this week?', icon: '🎯' },
-  { text: 'Why am I losing motivation?', icon: '💭' },
-  { text: 'Give me a 7-day boss battle challenge', icon: '🏆' },
-  { text: 'What stat am I neglecting?', icon: '📊' },
-  { text: 'How close am I to leveling up?', icon: '⚡' },
+  { text: 'What should I focus on this week?', Icon: Target },
+  { text: 'Why am I losing motivation?', Icon: HelpCircle },
+  { text: 'Give me a 7-day boss battle challenge', Icon: Trophy },
+  { text: 'What stat am I neglecting?', Icon: BarChart2 },
+  { text: 'How close am I to leveling up?', Icon: Zap },
 ]
 
 interface Message {
@@ -55,10 +68,10 @@ function ChatBubble({ message, isLatest }: ChatBubbleProps) {
     >
       {!isUser && (
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0 mt-1"
-          style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-1"
+          style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
         >
-          🤖
+          <Bot size={18} />
         </div>
       )}
       <div
@@ -86,7 +99,7 @@ export default function CoachPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Welcome, adventurer! 🤖⚔️\n\nI'm your AI Life Coach — I have full visibility into your stats, quests, and progress. Ask me anything: strategy, motivation, next steps, or why that one quest is still on your board after 3 days.\n\nWhat's on your mind?`,
+      content: `Welcome, adventurer!\n\nI'm your AI Life Coach — I have full visibility into your stats, quests, and progress. Ask me anything: strategy, motivation, next steps, or why that one quest is still on your board after 3 days.\n\nWhat's on your mind?`,
     },
   ])
   const [input, setInput] = useState('')
@@ -164,7 +177,7 @@ export default function CoachPage() {
         {
           role: 'assistant',
           content:
-            '⚠️ I seem to be offline right now. Make sure `GROQ_API_KEY` is set in `.env.local`.',
+            'I seem to be offline right now. Make sure `GROQ_API_KEY` is set in `.env.local`.',
         },
       ])
     } finally {
@@ -196,18 +209,18 @@ export default function CoachPage() {
   }
 
   const statEntries = [
-    { label: 'STR', icon: '💪', color: '#EF4444', val: stats?.str ?? 0 },
-    { label: 'INT', icon: '🧠', color: '#3B82F6', val: stats?.int ?? 0 },
-    { label: 'WIS', icon: '🧘', color: '#8B5CF6', val: stats?.wis ?? 0 },
-    { label: 'VIT', icon: '❤️', color: '#22C55E', val: stats?.vit ?? 0 },
-    { label: 'GOLD', icon: '💰', color: '#F59E0B', val: stats?.gold ?? 0 },
-    { label: 'CHA', icon: '🗣️', color: '#EC4899', val: stats?.cha ?? 0 },
+    { label: 'STR', Icon: Dumbbell, color: '#EF4444', val: stats?.str ?? 0 },
+    { label: 'INT', Icon: Brain,    color: '#3B82F6', val: stats?.int ?? 0 },
+    { label: 'WIS', Icon: Wind,     color: '#8B5CF6', val: stats?.wis ?? 0 },
+    { label: 'VIT', Icon: Heart,    color: '#22C55E', val: stats?.vit ?? 0 },
+    { label: 'GOLD', Icon: Coins,   color: '#F59E0B', val: stats?.gold ?? 0 },
+    { label: 'CHA', Icon: Mic2,     color: '#EC4899', val: stats?.cha ?? 0 },
   ]
 
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -224,8 +237,17 @@ export default function CoachPage() {
               className="rounded-2xl p-4"
               style={{ background: '#13131F', border: '1px solid #1E1E35' }}
             >
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl">{profile?.avatar_emoji ?? '⚔️'}</span>
+              <div className="flex items-center gap-3 mb-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+                >
+                  {profile?.avatar_emoji ? (
+                    <span className="text-xl">{profile.avatar_emoji}</span>
+                  ) : (
+                    <Swords size={20} style={{ color: '#9F67FF' }} />
+                  )}
+                </div>
                 <div>
                   <div
                     className="font-bold text-sm"
@@ -233,8 +255,10 @@ export default function CoachPage() {
                   >
                     {profile?.display_name}
                   </div>
-                  <div className="text-xs" style={{ color: '#F59E0B' }}>
-                    Level {profile?.level} · {profile?.streak ?? 0}🔥 streak
+                  <div className="text-xs flex items-center gap-1.5" style={{ color: '#F59E0B' }}>
+                    <span>Level {profile?.level}</span>
+                    <span>·</span>
+                    <span className="flex items-center gap-0.5"><Flame size={12} /> {profile?.streak ?? 0}d streak</span>
                   </div>
                 </div>
               </div>
@@ -245,7 +269,9 @@ export default function CoachPage() {
                     className="rounded-lg p-2 text-center"
                     style={{ background: '#0F0F1A' }}
                   >
-                    <div className="text-base">{s.icon}</div>
+                    <div className="w-5 h-5 mx-auto mb-1 flex items-center justify-center" style={{ color: s.color }}>
+                      <s.Icon size={14} />
+                    </div>
                     <div
                       className="text-sm font-bold"
                       style={{ fontFamily: 'Oxanium, sans-serif', color: s.color }}
@@ -275,7 +301,7 @@ export default function CoachPage() {
                   key={q.text}
                   onClick={() => sendMessage(q.text)}
                   disabled={isStreaming}
-                  className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 flex items-start gap-2"
+                  className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 flex items-start gap-2.5"
                   style={{
                     background: '#13131F',
                     color: '#9B99B8',
@@ -290,7 +316,9 @@ export default function CoachPage() {
                     e.currentTarget.style.color = '#9B99B8'
                   }}
                 >
-                  <span className="flex-shrink-0">{q.icon}</span>
+                  <div className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#7C3AED' }}>
+                    <q.Icon size={14} />
+                  </div>
                   <span>{q.text}</span>
                 </button>
               ))}
@@ -303,7 +331,7 @@ export default function CoachPage() {
               setMessages([
                 {
                   role: 'assistant',
-                  content: 'Conversation cleared. Ready for a fresh battle plan! ⚔️',
+                  content: 'Conversation cleared. Ready for a fresh battle plan!',
                 },
               ])
             }
@@ -332,10 +360,10 @@ export default function CoachPage() {
           >
             <div className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-                style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
               >
-                🤖
+                <Bot size={20} />
               </div>
               <div>
                 <h1

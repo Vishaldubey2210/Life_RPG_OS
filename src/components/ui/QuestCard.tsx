@@ -1,7 +1,6 @@
-'use client'
-
+import React from 'react'
 import { motion } from 'framer-motion'
-import { Check } from 'lucide-react'
+import { Check, Zap, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Sparkles, LucideIcon } from 'lucide-react'
 import DifficultyBadge from './DifficultyBadge'
 
 export interface Habit {
@@ -20,16 +19,20 @@ interface QuestCardProps {
   onComplete: (habitId: string) => void
 }
 
-const STAT_ICONS: Record<string, string> = {
-  str: '💪',
-  int: '🧠',
-  wis: '🧘',
-  vit: '❤️',
-  gold: '💰',
-  cha: '🗣️',
+const STAT_ICON_MAP: Record<string, { icon: LucideIcon; color: string }> = {
+  str:  { icon: Dumbbell, color: '#EF4444' },
+  int:  { icon: Brain,    color: '#3B82F6' },
+  wis:  { icon: Wind,     color: '#8B5CF6' },
+  vit:  { icon: Heart,    color: '#22C55E' },
+  gold: { icon: Coins,    color: '#F59E0B' },
+  cha:  { icon: Mic2,     color: '#EC4899' },
 }
 
 export default function QuestCard({ habit, isCompleted, onComplete }: QuestCardProps) {
+  const statInfo = STAT_ICON_MAP[habit.stat_category]
+  const IconComp = statInfo?.icon ?? Sparkles
+  const statColor = statInfo?.color ?? '#9B99B8'
+
   return (
     <motion.div
       layout
@@ -44,8 +47,17 @@ export default function QuestCard({ habit, isCompleted, onComplete }: QuestCardP
         border: isCompleted ? '1px solid #22C55E44' : '1px solid #1E1E35',
       }}
     >
-      {/* Emoji */}
-      <div className="text-2xl flex-shrink-0">{habit.emoji}</div>
+      {/* Icon / Emoji */}
+      <div
+        className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+        style={{
+          background: `${statColor}18`,
+          border: `1px solid ${statColor}33`,
+          color: statColor,
+        }}
+      >
+        {habit.emoji ? habit.emoji : <IconComp size={18} />}
+      </div>
 
       {/* Details */}
       <div className="flex-1 min-w-0">
@@ -60,11 +72,11 @@ export default function QuestCard({ habit, isCompleted, onComplete }: QuestCardP
         </div>
         <div className="flex items-center gap-2 mt-1 flex-wrap">
           <DifficultyBadge difficulty={habit.difficulty} />
-          <span className="text-xs" style={{ color: '#7C3AED' }}>
-            ⚡ +{habit.xp_reward} XP
+          <span className="text-xs flex items-center gap-1 font-bold" style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
+            <Zap size={11} /> +{habit.xp_reward} XP
           </span>
-          <span className="text-xs" style={{ color: '#5C5A7A' }}>
-            {STAT_ICONS[habit.stat_category] ?? '⭐'} {habit.stat_category.toUpperCase()}
+          <span className="text-xs flex items-center gap-1" style={{ color: '#5C5A7A' }}>
+            <IconComp size={11} style={{ color: statColor }} /> {habit.stat_category.toUpperCase()}
           </span>
         </div>
       </div>

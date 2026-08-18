@@ -1,6 +1,5 @@
-'use client'
-
 import { useState } from 'react'
+import { Share2, Loader2 } from 'lucide-react'
 
 export function ShareButton({ username }: { username: string }) {
   const [loading, setLoading] = useState(false)
@@ -16,7 +15,7 @@ export function ShareButton({ username }: { username: string }) {
       if (navigator.share && navigator.canShare({ files: [file] })) {
         await navigator.share({
           title: 'My Life RPG OS Progress',
-          text: "I'm leveling up my life on Life RPG OS! Join me ⚔️",
+          text: "I'm leveling up my life on Life RPG OS! Join me!",
           files: [file],
           url: window.location.origin,
         })
@@ -54,7 +53,8 @@ export function ShareButton({ username }: { username: string }) {
         gap: 8,
       }}
     >
-      📤 {loading ? 'Preparing Card...' : 'Share Progress'}
+      {loading ? <Loader2 size={16} className="animate-spin" /> : <Share2 size={16} />}
+      <span>{loading ? 'Preparing Card...' : 'Share Progress'}</span>
     </button>
   )
 }

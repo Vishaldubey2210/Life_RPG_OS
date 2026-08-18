@@ -2,7 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bell, X, Check } from 'lucide-react'
+import {
+  Bell,
+  X,
+  Check,
+  Users,
+  Heart,
+  Castle,
+  Target,
+  Flame,
+  Zap,
+  Trophy,
+  BarChart2,
+} from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 interface Notification {
@@ -26,17 +38,32 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`
 }
 
-function notifIcon(type: string): string {
+function notifIcon(type: string): React.ReactNode {
+  const props = { size: 16 }
   switch (type) {
-    case 'party_invite': return '👥'
-    case 'couple_invite': return '💑'
-    case 'guild_invite': return '🏰'
-    case 'friend_completed': return '🎯'
-    case 'streak_cheer': return '🔥'
-    case 'level_up_congrats': return '⚡'
-    case 'achievement_earned': return '🏆'
-    case 'weekly_report': return '📊'
-    default: return '🔔'
+    case 'party_invite':        return <Users {...props} />
+    case 'couple_invite':       return <Heart {...props} />
+    case 'guild_invite':        return <Castle {...props} />
+    case 'friend_completed':    return <Target {...props} />
+    case 'streak_cheer':        return <Flame {...props} />
+    case 'level_up_congrats':   return <Zap {...props} />
+    case 'achievement_earned':  return <Trophy {...props} />
+    case 'weekly_report':       return <BarChart2 {...props} />
+    default:                    return <Bell {...props} />
+  }
+}
+
+function notifIconColor(type: string): string {
+  switch (type) {
+    case 'party_invite':        return '#3B82F6'
+    case 'couple_invite':       return '#EC4899'
+    case 'guild_invite':        return '#F59E0B'
+    case 'friend_completed':    return '#22C55E'
+    case 'streak_cheer':        return '#F97316'
+    case 'level_up_congrats':   return '#7C3AED'
+    case 'achievement_earned':  return '#F59E0B'
+    case 'weekly_report':       return '#3B82F6'
+    default:                    return '#9B99B8'
   }
 }
 
@@ -205,7 +232,12 @@ export default function NotificationBell() {
             <div className="max-h-80 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="py-12 text-center">
-                  <div className="text-3xl mb-2">🔔</div>
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                    style={{ background: '#1E1E35' }}
+                  >
+                    <Bell size={20} style={{ color: '#5C5A7A' }} />
+                  </div>
                   <div className="text-sm" style={{ color: '#5C5A7A' }}>No notifications yet</div>
                 </div>
               ) : (
@@ -225,8 +257,12 @@ export default function NotificationBell() {
                     onMouseLeave={(e) => (e.currentTarget.style.background = notif.is_read ? 'transparent' : '#7C3AED08')}
                   >
                     <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-base"
-                      style={{ background: '#1E1E35' }}
+                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{
+                        background: notifIconColor(notif.type) + '18',
+                        border: `1px solid ${notifIconColor(notif.type)}33`,
+                        color: notifIconColor(notif.type),
+                      }}
                     >
                       {notifIcon(notif.type)}
                     </div>

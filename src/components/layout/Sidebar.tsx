@@ -12,6 +12,8 @@ import {
   Bot,
   LogOut,
   Settings,
+  Swords,
+  UserCircle2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -42,7 +44,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
-  userAvatar = '⚔️',
+  userAvatar,
   userName = 'Adventurer',
   userLevel = 1,
   completedToday,
@@ -68,7 +70,12 @@ export default function Sidebar({
       {/* Logo */}
       <div className="px-6 py-6 border-b" style={{ borderColor: '#1E1E35' }}>
         <div className="flex items-center gap-3">
-          <span className="text-2xl">⚔️</span>
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg, #7C3AED, #F59E0B)', boxShadow: '0 0 12px #7C3AED55' }}
+          >
+            <Swords size={16} color="#fff" />
+          </div>
           <span
             className="text-lg font-bold"
             style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}
@@ -139,7 +146,16 @@ export default function Sidebar({
       {/* User section */}
       <div className="px-4 py-4 border-t" style={{ borderColor: '#1E1E35' }}>
         <div className="flex items-center gap-3 mb-3">
-          <div className="text-2xl">{userAvatar}</div>
+          <div
+            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+          >
+            {userAvatar ? (
+              <span className="text-xl leading-none">{userAvatar}</span>
+            ) : (
+              <UserCircle2 size={20} color="#9F67FF" />
+            )}
+          </div>
           <div className="flex-1 min-w-0">
             <div
               className="text-sm font-semibold truncate"

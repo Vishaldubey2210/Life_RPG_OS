@@ -4,7 +4,11 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, CheckCircle2, Pencil, Trash2, Loader2 } from 'lucide-react'
+import {
+  Plus, CheckCircle2, Pencil, Trash2, Loader2,
+  Dumbbell, Brain, Wind, Heart, Coins, Mic2,
+  AlertTriangle, PartyPopper, ClipboardList, Zap,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import Sidebar from '@/components/layout/Sidebar'
 import QuestModal, { QuestFormData } from '@/components/quests/QuestModal'
@@ -12,13 +16,13 @@ import { useProfile } from '@/hooks/useProfile'
 import { useCompleteHabit } from '@/hooks/useCompleteHabit'
 import { createClient } from '@/lib/supabase/client'
 
-const CATEGORIES: Record<string, { label: string; icon: string; color: string }> = {
-  str:  { label: 'Strength',     icon: '💪', color: '#EF4444' },
-  int:  { label: 'Intelligence', icon: '🧠', color: '#3B82F6' },
-  wis:  { label: 'Wisdom',       icon: '🧘', color: '#8B5CF6' },
-  vit:  { label: 'Vitality',     icon: '❤️', color: '#22C55E' },
-  gold: { label: 'Wealth',       icon: '💰', color: '#F59E0B' },
-  cha:  { label: 'Charisma',     icon: '🗣️', color: '#EC4899' },
+const CATEGORIES: Record<string, { label: string; icon: React.ComponentType<{ size?: number }>; color: string }> = {
+  str:  { label: 'Strength',     icon: Dumbbell, color: '#EF4444' },
+  int:  { label: 'Intelligence', icon: Brain,    color: '#3B82F6' },
+  wis:  { label: 'Wisdom',       icon: Wind,     color: '#8B5CF6' },
+  vit:  { label: 'Vitality',     icon: Heart,    color: '#22C55E' },
+  gold: { label: 'Wealth',       icon: Coins,    color: '#F59E0B' },
+  cha:  { label: 'Charisma',     icon: Mic2,     color: '#EC4899' },
 }
 
 const DIFFICULTY_LABELS: Record<string, string> = {
@@ -64,7 +68,12 @@ function DeleteDialog({ isOpen, habitName, onCancel, onConfirm }: DeleteDialogPr
             className="w-full max-w-sm rounded-2xl p-6"
             style={{ background: '#13131F', border: '1px solid #EF444444' }}
           >
-            <div className="text-3xl mb-3">⚠️</div>
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
+              style={{ background: '#EF444415', border: '1px solid #EF444433' }}
+            >
+              <AlertTriangle size={22} style={{ color: '#EF4444' }} />
+            </div>
             <h3
               className="text-lg font-bold mb-2"
               style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
@@ -110,6 +119,7 @@ interface QuestCardProps {
 
 function QuestCard({ habit, isCompleted, onComplete, onEdit, onDelete }: QuestCardProps) {
   const cat = CATEGORIES[habit.stat_category] ?? CATEGORIES.str
+  const CatIcon = cat.icon
   const diffColor = DIFFICULTY_COLORS[habit.difficulty] ?? '#9B99B8'
   const diffLabel = DIFFICULTY_LABELS[habit.difficulty] ?? habit.difficulty
 
@@ -129,19 +139,20 @@ function QuestCard({ habit, isCompleted, onComplete, onEdit, onDelete }: QuestCa
     >
       {/* Icon */}
       <div
-        className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-        style={{ background: `${cat.color}20`, border: `1px solid ${cat.color}44` }}
+        className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+        style={{ background: `${cat.color}20`, border: `1px solid ${cat.color}44`, color: cat.color }}
       >
-        {habit.emoji}
+        {habit.emoji ? habit.emoji : <CatIcon size={22} />}
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <h3
-          className="font-bold text-sm mb-0.5 truncate"
-          style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
+          className="font-bold text-sm mb-0.5 truncate flex items-center gap-1.5"
+          style={{ fontFamily: 'Oxanium, sans-serif', color: isCompleted ? '#22C55E' : '#F1F0FF' }}
         >
-          {isCompleted && '✅ '}{habit.name}
+          {isCompleted && <CheckCircle2 size={14} className="flex-shrink-0" style={{ color: '#22C55E' }} />}
+          <span className="truncate">{habit.name}</span>
         </h3>
         {habit.description && (
           <p className="text-xs mb-2 line-clamp-1" style={{ color: '#5C5A7A' }}>
@@ -156,16 +167,13 @@ function QuestCard({ habit, isCompleted, onComplete, onEdit, onDelete }: QuestCa
             {diffLabel}
           </span>
           <span
-            className="text-xs px-2 py-0.5 rounded-full"
+            className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
             style={{ background: `${cat.color}15`, color: cat.color }}
           >
-            {cat.icon} {cat.label}
+            <CatIcon size={11} /> {cat.label}
           </span>
-          <span
-            className="text-xs font-bold"
-            style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}
-          >
-            ⚡ {habit.xp_reward} XP
+          <span className="text-xs font-bold flex items-center gap-1" style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
+            <Zap size={11} /> {habit.xp_reward} XP
           </span>
         </div>
       </div>
@@ -426,7 +434,12 @@ export default function QuestsPage() {
                     className="text-center py-16 rounded-2xl"
                     style={{ background: '#13131F', border: '1px solid #1E1E35' }}
                   >
-                    <div className="text-5xl mb-4">🎉</div>
+                    <div
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                      style={{ background: '#22C55E15', border: '1px solid #22C55E33' }}
+                    >
+                      <PartyPopper size={28} style={{ color: '#22C55E' }} />
+                    </div>
                     <h3
                       className="text-lg font-bold mb-2"
                       style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
@@ -446,10 +459,10 @@ export default function QuestsPage() {
                           {/* Category Header */}
                           <div className="flex items-center gap-3 mb-3">
                             <div
-                              className="w-8 h-8 rounded-lg flex items-center justify-center text-base"
-                              style={{ background: `${cat.color}20`, border: `1px solid ${cat.color}44` }}
+                              className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                              style={{ background: `${cat.color}20`, border: `1px solid ${cat.color}44`, color: cat.color }}
                             >
-                              {cat.icon}
+                              <cat.icon size={16} />
                             </div>
                             <h2
                               className="font-bold text-sm uppercase tracking-wider"
@@ -496,7 +509,12 @@ export default function QuestsPage() {
                     className="text-center py-16 rounded-2xl"
                     style={{ background: '#13131F', border: '1px solid #1E1E35' }}
                   >
-                    <div className="text-5xl mb-4">📋</div>
+                    <div
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                      style={{ background: '#1E1E35' }}
+                    >
+                      <ClipboardList size={28} style={{ color: '#5C5A7A' }} />
+                    </div>
                     <h3
                       className="text-lg font-bold mb-2"
                       style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
@@ -524,10 +542,11 @@ export default function QuestsPage() {
                           XP Earned Today
                         </div>
                         <div
-                          className="text-3xl font-bold"
+                          className="text-3xl font-bold flex items-center gap-2"
                           style={{ fontFamily: 'Oxanium, sans-serif', color: '#22C55E' }}
                         >
-                          ⚡ {completedHabits.reduce((s, h) => s + h.xp_reward, 0)} XP
+                          <Zap size={28} style={{ color: '#22C55E' }} />
+                          {completedHabits.reduce((s, h) => s + h.xp_reward, 0)} XP
                         </div>
                       </div>
                       <div className="text-center">

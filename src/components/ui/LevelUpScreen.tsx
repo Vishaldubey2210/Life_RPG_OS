@@ -1,7 +1,6 @@
-'use client'
-
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Zap, Swords, ArrowRight } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
 interface LevelUpScreenProps {
@@ -41,8 +40,8 @@ export default function LevelUpScreen({ isOpen, newLevel, onClose, statGains }: 
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
-          style={{ background: 'rgba(8,8,15,0.97)' }}
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-4"
+          style={{ background: 'rgba(8,8,15,0.97)', backdropFilter: 'blur(12px)' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -52,13 +51,17 @@ export default function LevelUpScreen({ isOpen, newLevel, onClose, statGains }: 
           <AnimatePresence>
             {phase === 'flash' && (
               <motion.div
-                className="text-8xl"
+                className="w-24 h-24 rounded-3xl flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #7C3AED, #F59E0B)',
+                  boxShadow: '0 0 50px #F59E0B88',
+                }}
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: 1.2, rotate: 0 }}
                 exit={{ scale: 0, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 12 }}
               >
-                ⚡
+                <Zap size={48} color="#fff" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -93,7 +96,14 @@ export default function LevelUpScreen({ isOpen, newLevel, onClose, statGains }: 
                 >
                   LEVEL UP!
                 </div>
-                <div className="text-6xl mb-4">⚡</div>
+                <div className="flex justify-center mb-4">
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                    style={{ background: '#F59E0B22', border: '1px solid #F59E0B44' }}
+                  >
+                    <Zap size={28} style={{ color: '#F59E0B' }} />
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -102,7 +112,7 @@ export default function LevelUpScreen({ isOpen, newLevel, onClose, statGains }: 
           <AnimatePresence>
             {(phase === 'card' || phase === 'done') && (
               <motion.div
-                className="mt-4 p-8 rounded-3xl border text-center max-w-sm mx-4"
+                className="mt-4 p-8 rounded-3xl border text-center max-w-sm mx-4 w-full"
                 style={{
                   background: '#13131F',
                   borderColor: '#F59E0B44',
@@ -149,7 +159,7 @@ export default function LevelUpScreen({ isOpen, newLevel, onClose, statGains }: 
                 )}
 
                 <motion.button
-                  className="w-full py-3 rounded-xl font-bold text-sm"
+                  className="w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
                   style={{
                     background: 'linear-gradient(135deg, #7C3AED, #F59E0B)',
                     color: '#fff',
@@ -159,7 +169,7 @@ export default function LevelUpScreen({ isOpen, newLevel, onClose, statGains }: 
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  Continue Adventure ⚔️
+                  Continue Adventure <ArrowRight size={16} />
                 </motion.button>
               </motion.div>
             )}

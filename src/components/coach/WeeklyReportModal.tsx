@@ -1,8 +1,19 @@
-'use client'
-
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Copy, CheckCheck, Loader2 } from 'lucide-react'
-import { useState } from 'react'
+import {
+  X,
+  Copy,
+  CheckCheck,
+  Loader2,
+  Swords,
+  BarChart2,
+  Trophy,
+  AlertTriangle,
+  Target,
+  MessageSquare,
+  FileText,
+  Sparkles,
+} from 'lucide-react'
 import { toast } from 'sonner'
 
 interface WeeklyReportModalProps {
@@ -12,26 +23,25 @@ interface WeeklyReportModalProps {
   onClose: () => void
 }
 
-const SECTION_ICONS: Record<string, { icon: string; color: string }> = {
-  'BATTLE SUMMARY': { icon: '⚔️', color: '#7C3AED' },
-  'STAT CHANGES':   { icon: '📊', color: '#3B82F6' },
-  'WINS':           { icon: '🏆', color: '#F59E0B' },
-  'WEAK POINTS':    { icon: '⚠️', color: '#EF4444' },
-  'NEXT WEEK MISSION': { icon: '🎯', color: '#22C55E' },
-  "COACH'S MESSAGE": { icon: '💬', color: '#EC4899' },
+const SECTION_ICONS: Record<string, { icon: React.ComponentType<{ size?: number }>; color: string }> = {
+  'BATTLE SUMMARY':    { icon: Swords,        color: '#7C3AED' },
+  'STAT CHANGES':      { icon: BarChart2,     color: '#3B82F6' },
+  'WINS':              { icon: Trophy,        color: '#F59E0B' },
+  'WEAK POINTS':       { icon: AlertTriangle, color: '#EF4444' },
+  'NEXT WEEK MISSION': { icon: Target,        color: '#22C55E' },
+  "COACH'S MESSAGE":   { icon: MessageSquare, color: '#EC4899' },
 }
 
 function parseReport(text: string) {
   if (!text) return []
 
   const lines = text.split('\n')
-  const sections: Array<{ title: string; content: string; icon: string; color: string }> = []
+  const sections: Array<{ title: string; content: string; Icon: React.ComponentType<{ size?: number }>; color: string }> = []
   let currentTitle = ''
   let currentContent: string[] = []
 
   for (const line of lines) {
     const trimmed = line.trim()
-    // Match lines like "1. ⚔️ BATTLE SUMMARY — ..." or "⚔️ BATTLE SUMMARY"
     const sectionMatch = trimmed.match(/^(\d+\.\s+)?[^a-z]*([A-Z][A-Z\s']+[A-Z])\s*(—.*)?$/)
     const matchedKey = sectionMatch
       ? Object.keys(SECTION_ICONS).find((k) => sectionMatch[2]?.includes(k))
@@ -39,11 +49,11 @@ function parseReport(text: string) {
 
     if (matchedKey) {
       if (currentTitle) {
-        const meta = SECTION_ICONS[currentTitle] ?? { icon: '📌', color: '#7C3AED' }
+        const meta = SECTION_ICONS[currentTitle] ?? { icon: FileText, color: '#7C3AED' }
         sections.push({
           title: currentTitle,
           content: currentContent.join('\n').trim(),
-          icon: meta.icon,
+          Icon: meta.icon,
           color: meta.color,
         })
       }
@@ -55,11 +65,11 @@ function parseReport(text: string) {
   }
 
   if (currentTitle) {
-    const meta = SECTION_ICONS[currentTitle] ?? { icon: '📌', color: '#7C3AED' }
+    const meta = SECTION_ICONS[currentTitle] ?? { icon: FileText, color: '#7C3AED' }
     sections.push({
       title: currentTitle,
       content: currentContent.join('\n').trim(),
-      icon: meta.icon,
+      Icon: meta.icon,
       color: meta.color,
     })
   }
@@ -102,7 +112,12 @@ export default function WeeklyReportModal({
               style={{ borderColor: '#1E1E35' }}
             >
               <div className="flex items-center gap-3">
-                <span className="text-2xl">📜</span>
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+                >
+                  <FileText size={20} style={{ color: '#9F67FF' }} />
+                </div>
                 <div>
                   <h2
                     className="text-xl font-bold"
@@ -159,8 +174,13 @@ export default function WeeklyReportModal({
                         borderLeft: `3px solid ${section.color}`,
                       }}
                     >
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xl">{section.icon}</span>
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <div
+                          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ background: `${section.color}20`, color: section.color }}
+                        >
+                          <section.Icon size={15} />
+                        </div>
                         <h3
                           className="font-bold text-sm uppercase tracking-wider"
                           style={{ fontFamily: 'Oxanium, sans-serif', color: section.color }}
@@ -179,7 +199,12 @@ export default function WeeklyReportModal({
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <div className="text-4xl mb-3">📜</div>
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                    style={{ background: '#1E1E35' }}
+                  >
+                    <FileText size={24} style={{ color: '#5C5A7A' }} />
+                  </div>
                   <p style={{ color: '#5C5A7A' }}>No report generated yet.</p>
                 </div>
               )}
