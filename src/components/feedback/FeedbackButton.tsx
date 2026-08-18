@@ -16,7 +16,6 @@ const feedbackMeta: Record<FeedbackType, { label: string; placeholder: string; i
 
 export function FeedbackButton() {
   const [open, setOpen] = useState(false)
-  const [visible, setVisible] = useState(false)
   const [type, setType] = useState<FeedbackType>('feedback')
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
@@ -53,11 +52,10 @@ export function FeedbackButton() {
     try {
       const { error } = await supabase.from('feedback').insert({
         user_id: user.id,
-        type,
+        feedback_type: type,
         title: title.trim(),
-        body: body.trim() || null,
+        body: body.trim() || 'No additional details provided.',
         status: 'open',
-        priority: 'medium',
       })
 
       if (error) throw error
@@ -82,7 +80,6 @@ export function FeedbackButton() {
         type="button"
         onClick={() => {
           setOpen(true)
-          setVisible(true)
         }}
         className="fixed bottom-24 right-4 z-40 flex items-center gap-2 rounded-full bg-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-900/40 md:bottom-6"
       >

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
 import { Check, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 const AVATARS = ['⚔️', '🧙', '🏹', '🛡️', '🔮', '🦅', '🐉', '👑', '🌟', '🔥', '💎', '🌙']
 
@@ -125,10 +126,10 @@ export default function OnboardingPage() {
     setLoading(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.push('/login'); return }
+      if (!user) { router.replace('/login'); return }
 
       // Upsert profile
-      await supabase.from('profiles').upsert({
+      const { error: profileError } = await supabase.from('profiles').upsert({
         id: user.id,
         display_name: displayName || 'Adventurer',
         avatar_emoji: selectedAvatar,
@@ -140,10 +141,14 @@ export default function OnboardingPage() {
         xp_to_next: 100,
         streak: 0,
       })
+      if (profileError) throw profileError
+
+      const { error: statsError } = await supabase.from('stats').upsert({ user_id: user.id })
+      if (statsError) throw statsError
 
       // Insert habits
       if (selectedHabits.length > 0) {
-        await supabase.from('habits').insert(
+        const { error: habitsError } = await supabase.from('habits').insert(
           selectedHabits.map((h) => ({
             user_id: user.id,
             name: h.name,
@@ -154,11 +159,14 @@ export default function OnboardingPage() {
             is_active: true,
           }))
         )
+        if (habitsError) throw habitsError
       }
 
-      router.push('/dashboard')
-    } catch (err) {
+      router.replace('/dashboard')
+      router.refresh()
+    } catch (err: unknown) {
       console.error(err)
+      toast.error(err instanceof Error ? err.message : 'Could not save your character. Please try again.')
     } finally {
       setLoading(false)
     }

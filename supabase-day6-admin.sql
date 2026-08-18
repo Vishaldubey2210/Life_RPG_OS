@@ -137,6 +137,12 @@ create policy "Admins can update feedback"
   on public.feedback for update
   using (auth.uid() in (select id from public.profiles where is_admin = true));
 
+-- The feedback widget uses these friendlier product categories. Keep the
+-- previous values too, so existing feedback remains valid after this upgrade.
+alter table public.feedback drop constraint if exists feedback_feedback_type_check;
+alter table public.feedback add constraint feedback_feedback_type_check
+  check (feedback_type in ('bug', 'feature', 'feedback', 'praise', 'feature_request', 'general', 'complaint'));
+
 
 -- 7. Notifications Table
 create table if not exists public.notifications (

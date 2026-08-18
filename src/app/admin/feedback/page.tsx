@@ -60,6 +60,9 @@ export default function AdminFeedbackPage() {
   const statusOptions = ['open', 'reviewing', 'acknowledged', 'closed']
   const typeColorMap = {
     bug: 'bg-red-500/15 text-red-300',
+    feature: 'bg-blue-500/15 text-blue-300',
+    feedback: 'bg-slate-500/15 text-slate-300',
+    praise: 'bg-emerald-500/15 text-emerald-300',
     feature_request: 'bg-blue-500/15 text-blue-300',
     general: 'bg-slate-500/15 text-slate-300',
     complaint: 'bg-amber-500/15 text-amber-300',

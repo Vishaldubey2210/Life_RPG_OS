@@ -10,6 +10,19 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 type Mode = 'login' | 'signup'
 
+function friendlyAuthError(error: unknown) {
+  const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.'
+  const normalized = message.toLowerCase()
+  if (normalized.includes('invalid login credentials')) return 'Email or password is incorrect.'
+  if (normalized.includes('email not confirmed')) return 'Please confirm your email first, then sign in.'
+  if (normalized.includes('already registered')) return 'An account with this email already exists. Try signing in instead.'
+  if (normalized.includes('password should be')) return 'Password must be at least 6 characters long.'
+  if (normalized.includes('failed to fetch') || normalized.includes('networkerror')) {
+    return 'Cannot reach Supabase. Check NEXT_PUBLIC_SUPABASE_URL in .env.local and confirm the Supabase project is active.'
+  }
+  return message
+}
+
 export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
@@ -24,32 +37,44 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
+    setNotice(null)
     setLoading(true)
 
     try {
+      const appOrigin = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, '')
+
       if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
+        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
         if (error) throw error
-        router.push('/dashboard')
+        router.replace('/dashboard')
+        router.refresh()
       } else {
         if (password !== confirmPassword) {
           throw new Error('Passwords do not match')
         }
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: email.trim(),
           password,
           options: {
             data: { display_name: displayName },
+            emailRedirectTo: `${appOrigin}/auth/callback`,
           },
         })
         if (error) throw error
 
+        // With Confirm email enabled Supabase intentionally returns no session.
+        // Redirecting to a protected page here causes a confusing login loop.
+        if (!data.session) {
+          setNotice('Account created. Check your inbox to confirm your email, then sign in.')
+          return
+        }
+
         if (data.user) {
-          // Check onboarding status
           const { data: profile } = await supabase
             .from('profiles')
             .select('onboarding_completed')
@@ -57,14 +82,15 @@ export default function LoginPage() {
             .single()
 
           if (profile?.onboarding_completed) {
-            router.push('/dashboard')
+            router.replace('/dashboard')
           } else {
-            router.push('/onboarding')
+            router.replace('/onboarding')
           }
+          router.refresh()
         }
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(friendlyAuthError(err))
     } finally {
       setLoading(false)
     }
@@ -73,16 +99,22 @@ export default function LoginPage() {
   async function handleGoogle() {
     setGoogleLoading(true)
     setError(null)
+    setNotice(null)
     try {
+      const appOrigin = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, '')
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${appOrigin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       })
       if (error) throw error
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Google sign-in failed')
+      setError(friendlyAuthError(err))
       setGoogleLoading(false)
     }
   }
@@ -274,6 +306,14 @@ export default function LoginPage() {
               )}
             </AnimatePresence>
 
+            <AnimatePresence>
+              {notice && (
+                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm text-emerald-200">
+                  {notice}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <button
               id="submit-btn"
               type="submit"
@@ -308,6 +348,7 @@ export default function LoginPage() {
           {/* Google OAuth */}
           <button
             id="google-btn"
+            type="button"
             onClick={handleGoogle}
             disabled={googleLoading}
             className="w-full py-3 rounded-lg font-medium text-sm transition-all duration-200 flex items-center justify-center gap-3"

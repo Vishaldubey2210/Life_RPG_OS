@@ -18,9 +18,9 @@ export async function logError(
       error_type: context.errorType || error.name,
       error_message: error.message,
       stack_trace: error.stack || null,
-      page_url: context.pageUrl || (typeof window !== 'undefined' ? window.location.href : null),
+      url: context.pageUrl || (typeof window !== 'undefined' ? window.location.href : null),
       user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-      metadata: context.metadata || {},
+      severity: context.errorType === 'uncaught' ? 'critical' : 'error',
     }
 
     await supabase.from('error_logs').insert(payload)
