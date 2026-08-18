@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 
 export interface NewAchievement {
@@ -30,24 +30,26 @@ interface UseCompleteHabitReturn {
 
 export function useCompleteHabit(): UseCompleteHabitReturn {
   const supabase = createClient()
-  const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<CompleteHabitResult | null>(null)
+  const queryClient = useQueryClient()
 
-  const completeHabit = useCallback(async (habitId: string): Promise<CompleteHabitResult | null> => {
-    setLoading(true)
-    try {
+  const mutation = useMutation({
+    mutationFn: async ({ habitId }: { habitId: string }): Promise<CompleteHabitResult | null> => {
+      if (!supabase) return null
+
       const { data, error } = await supabase.rpc('complete_habit', { p_habit_id: habitId })
       if (error) throw error
-      const res = data as CompleteHabitResult
-      setResult(res)
-      return res
-    } catch (err) {
-      console.error('Failed to complete habit:', err)
-      return null
-    } finally {
-      setLoading(false)
-    }
-  }, [supabase])
+      return data as CompleteHabitResult
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
+      queryClient.invalidateQueries({ queryKey: ['habits'] })
+      queryClient.invalidateQueries({ queryKey: ['completions'] })
+    },
+  })
 
-  return { completeHabit, loading, result }
+  return {
+    completeHabit: async (habitId: string) => mutation.mutateAsync({ habitId }),
+    loading: mutation.isPending,
+    result: mutation.data ?? null,
+  }
 }

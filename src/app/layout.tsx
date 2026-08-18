@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { Toaster } from 'sonner'
+import { AppShell } from '@/components/AppShell'
+import { AnnouncementBanner } from '@/components/ui/AnnouncementBanner'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -33,18 +34,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full flex flex-col antialiased" style={{ background: '#08080F', color: '#F1F0FF' }}>
-        {children}
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              background: '#13131F',
-              border: '1px solid #2E2E50',
-              color: '#F1F0FF',
-              fontFamily: 'Inter, sans-serif',
-            },
-          }}
-        />
+        <AnnouncementBanner />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   )

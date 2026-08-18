@@ -3,6 +3,14 @@
     {
       "path": "/api/cron/daily-reminder",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/cron/daily-metrics",
+      "schedule": "0 23 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-snapshot",
+      "schedule": "0 0 * * 1"
     }
   ]
 }

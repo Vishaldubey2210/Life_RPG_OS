@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 
 export interface Profile {
@@ -36,12 +36,6 @@ export interface Habit {
   is_active: boolean
 }
 
-export interface HabitCompletion {
-  id: string
-  habit_id: string
-  completed_at: string
-}
-
 interface UseProfileReturn {
   profile: Profile | null
   stats: Stats | null
@@ -56,17 +50,15 @@ const today = () => new Date().toISOString().split('T')[0]
 
 export function useProfile(): UseProfileReturn {
   const supabase = createClient()
-  const [profile, setProfile] = useState<Profile | null>(null)
-  const [stats, setStats] = useState<Stats | null>(null)
-  const [habits, setHabits] = useState<Habit[]>([])
-  const [completionsToday, setCompletionsToday] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
-  const fetchAll = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
+  const query = useQuery({
+    queryKey: ['profile'],
+    enabled: !!supabase,
+    queryFn: async () => {
+      if (!supabase) {
+        return { profile: null, stats: null, habits: [], completions_today: [] }
+      }
+
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
@@ -82,32 +74,22 @@ export function useProfile(): UseProfileReturn {
           .lt('completed_at', today() + 'T23:59:59'),
       ])
 
-      if (profileRes.data) setProfile(profileRes.data)
-      if (statsRes.data) setStats(statsRes.data)
-      if (habitsRes.data) setHabits(habitsRes.data)
-      if (completionsRes.data) {
-        setCompletionsToday(completionsRes.data.map((c: { habit_id: string }) => c.habit_id))
+      return {
+        profile: profileRes.data,
+        stats: statsRes.data,
+        habits: habitsRes.data ?? [],
+        completions_today: completionsRes.data?.map((c: { habit_id: string }) => c.habit_id) ?? [],
       }
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to load profile')
-    } finally {
-      setLoading(false)
-    }
-  }, [supabase])
-
-  useEffect(() => {
-    Promise.resolve().then(() => {
-      fetchAll()
-    })
-  }, [fetchAll])
+    },
+  })
 
   return {
-    profile,
-    stats,
-    habits,
-    completions_today: completionsToday,
-    loading,
-    error,
-    refetch: fetchAll,
+    profile: query.data?.profile ?? null,
+    stats: query.data?.stats ?? null,
+    habits: query.data?.habits ?? [],
+    completions_today: query.data?.completions_today ?? [],
+    loading: query.isLoading,
+    error: query.error instanceof Error ? query.error.message : null,
+    refetch: () => { void query.refetch() },
   }
 }
