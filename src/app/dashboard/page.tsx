@@ -35,6 +35,8 @@ import HPBar from '@/components/ui/HPBar'
 import StreakDisplay from '@/components/ui/StreakDisplay'
 import PerfectDayBanner from '@/components/ui/PerfectDayBanner'
 import AchievementUnlockModal, { NewAchievement } from '@/components/achievements/AchievementUnlockModal'
+import { DailyCheckinCard } from '@/components/dashboard/DailyCheckinCard'
+import { WeeklyChallengeCard } from '@/components/dashboard/WeeklyChallengeCard'
 import { useProfile } from '@/hooks/useProfile'
 import { useCompleteHabit } from '@/hooks/useCompleteHabit'
 import { createClient } from '@/lib/supabase/client'
@@ -289,6 +291,14 @@ export default function DashboardPage() {
               </h1>
               <p style={{ color: '#5C5A7A' }}>{dateStr}</p>
             </div>
+
+            {/* Daily Check-in + Weekly Challenge */}
+            {profile?.id && (
+              <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <DailyCheckinCard userId={profile.id} />
+                <WeeklyChallengeCard userId={profile.id} />
+              </div>
+            )}
 
             {/* Quick Stats row */}
             <motion.div
