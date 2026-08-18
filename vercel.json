@@ -11,6 +11,22 @@
     {
       "path": "/api/cron/weekly-snapshot",
       "schedule": "0 0 * * 1"
+    },
+    {
+      "path": "/api/cron/coach-nudge-morning",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/coach-nudge-evening",
+      "schedule": "0 20 * * *"
+    },
+    {
+      "path": "/api/cron/email-sequences",
+      "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/shadow-snapshot",
+      "schedule": "0 0 * * 0"
     }
   ]
 }

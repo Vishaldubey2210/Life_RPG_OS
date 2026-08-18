@@ -14,6 +14,11 @@ import {
   Settings,
   Swords,
   UserCircle2,
+  BookOpen,
+  Timer,
+  LayoutGrid,
+  Copy,
+  Skull,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -24,15 +29,20 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { href: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/quests',       icon: Zap,             label: 'Quests' },
-  { href: '/skills',       icon: TreePine,        label: 'Skill Tree' },
-  { href: '/coach',        icon: Bot,             label: 'AI Coach' },
-  { href: '/party',        icon: Users,           label: 'Party' },
-  { href: '/leaderboard',  icon: Trophy,          label: 'Leaderboard' },
-  { href: '/analytics',    icon: BarChart2,       label: 'Analytics' },
-  { href: '/achievements', icon: Trophy,          label: 'Achievements' },
-  { href: '/settings',     icon: Settings,        label: 'Settings' },
+  { href: '/dashboard',      icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/quests',         icon: Zap,             label: 'Quests' },
+  { href: '/journal',        icon: BookOpen,        label: 'Journal' },
+  { href: '/focus',          icon: Timer,           label: 'Focus Mode' },
+  { href: '/skills',         icon: TreePine,        label: 'Skill Tree' },
+  { href: '/coach',          icon: Bot,             label: 'AI Coach' },
+  { href: '/party',          icon: Users,           label: 'Party' },
+  { href: '/party/boss',     icon: Skull,           label: 'Boss Battle' },
+  { href: '/shadow',         icon: Copy,            label: 'Shadow Clone' },
+  { href: '/templates',      icon: LayoutGrid,      label: 'Templates' },
+  { href: '/leaderboard',    icon: Trophy,          label: 'Leaderboard' },
+  { href: '/analytics',      icon: BarChart2,       label: 'Analytics' },
+  { href: '/achievements',   icon: Trophy,          label: 'Achievements' },
+  { href: '/settings',       icon: Settings,        label: 'Settings' },
 ]
 
 
