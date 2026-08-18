@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Loader2, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Zap } from 'lucide-react'
+import { X, Loader2, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Zap, Clock, Timer, Layers, Sparkles } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 const CATEGORIES = [
   { key: 'str',  label: 'Strength',     icon: Dumbbell, color: '#EF4444' },
@@ -27,6 +28,7 @@ const EMOJI_OPTIONS = [
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
 
 export interface QuestFormData {
+  id?: string
   name: string
   description: string
   stat_category: string
@@ -35,6 +37,10 @@ export interface QuestFormData {
   emoji: string
   frequency: 'daily' | 'weekly' | 'custom'
   custom_days: number[]
+  scheduled_time?: string
+  duration_minutes?: number
+  trigger_habit_id?: string
+  implementation_intention?: string
 }
 
 interface QuestModalProps {
@@ -59,7 +65,33 @@ export default function QuestModal({
   const [emoji, setEmoji] = useState('⚔️')
   const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('daily')
   const [customDays, setCustomDays] = useState<number[]>([])
+  const [scheduledTime, setScheduledTime] = useState('')
+  const [durationMinutes, setDurationMinutes] = useState(20)
+  const [triggerHabitId, setTriggerHabitId] = useState('')
+  const [implementationIntention, setImplementationIntention] = useState('')
+  const [otherHabits, setOtherHabits] = useState<Array<{ id: string; name: string }>>([])
   const [submitting, setSubmitting] = useState(false)
+  const supabase = createClient()
+
+  // Fetch other habits for Habit Stacking dropdown
+  useEffect(() => {
+    async function loadOtherHabits() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data } = await supabase
+        .from('habits')
+        .select('id, name')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+
+      if (data) {
+        setOtherHabits(data.filter((h: { id: string; name: string }) => h.id !== initialData?.id))
+      }
+    }
+    if (isOpen) {
+      loadOtherHabits()
+    }
+  }, [isOpen, initialData?.id, supabase])
 
   // Populate from initialData when editing
   useEffect(() => {
@@ -71,6 +103,10 @@ export default function QuestModal({
       setEmoji(initialData.emoji ?? '⚔️')
       setFrequency(initialData.frequency ?? 'daily')
       setCustomDays(initialData.custom_days ?? [])
+      setScheduledTime(initialData.scheduled_time ?? '')
+      setDurationMinutes(initialData.duration_minutes ?? 20)
+      setTriggerHabitId(initialData.trigger_habit_id ?? '')
+      setImplementationIntention(initialData.implementation_intention ?? '')
     }
   }, [initialData, isOpen])
 
@@ -80,6 +116,12 @@ export default function QuestModal({
     setCustomDays((prev) =>
       prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx]
     )
+  }
+
+  function generateIntentionTemplate() {
+    const habitName = name.trim() || 'this quest'
+    const timeStr = scheduledTime ? `at ${scheduledTime}` : 'in the morning'
+    setImplementationIntention(`When I finish my morning routine, I will ${habitName} ${timeStr} at my desk.`)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -96,6 +138,10 @@ export default function QuestModal({
         emoji: emoji || '📋',
         frequency,
         custom_days: customDays,
+        scheduled_time: scheduledTime || undefined,
+        duration_minutes: durationMinutes,
+        trigger_habit_id: triggerHabitId || undefined,
+        implementation_intention: implementationIntention || undefined,
       })
     } finally {
       setSubmitting(false)
@@ -111,7 +157,7 @@ export default function QuestModal({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.93, opacity: 0, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="w-full max-w-lg max-h-[90vh] flex flex-col rounded-2xl overflow-hidden"
+            className="w-full max-w-lg max-h-[90vh] flex flex-col rounded-2xl overflow-hidden shadow-2xl"
             style={{ background: '#13131F', border: '1px solid #7C3AED44' }}
           >
             {/* Header */}
@@ -120,23 +166,14 @@ export default function QuestModal({
               style={{ borderColor: '#1E1E35' }}
             >
               <h3
-                className="text-xl font-bold"
-                style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
+                className="text-xl font-bold font-display"
+                style={{ color: '#F1F0FF' }}
               >
-                {editMode ? '✏️ Edit Quest' : '⚔️ New Quest'}
+                {editMode ? 'Edit Quest' : 'New Quest'}
               </h3>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg transition-colors"
-                style={{ color: '#5C5A7A' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#1E1E35'
-                  e.currentTarget.style.color = '#F1F0FF'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#5C5A7A'
-                }}
+                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors"
               >
                 <X size={20} />
               </button>
@@ -149,7 +186,7 @@ export default function QuestModal({
             >
               {/* Quest Name */}
               <div>
-                <label className="block text-sm mb-1.5 font-medium" style={{ color: '#9B99B8' }}>
+                <label className="block text-sm mb-1.5 font-medium text-slate-300">
                   Quest Name *
                 </label>
                 <input
@@ -158,41 +195,13 @@ export default function QuestModal({
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="e.g. Morning Workout, Read 20 Pages"
-                  className="w-full px-4 py-3 rounded-xl outline-none text-sm transition-colors"
-                  style={{
-                    background: '#0F0F1A',
-                    border: '1px solid #1E1E35',
-                    color: '#F1F0FF',
-                  }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = '#7C3AED')}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = '#1E1E35')}
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="block text-sm mb-1.5 font-medium" style={{ color: '#9B99B8' }}>
-                  Description <span style={{ color: '#5C5A7A' }}>(optional)</span>
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={2}
-                  placeholder="What does completing this look like?"
-                  className="w-full px-4 py-3 rounded-xl outline-none text-sm resize-none transition-colors"
-                  style={{
-                    background: '#0F0F1A',
-                    border: '1px solid #1E1E35',
-                    color: '#F1F0FF',
-                  }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = '#7C3AED')}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = '#1E1E35')}
+                  className="w-full px-4 py-3 rounded-xl outline-none text-sm bg-[#0F0F1A] border border-slate-800 text-white focus:border-purple-500 transition-colors"
                 />
               </div>
 
               {/* Category Picker */}
               <div>
-                <label className="block text-sm mb-2 font-medium" style={{ color: '#9B99B8' }}>
+                <label className="block text-sm mb-2 font-medium text-slate-300">
                   Category *
                 </label>
                 <div className="grid grid-cols-3 gap-2">
@@ -228,9 +237,9 @@ export default function QuestModal({
 
               {/* Difficulty Picker */}
               <div>
-                <label className="block text-sm mb-2 font-medium flex items-center gap-1.5" style={{ color: '#9B99B8' }}>
+                <label className="block text-sm mb-2 font-medium flex items-center gap-1.5 text-slate-300">
                   <span>Difficulty —</span>
-                  <span className="inline-flex items-center gap-1" style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
+                  <span className="inline-flex items-center gap-1 text-purple-400 font-display font-semibold">
                     <Zap size={12} /> {currentXP} XP reward
                   </span>
                 </label>
@@ -242,13 +251,12 @@ export default function QuestModal({
                         key={d.key}
                         type="button"
                         onClick={() => setDifficulty(d.key)}
-                        className="py-2.5 px-1 rounded-xl text-xs font-semibold transition-all duration-150 text-center"
+                        className="py-2.5 px-1 rounded-xl text-xs font-semibold transition-all duration-150 text-center font-display"
                         style={{
                           background: active ? '#7C3AED' : '#0F0F1A',
                           color: active ? '#F1F0FF' : '#9B99B8',
                           border: `1px solid ${active ? '#7C3AED' : '#1E1E35'}`,
                           boxShadow: active ? '0 0 12px #7C3AED44' : 'none',
-                          fontFamily: 'Oxanium, sans-serif',
                         }}
                       >
                         <div>{d.label}</div>
@@ -259,9 +267,101 @@ export default function QuestModal({
                 </div>
               </div>
 
+              {/* Scheduled Time & Duration (Phase 2A) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
+                      <Clock size={14} className="text-amber-400" />
+                      <span>Scheduled Time</span>
+                    </label>
+                  </div>
+                  <input
+                    type="time"
+                    value={scheduledTime}
+                    onChange={(e) => setScheduledTime(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl outline-none text-sm bg-[#0F0F1A] border border-slate-800 text-white focus:border-purple-500"
+                  />
+                  <p className="text-[11px] text-amber-400/80 mt-1">
+                    ⚡ Adding a time = 2x more likely to complete
+                  </p>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
+                      <Timer size={14} className="text-purple-400" />
+                      <span>Duration</span>
+                    </label>
+                    <span className="text-xs text-purple-400 font-bold font-display">~{durationMinutes} min</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={5}
+                    max={120}
+                    step={5}
+                    value={durationMinutes}
+                    onChange={(e) => setDurationMinutes(Number(e.target.value))}
+                    className="w-full accent-purple-500 bg-slate-800 h-2 rounded-lg cursor-pointer mt-2"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-500 mt-1">
+                    <span>5m</span>
+                    <span>30m</span>
+                    <span>60m</span>
+                    <span>120m</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Habit Stacking (Phase 2A) */}
+              {otherHabits.length > 0 && (
+                <div>
+                  <label className="block text-sm mb-1.5 font-medium text-slate-300 flex items-center gap-1.5">
+                    <Layers size={14} className="text-cyan-400" />
+                    <span>Habit Stacking (Trigger Habit)</span>
+                  </label>
+                  <select
+                    value={triggerHabitId}
+                    onChange={(e) => setTriggerHabitId(e.target.value)}
+                    className="w-full px-3 py-2.5 rounded-xl outline-none text-sm bg-[#0F0F1A] border border-slate-800 text-white focus:border-purple-500"
+                  >
+                    <option value="">No trigger (Standalone Quest)</option>
+                    {otherHabits.map((h) => (
+                      <option key={h.id} value={h.id}>
+                        Do this immediately AFTER: {h.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Implementation Intention (Phase 2A) */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-sm font-medium text-slate-300 flex items-center gap-1.5">
+                    <Sparkles size={14} className="text-pink-400" />
+                    <span>Implementation Intention</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={generateIntentionTemplate}
+                    className="text-[11px] text-purple-400 hover:text-purple-300 font-semibold"
+                  >
+                    Auto-Fill Template ✨
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  value={implementationIntention}
+                  onChange={(e) => setImplementationIntention(e.target.value)}
+                  placeholder="When [situation], I will [habit] at [time] in [location]"
+                  className="w-full px-3 py-2.5 rounded-xl outline-none text-sm bg-[#0F0F1A] border border-slate-800 text-white focus:border-purple-500"
+                />
+              </div>
+
               {/* Frequency */}
               <div>
-                <label className="block text-sm mb-2 font-medium" style={{ color: '#9B99B8' }}>
+                <label className="block text-sm mb-2 font-medium text-slate-300">
                   Frequency
                 </label>
                 <div className="flex gap-2 mb-3">
@@ -302,27 +402,18 @@ export default function QuestModal({
                 )}
               </div>
 
-              {/* Emoji Picker */}
+              {/* Description */}
               <div>
-                <label className="block text-sm mb-2 font-medium" style={{ color: '#9B99B8' }}>
-                  Quest Icon
+                <label className="block text-sm mb-1.5 font-medium text-slate-300">
+                  Notes / Details <span className="text-slate-500">(optional)</span>
                 </label>
-                <div className="grid grid-cols-10 gap-1.5 p-3 rounded-xl" style={{ background: '#0F0F1A', border: '1px solid #1E1E35' }}>
-                  {EMOJI_OPTIONS.map((e) => (
-                    <button
-                      key={e}
-                      type="button"
-                      onClick={() => setEmoji(e)}
-                      className="aspect-square rounded-lg flex items-center justify-center text-lg transition-all"
-                      style={{
-                        background: emoji === e ? '#7C3AED33' : 'transparent',
-                        border: `1px solid ${emoji === e ? '#7C3AED' : 'transparent'}`,
-                      }}
-                    >
-                      {e}
-                    </button>
-                  ))}
-                </div>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={2}
+                  placeholder="What does completing this look like?"
+                  className="w-full px-4 py-3 rounded-xl outline-none text-sm resize-none bg-[#0F0F1A] border border-slate-800 text-white focus:border-purple-500"
+                />
               </div>
             </form>
 
@@ -334,21 +425,14 @@ export default function QuestModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3 rounded-xl font-medium text-sm transition-colors"
-                style={{ background: '#1E1E35', color: '#9B99B8' }}
+                className="flex-1 py-3 rounded-xl font-medium text-sm text-slate-400 hover:text-white bg-slate-800/80 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="flex-1 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
-                style={{
-                  background: '#7C3AED',
-                  color: '#F1F0FF',
-                  boxShadow: '0 0 15px #7C3AED44',
-                  fontFamily: 'Oxanium, sans-serif',
-                }}
+                className="flex-1 py-3 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 font-display bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-900/40"
               >
                 {submitting ? (
                   <Loader2 size={16} className="animate-spin" />
