@@ -2,6 +2,7 @@ import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { COACH_SYSTEM_PROMPT, buildUserContext, CoachMemoryItem } from '@/lib/coach'
+import { logger } from '@/lib/logger'
 
 export async function POST(request: Request) {
   try {
@@ -142,7 +143,7 @@ export async function POST(request: Request) {
       headers: { 'Content-Type': 'text/event-stream' },
     })
   } catch (error) {
-    console.error('Coach API error:', error)
-    return NextResponse.json({ error: 'Coach unavailable' }, { status: 500 })
+    logger.error('Coach API execution failure', error)
+    return NextResponse.json({ error: 'AI Coach is temporarily resting. Please try again shortly.' }, { status: 500 })
   }
 }

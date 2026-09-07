@@ -1,6 +1,7 @@
 import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { logger, safeErrorResponse } from '@/lib/logger'
 
 interface ExtractedMemory {
   memory_type: 'pattern' | 'preference' | 'goal' | 'struggle' | 'milestone' | 'personality' | 'insight'
@@ -83,7 +84,7 @@ Max 3 high-value memories. If nothing noteworthy is found, return []
     try {
       memories = JSON.parse(cleaned)
     } catch (parseErr) {
-      console.error('Failed to parse memory JSON:', cleaned, parseErr)
+      logger.warn('Failed to parse memory extraction JSON', { rawOutput: cleaned, error: String(parseErr) })
       return NextResponse.json({ extracted: 0 })
     }
 
@@ -100,12 +101,14 @@ Max 3 high-value memories. If nothing noteworthy is found, return []
 
     const { error: insertError } = await supabase.from('coach_memory').insert(rowsToInsert)
     if (insertError) {
-      console.error('Error inserting coach memories:', insertError)
+      logger.error('Error saving extracted coach memories to database', insertError)
     }
 
     return NextResponse.json({ extracted: rowsToInsert.length, memories: rowsToInsert })
   } catch (error) {
-    console.error('Extract memory error:', error)
-    return NextResponse.json({ error: 'Failed to extract memory' }, { status: 500 })
+    return safeErrorResponse(error, {
+      context: 'Extract Memory API',
+      fallbackMessage: 'Failed to extract memories.',
+    })
   }
 }

@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import Groq from 'groq-sdk'
+import { logger } from '@/lib/logger'
 
 function createServiceClient() {
   return createClient(
@@ -74,7 +75,7 @@ Keep under 40 words total. RPG tone. No emojis in excess.`,
         })
         sentCount++
       } catch (err) {
-        console.error('Error sending morning nudge:', err)
+        logger.error('Error sending morning coach nudge', err, { userId: user.id })
       }
     }
   }

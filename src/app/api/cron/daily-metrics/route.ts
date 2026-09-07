@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { safeErrorResponse } from '@/lib/logger'
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization')
@@ -17,7 +18,9 @@ export async function GET(request: Request) {
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Daily metrics cron failed:', error)
-    return NextResponse.json({ error: 'Daily metrics failed' }, { status: 500 })
+    return safeErrorResponse(error, {
+      context: 'Daily Metrics Cron',
+      fallbackMessage: 'Daily metrics generation failed.',
+    })
   }
 }

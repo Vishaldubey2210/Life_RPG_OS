@@ -100,3 +100,33 @@ test('Rate limiter permits requests within budget and blocks overflow', () => {
   assert.equal(result.allowed, 30)
   assert.equal(result.blocked, 5)
 })
+
+// 5. Error Sanitization & Developer Log Shielding
+function formatSafeUserError(error, fallback = 'An unexpected error occurred. Please try again.') {
+  if (!error) return fallback
+  const rawMessage = error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+  const lower = rawMessage.toLowerCase()
+
+  if (lower.includes('rate limit')) return 'Too many requests. Please slow down and try again shortly.'
+  if (lower.includes('unauthorized') || lower.includes('unauthenticated') || lower.includes('jwt'))
+    return 'Your session has expired. Please sign in again.'
+  if (lower.includes('invalid credentials')) return 'Email or password is incorrect.'
+  if (lower.includes('not found')) return 'The requested resource could not be found.'
+  if (lower.includes('permission') || lower.includes('forbidden'))
+    return 'You do not have permission to perform this action.'
+
+  // Hide internal database errors, sql syntax, missing env keys, network socket crashes
+  return fallback
+}
+
+test('Error sanitizer shields internal technical errors from end-users', () => {
+  const dbError = new Error('pg_query_params(): syntax error at or near "SELECT" in column user_id')
+  const safeMessage = formatSafeUserError(dbError)
+  assert.equal(safeMessage, 'An unexpected error occurred. Please try again.')
+  assert.equal(safeMessage.includes('pg_query_params'), false)
+  assert.equal(safeMessage.includes('SELECT'), false)
+
+  const tokenError = new Error('JWT expired at 1712000000; secret signature mismatch')
+  assert.equal(formatSafeUserError(tokenError), 'Your session has expired. Please sign in again.')
+})
+

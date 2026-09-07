@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 import Groq from 'groq-sdk'
 
 function createServiceClient() {
@@ -74,7 +75,7 @@ Reference the ${streak}-day streak specifically. Under 25 words total.`,
         })
         sentCount++
       } catch (err) {
-        console.error('Error sending evening nudge:', err)
+        logger.error('Error sending evening coach nudge', err, { userId: user.id })
       }
     }
   }

@@ -2,6 +2,7 @@ import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { buildUserContext } from '@/lib/coach'
+import { safeErrorResponse } from '@/lib/logger'
 
 const WEEKLY_REPORT_PROMPT = `Generate a detailed Weekly RPG Report for this player.
 Format it with these sections:
@@ -65,7 +66,9 @@ export async function POST() {
 
     return NextResponse.json({ report: reportText })
   } catch (error) {
-    console.error('Weekly report error:', error)
-    return NextResponse.json({ error: 'Failed to generate report' }, { status: 500 })
+    return safeErrorResponse(error, {
+      context: 'Weekly Report API',
+      fallbackMessage: 'Unable to generate weekly battle report at this time.',
+    })
   }
 }

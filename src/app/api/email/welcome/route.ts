@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { sendEmail } from '@/lib/email'
 import { welcomeEmail } from '@/lib/emails/welcome'
+import { safeErrorResponse } from '@/lib/logger'
 
 export async function POST() {
   try {
@@ -28,7 +29,9 @@ export async function POST() {
 
     return NextResponse.json({ success: true })
   } catch (err) {
-    console.error('Welcome email error:', err)
-    return NextResponse.json({ error: 'Failed to send welcome email' }, { status: 500 })
+    return safeErrorResponse(err, {
+      context: 'Welcome Email API',
+      fallbackMessage: 'Could not send welcome email at this time.',
+    })
   }
 }

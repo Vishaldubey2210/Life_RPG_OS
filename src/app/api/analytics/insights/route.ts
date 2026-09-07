@@ -1,6 +1,7 @@
 import Groq from 'groq-sdk'
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
 export async function GET() {
   try {
@@ -91,7 +92,7 @@ Format as JSON array ONLY (no markdown, no explanation):
     const insights = JSON.parse(jsonMatch[0])
     return NextResponse.json(insights)
   } catch (err) {
-    console.error('Analytics insights error:', err)
+    logger.error('Analytics insights generation failure', err)
     return NextResponse.json([])
   }
 }
