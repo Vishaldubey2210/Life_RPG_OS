@@ -75,3 +75,22 @@ jobs:
 
       - name: Build Production Bundle
         run: npm run build
+
+  docker_build:
+    name: Docker Container Build Check
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: life-rpg-os:test
+

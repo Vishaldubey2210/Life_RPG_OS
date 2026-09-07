@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "test": "node --test scripts/test.mjs"
+    "test": "node --test scripts/test.mjs",
+    "docker:build": "docker build -t life-rpg-os:latest .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env.local life-rpg-os:latest"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

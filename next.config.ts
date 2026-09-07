@@ -55,6 +55,7 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  output: process.env.OUTPUT_STANDALONE === 'true' || process.env.DOCKER_BUILD === 'true' ? 'standalone' : undefined,
   poweredByHeader: false,
   compress: true,
   reactStrictMode: true,
