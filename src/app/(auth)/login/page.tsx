@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { Eye, EyeOff, Loader2, Swords, AlertTriangle, Sparkles, Zap, UserCheck, ArrowLeft } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Swords, AlertTriangle, Sparkles, ArrowLeft } from 'lucide-react'
 
 type Mode = 'login' | 'signup'
 
@@ -36,71 +36,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [demoLoading, setDemoLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
-
-  async function handleDemoLogin() {
-    setDemoLoading(true)
-    setError(null)
-    setNotice(null)
-    const demoEmail = 'demo@liferpg.os'
-    const demoPassword = 'demouser123'
-    setEmail(demoEmail)
-    setPassword(demoPassword)
-    setMode('login')
-
-    try {
-      // 1. Attempt login with demo credentials
-      const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
-        email: demoEmail,
-        password: demoPassword,
-      })
-
-      if (!signInErr && signInData.user) {
-        router.replace('/dashboard')
-        router.refresh()
-        return
-      }
-
-      // 2. If account doesn't exist yet, auto-create it
-      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
-        email: demoEmail,
-        password: demoPassword,
-        options: {
-          data: { display_name: 'Demo Hero' },
-        },
-      })
-
-      if (signUpErr && !signUpErr.message.toLowerCase().includes('already registered')) {
-        throw signUpErr
-      }
-
-      if (signUpData?.session) {
-        router.replace('/dashboard')
-        router.refresh()
-        return
-      }
-
-      // 3. Re-try sign in
-      const { error: retryErr } = await supabase.auth.signInWithPassword({
-        email: demoEmail,
-        password: demoPassword,
-      })
-
-      if (retryErr) {
-        throw retryErr
-      }
-
-      router.replace('/dashboard')
-      router.refresh()
-    } catch (err: unknown) {
-      setError(friendlyAuthError(err))
-    } finally {
-      setDemoLoading(false)
-    }
-  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -292,87 +230,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* 1-Click Demo Login Block (Warm --accent-soft panel with left accent bar) */}
-          <div
-            style={{
-              background: '#EDECFD',
-              border: '1px solid #D6D3FA',
-              borderLeft: '4px solid #5B57F0',
-              borderRadius: 14,
-              padding: '14px 16px',
-              marginBottom: 24,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#5B57F0', fontWeight: 600, fontSize: 13 }}>
-                <Zap size={15} />
-                <span>Instant Demo Access</span>
-              </div>
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: '#5B57F0',
-                  background: '#FFFFFF',
-                  padding: '2px 8px',
-                  borderRadius: 999,
-                }}
-              >
-                1-Click
-              </span>
-            </div>
-            <p style={{ fontSize: 12.5, color: '#6E6A61', margin: '0 0 10px 0', lineHeight: 1.4 }}>
-              Directly explore the full character sheet and daily quests with a pre-loaded hero account.
-            </p>
-            <button
-              id="demo-login-btn"
-              type="button"
-              onClick={handleDemoLogin}
-              disabled={demoLoading || loading}
-              style={{
-                width: '100%',
-                padding: '10px 16px',
-                borderRadius: 999,
-                background: '#5B57F0',
-                color: '#FFFFFF',
-                border: 'none',
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 8,
-                boxShadow: '0 2px 8px rgba(91, 87, 240, 0.25)',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#4A46E0')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = '#5B57F0')}
-            >
-              {demoLoading ? (
-                <>
-                  <Loader2 size={14} className="animate-spin" />
-                  <span>Entering realm...</span>
-                </>
-              ) : (
-                <>
-                  <UserCheck size={14} />
-                  <span>Login with Demo Hero</span>
-                </>
-              )}
-            </button>
-            <div
-              style={{
-                marginTop: 8,
-                fontSize: 11,
-                color: '#6E6A61',
-                textAlign: 'center',
-                fontFamily: "'IBM Plex Mono', monospace",
-              }}
-            >
-              demo@liferpg.os • demouser123
-            </div>
-          </div>
 
           {/* Underline Tabs for Sign In / Create Account */}
           <div
