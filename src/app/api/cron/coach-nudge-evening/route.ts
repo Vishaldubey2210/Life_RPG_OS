@@ -67,7 +67,7 @@ Reference the ${streak}-day streak specifically. Under 25 words total.`,
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             userId: user.id,
-            title: streak > 0 ? `🔥 Streak Alert: ${streak} Days on the Line!` : `⚔️ Night Raid: ${remaining} Quests Left`,
+            title: streak > 0 ? `Streak Alert: ${streak} Days on the Line!` : `Night Raid: ${remaining} Quests Left`,
             body: nudgeBody,
             url: '/quests',
           }),

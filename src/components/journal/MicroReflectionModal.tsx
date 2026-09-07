@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Star, Check, X, Sparkles } from 'lucide-react'
+import { Star, Check, X, Sparkles, Frown, Meh, Smile, Laugh, Flame } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
@@ -14,11 +14,11 @@ interface MicroReflectionProps {
 }
 
 const MOODS = [
-  { score: 1, emoji: '😔', label: 'Tough' },
-  { score: 2, emoji: '😐', label: 'Okay' },
-  { score: 3, emoji: '🙂', label: 'Good' },
-  { score: 4, emoji: '😊', label: 'Great' },
-  { score: 5, emoji: '🔥', label: 'Unstoppable' },
+  { score: 1, icon: Frown, label: 'Tough', color: '#EF4444' },
+  { score: 2, icon: Meh, label: 'Okay', color: '#F59E0B' },
+  { score: 3, icon: Smile, label: 'Good', color: '#3B82F6' },
+  { score: 4, icon: Laugh, label: 'Great', color: '#8B5CF6' },
+  { score: 5, icon: Flame, label: 'Unstoppable', color: '#EC4899' },
 ]
 
 export function MicroReflectionModal({
@@ -50,7 +50,7 @@ export function MicroReflectionModal({
           tags: ['reflection', 'quest'],
         })
       }
-      toast.success('Reflection logged in Journal! 📝')
+      toast.success('Reflection logged in Journal!')
       onClose()
     } catch (err) {
       console.error('Error saving reflection:', err)
@@ -104,23 +104,27 @@ export function MicroReflectionModal({
             <span className="text-[11px] text-slate-400 ml-2 font-display">{rating}/5</span>
           </div>
 
-          {/* Mood emoji selection */}
+          {/* Mood icon selection */}
           <div className="flex justify-between gap-1 mb-3">
-            {MOODS.map((m) => (
-              <button
-                key={m.score}
-                type="button"
-                onClick={() => setSelectedMood(m.score)}
-                className={`flex-1 py-1.5 rounded-lg text-sm transition-all text-center ${
-                  selectedMood === m.score
-                    ? 'bg-purple-500/20 border border-purple-500 scale-105'
-                    : 'bg-slate-900 border border-slate-800 opacity-70'
-                }`}
-                title={m.label}
-              >
-                {m.emoji}
-              </button>
-            ))}
+            {MOODS.map((m) => {
+              const IconComp = m.icon
+              return (
+                <button
+                  key={m.score}
+                  type="button"
+                  onClick={() => setSelectedMood(m.score)}
+                  className={`flex-1 py-2 rounded-lg flex items-center justify-center transition-all ${
+                    selectedMood === m.score
+                      ? 'bg-purple-500/20 border border-purple-500 scale-105'
+                      : 'bg-slate-900 border border-slate-800 opacity-70 hover:opacity-100'
+                  }`}
+                  style={{ color: m.color }}
+                  title={m.label}
+                >
+                  <IconComp size={16} />
+                </button>
+              )
+            })}
           </div>
 
           {/* Optional one line thought */}
@@ -145,10 +149,10 @@ export function MicroReflectionModal({
               type="button"
               onClick={handleSave}
               disabled={saving}
-              className="flex-1 py-1.5 rounded-lg text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 flex items-center justify-center gap-1 font-display"
+              className="flex-1 py-1.5 rounded-lg text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 flex items-center justify-center gap-1.5 font-display"
             >
               <Check size={13} />
-              <span>Save ✓</span>
+              <span>Save</span>
             </button>
           </div>
         </motion.div>

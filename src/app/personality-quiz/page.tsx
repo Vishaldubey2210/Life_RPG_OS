@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Brain, ChevronRight, CheckCircle2, Loader2 } from 'lucide-react'
+import { Brain, ChevronRight, CheckCircle2, Loader2, Sparkles, Award } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 
 interface Question {
   id: string
@@ -18,50 +19,50 @@ const QUESTIONS: Question[] = [
     id: 'morning_type',
     text: 'Which best describes your morning?',
     options: [
-      { label: 'Early riser', value: 'early_bird', emoji: '🌅' },
-      { label: 'Night owl', value: 'night_owl', emoji: '🦉' },
-      { label: 'Flexible', value: 'flexible', emoji: '⚡' },
-      { label: 'Total chaos', value: 'chaotic', emoji: '🌪️' },
+      { label: 'Early riser', value: 'early_bird', emoji: 'sun' },
+      { label: 'Night owl', value: 'night_owl', emoji: 'moon' },
+      { label: 'Flexible', value: 'flexible', emoji: 'zap' },
+      { label: 'Total chaos', value: 'chaotic', emoji: 'wind' },
     ],
   },
   {
     id: 'motivation_style',
     text: 'What keeps you going when things get hard?',
     options: [
-      { label: 'Discipline & Systems', value: 'discipline', emoji: '🏋️' },
-      { label: 'Community & Accountability', value: 'social', emoji: '🤝' },
-      { label: 'Progress & Rewards', value: 'rewards', emoji: '🏆' },
-      { label: 'Purpose & Meaning', value: 'purpose', emoji: '🎯' },
+      { label: 'Discipline & Systems', value: 'discipline', emoji: 'dumbbell' },
+      { label: 'Community & Accountability', value: 'social', emoji: 'couple' },
+      { label: 'Progress & Rewards', value: 'rewards', emoji: 'trophy' },
+      { label: 'Purpose & Meaning', value: 'purpose', emoji: 'target' },
     ],
   },
   {
     id: 'biggest_challenge',
     text: 'Your biggest habit-building challenge?',
     options: [
-      { label: 'Starting consistently', value: 'consistency', emoji: '📅' },
-      { label: 'Not giving up', value: 'persistence', emoji: '🔥' },
-      { label: 'Finding time', value: 'time', emoji: '⏳' },
-      { label: 'Staying motivated', value: 'motivation', emoji: '💡' },
+      { label: 'Starting consistently', value: 'consistency', emoji: 'calendar' },
+      { label: 'Not giving up', value: 'persistence', emoji: 'flame' },
+      { label: 'Finding time', value: 'time', emoji: 'timer' },
+      { label: 'Staying motivated', value: 'motivation', emoji: 'lightbulb' },
     ],
   },
   {
     id: 'work_style',
     text: 'How do you prefer to work?',
     options: [
-      { label: 'Deep focus blocks', value: 'deep_work', emoji: '🎯' },
-      { label: 'Lots of small tasks', value: 'sprints', emoji: '⚡' },
-      { label: 'Flexible & spontaneous', value: 'flexible', emoji: '🌊' },
-      { label: 'Structured routine', value: 'structured', emoji: '📋' },
+      { label: 'Deep focus blocks', value: 'deep_work', emoji: 'target' },
+      { label: 'Lots of small tasks', value: 'sprints', emoji: 'zap' },
+      { label: 'Flexible & spontaneous', value: 'flexible', emoji: 'droplets' },
+      { label: 'Structured routine', value: 'structured', emoji: 'doc' },
     ],
   },
   {
     id: 'goal_timeline',
     text: 'Your primary goal horizon?',
     options: [
-      { label: 'This week', value: 'weekly', emoji: '📆' },
-      { label: 'This month', value: 'monthly', emoji: '📅' },
-      { label: 'This year', value: 'yearly', emoji: '🗓️' },
-      { label: 'Life-long journey', value: 'lifelong', emoji: '♾️' },
+      { label: 'This week', value: 'weekly', emoji: 'calendar' },
+      { label: 'This month', value: 'monthly', emoji: 'calendar' },
+      { label: 'This year', value: 'yearly', emoji: 'globe' },
+      { label: 'Life-long journey', value: 'lifelong', emoji: 'sparkles' },
     ],
   },
 ]
@@ -107,16 +108,16 @@ function deriveArchetype(answers: Record<string, string>): { archetype: string; 
 
 function starterHabits(archetype: string) {
   const shared = [
-    { name: 'Plan tomorrow in 5 minutes', difficulty: 'easy', xp_reward: 10, stat_category: 'wis', emoji: '📝' },
-    { name: 'Move your body for 20 minutes', difficulty: 'medium', xp_reward: 25, stat_category: 'vit', emoji: '🏃' },
+    { name: 'Plan tomorrow in 5 minutes', difficulty: 'easy', xp_reward: 10, stat_category: 'wis', emoji: 'doc' },
+    { name: 'Move your body for 20 minutes', difficulty: 'medium', xp_reward: 25, stat_category: 'vit', emoji: 'activity' },
   ]
   const signature = archetype === 'The Monk'
-    ? { name: 'Complete one 25-minute focus block', difficulty: 'medium', xp_reward: 25, stat_category: 'int', emoji: '🎯' }
+    ? { name: 'Complete one 25-minute focus block', difficulty: 'medium', xp_reward: 25, stat_category: 'int', emoji: 'target' }
     : archetype === 'The Guild Leader'
-      ? { name: 'Check in with an accountability partner', difficulty: 'easy', xp_reward: 10, stat_category: 'cha', emoji: '🤝' }
+      ? { name: 'Check in with an accountability partner', difficulty: 'easy', xp_reward: 10, stat_category: 'cha', emoji: 'couple' }
       : archetype === 'The Champion'
-        ? { name: 'Finish your highest-value quest', difficulty: 'hard', xp_reward: 50, stat_category: 'str', emoji: '🏆' }
-        : { name: 'Write one sentence about your bigger why', difficulty: 'easy', xp_reward: 10, stat_category: 'wis', emoji: '✨' }
+        ? { name: 'Finish your highest-value quest', difficulty: 'hard', xp_reward: 50, stat_category: 'str', emoji: 'trophy' }
+        : { name: 'Write one sentence about your bigger why', difficulty: 'easy', xp_reward: 10, stat_category: 'wis', emoji: 'sparkles' }
   return [...shared, signature]
 }
 
@@ -176,7 +177,7 @@ export default function PersonalityQuizPage() {
       })
       if (memoryError) throw memoryError
 
-      toast.success(`Archetype saved: ${result.archetype} 🎭`)
+      toast.success(`Archetype saved: ${result.archetype}`)
       router.push('/dashboard')
     } catch (err) {
       console.error('Save personality error:', err)
@@ -233,9 +234,14 @@ export default function PersonalityQuizPage() {
                   <button
                     key={opt.value}
                     onClick={() => handleAnswer(question.id, opt.value)}
-                    className="p-4 rounded-2xl border border-slate-800 bg-[#13131F] hover:border-purple-500/50 hover:bg-purple-500/10 transition-all text-left"
+                    className="p-4 rounded-2xl border border-slate-800 bg-[#13131F] hover:border-purple-500/50 hover:bg-purple-500/10 transition-all text-left flex flex-col items-start"
                   >
-                    <div className="text-2xl mb-2">{opt.emoji}</div>
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                      style={{ background: '#7C3AED15', color: '#9F67FF' }}
+                    >
+                      <DynamicIcon name={opt.emoji} size={20} />
+                    </div>
                     <div className="text-sm font-semibold text-white">{opt.label}</div>
                   </button>
                 ))}
@@ -248,7 +254,14 @@ export default function PersonalityQuizPage() {
               className="p-6 rounded-2xl border border-purple-500/40 bg-[#13131F] shadow-2xl shadow-purple-950/30"
             >
               <div className="text-center mb-6">
-                <div className="text-5xl mb-3">🎭</div>
+                <div className="flex justify-center mb-3">
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                    style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
+                  >
+                    <Sparkles size={32} />
+                  </div>
+                </div>
                 <div className="text-xs font-bold uppercase tracking-wider text-purple-400 font-display mb-1">Your Archetype</div>
                 <h2 className="text-3xl font-black text-white font-display">{result.archetype}</h2>
                 <p className="text-sm text-slate-400 mt-3 leading-relaxed">{result.description}</p>

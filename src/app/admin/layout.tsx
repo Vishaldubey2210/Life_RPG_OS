@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { Swords } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -34,7 +35,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="border-b border-slate-800 bg-[#050508]/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-3 font-bold text-lg tracking-wide">
-            <span className="text-2xl">⚔️</span>
+            <Swords size={20} className="text-purple-400" />
             <span className="font-display">Life RPG OS — Admin</span>
           </div>
 

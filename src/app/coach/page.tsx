@@ -416,7 +416,7 @@ export default function CoachPage() {
                   className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
                   style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
                 >
-                  🤖
+                  <Bot size={18} className="text-purple-400" />
                 </div>
                 <div
                   className="rounded-2xl rounded-tl-sm"

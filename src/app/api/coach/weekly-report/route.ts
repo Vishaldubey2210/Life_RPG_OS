@@ -5,15 +5,15 @@ import { buildUserContext } from '@/lib/coach'
 
 const WEEKLY_REPORT_PROMPT = `Generate a detailed Weekly RPG Report for this player.
 Format it with these sections:
-1. ⚔️ BATTLE SUMMARY — Overall performance this week
-2. 📊 STAT CHANGES — Which stats grew, which didn't
-3. 🏆 WINS — What they did great
-4. ⚠️ WEAK POINTS — Where they struggled (be honest)
-5. 🎯 NEXT WEEK MISSION — 3 specific goals for next 7 days
-6. 💬 COACH'S MESSAGE — Personal motivational note
+1. BATTLE SUMMARY — Overall performance this week
+2. STAT CHANGES — Which stats grew, which didn't
+3. WINS — What they did great
+4. WEAK POINTS — Where they struggled (be honest)
+5. NEXT WEEK MISSION — 3 specific goals for next 7 days
+6. COACH'S MESSAGE — Personal motivational note
 
 Use RPG language. Reference their actual numbers. Be specific.
-Format each section with the emoji + section name as a header, followed by the content.
+Format each section with the section name as a header, followed by the content.
 Keep each section 2-3 sentences. Be direct and honest.`
 
 export async function POST() {

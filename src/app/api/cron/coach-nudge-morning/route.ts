@@ -67,7 +67,7 @@ Keep under 40 words total. RPG tone. No emojis in excess.`,
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             userId: user.id,
-            title: `⚔️ Morning Quest Briefing — Level ${user.level}`,
+            title: `Morning Quest Briefing — Level ${user.level}`,
             body: briefing,
             url: '/dashboard',
           }),

@@ -195,14 +195,14 @@ export function useParty(): UsePartyReturn {
           completed_at: string
           habits: { name: string; xp_reward: number } | { name: string; xp_reward: number }[]
         }) => {
-          const profile = profileMap[c.user_id] ?? { display_name: 'Unknown', avatar_emoji: '⚔️' }
+          const profile = profileMap[c.user_id] ?? { display_name: 'Unknown', avatar_emoji: 'swords' }
           const habit = Array.isArray(c.habits) ? c.habits[0] : c.habits
           return {
             id: c.id,
             type: 'completion' as const,
             user_name: profile.display_name,
             user_avatar: profile.avatar_emoji,
-            message: `completed ${habit?.name ?? 'a quest'} +${habit?.xp_reward ?? 0} XP 🎯`,
+            message: `completed ${habit?.name ?? 'a quest'} (+${habit?.xp_reward ?? 0} XP)`,
             xp: habit?.xp_reward ?? 0,
             timestamp: c.completed_at,
           }

@@ -4,8 +4,14 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 
-const AVATAR_OPTIONS = ['⚔️','🧙','🏹','🛡️','🔮','⚡','🐉','🦁','🐺','🦅','🌙','☀️','🌊','🔥','💎','👑','🌟','🎯','💪','🧠']
+const AVATAR_OPTIONS = [
+  'swords', 'wizard', 'archer', 'shield', 'crystal', 'zap',
+  'dragon', 'lion', 'wolf', 'eagle', 'moon', 'sun',
+  'droplets', 'flame', 'diamond', 'crown', 'star', 'target',
+  'dumbbell', 'brain'
+]
 
 export default function EditProfilePage() {
   const router = useRouter()
@@ -14,7 +20,7 @@ export default function EditProfilePage() {
   const [saving, setSaving] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const [username, setUsername] = useState('')
-  const [avatarEmoji, setAvatarEmoji] = useState('⚔️')
+  const [avatarEmoji, setAvatarEmoji] = useState('swords')
   const [bio, setBio] = useState('')
   const [publicProfile, setPublicProfile] = useState(true)
   const [usernameAvailable, setUsernameAvailable] = useState(true)
@@ -33,7 +39,7 @@ export default function EditProfilePage() {
       if (data) {
         setDisplayName(data.display_name || '')
         setUsername(data.username || '')
-        setAvatarEmoji(data.avatar_emoji || '⚔️')
+        setAvatarEmoji(data.avatar_emoji || 'swords')
         setBio(data.bio || '')
         setPublicProfile(data.is_public ?? true)
       }
@@ -101,16 +107,20 @@ export default function EditProfilePage() {
 
       <div className="space-y-6 rounded-3xl border border-slate-800 bg-[#101018] p-6">
         <div>
-          <label className="mb-2 block text-sm text-slate-300">Avatar Emoji</label>
+          <label className="mb-2 block text-sm text-slate-300">Avatar Icon</label>
           <div className="flex flex-wrap gap-2">
             {AVATAR_OPTIONS.map((emoji) => (
               <button
                 key={emoji}
                 type="button"
                 onClick={() => setAvatarEmoji(emoji)}
-                className={`rounded-xl border p-2 text-2xl transition ${avatarEmoji === emoji ? 'scale-110 border-yellow-400 bg-yellow-500/10' : 'border-slate-700 bg-[#0d0d15]'}`}
+                className={`rounded-xl border p-2.5 flex items-center justify-center transition ${
+                  avatarEmoji === emoji
+                    ? 'scale-110 border-purple-500 bg-purple-500/20 text-purple-300'
+                    : 'border-slate-700 bg-[#0d0d15] text-slate-400 hover:text-white'
+                }`}
               >
-                {emoji}
+                <DynamicIcon name={emoji} size={22} />
               </button>
             ))}
           </div>

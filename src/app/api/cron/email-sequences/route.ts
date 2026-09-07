@@ -47,7 +47,7 @@ export async function GET(request: Request) {
       if ((count ?? 0) === 0) {
         await sendEmail({
           to: email,
-          subject: `⚠️ Your streak hasn't started yet, ${user.display_name}`,
+          subject: `Your streak hasn't started yet, ${user.display_name}`,
           html: day3NudgeEmail(user.display_name ?? 'Adventurer'),
         })
         results.day3++
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
 
       await sendEmail({
         to: email,
-        subject: `⚡ Your Week ${Math.floor(daysSinceSignup / 7)} RPG Report, ${user.display_name}`,
+        subject: `Your Week ${Math.floor(daysSinceSignup / 7)} RPG Report, ${user.display_name}`,
         html: day7ReportEmail(user.display_name ?? 'Adventurer', {
           questsCompleted: weeklyCompletions ?? 0,
           xpEarned: weeklyXP,
@@ -100,7 +100,7 @@ export async function GET(request: Request) {
       if ((recentActivity ?? 0) === 0) {
         await sendEmail({
           to: email,
-          subject: `👑 ${user.display_name}, your adventure awaits`,
+          subject: `${user.display_name}, your adventure awaits`,
           html: day30ComebackEmail(user.display_name ?? 'Adventurer', level, xp),
         })
         results.day30++

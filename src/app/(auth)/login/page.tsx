@@ -4,9 +4,10 @@ export const dynamic = 'force-dynamic'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Swords, AlertTriangle, Sparkles, Zap, UserCheck, ArrowLeft } from 'lucide-react'
 
 type Mode = 'login' | 'signup'
 
@@ -35,9 +36,71 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [demoLoading, setDemoLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
+
+  async function handleDemoLogin() {
+    setDemoLoading(true)
+    setError(null)
+    setNotice(null)
+    const demoEmail = 'demo@liferpg.os'
+    const demoPassword = 'demouser123'
+    setEmail(demoEmail)
+    setPassword(demoPassword)
+    setMode('login')
+
+    try {
+      // 1. Attempt login with demo credentials
+      const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+        email: demoEmail,
+        password: demoPassword,
+      })
+
+      if (!signInErr && signInData.user) {
+        router.replace('/dashboard')
+        router.refresh()
+        return
+      }
+
+      // 2. If account doesn't exist yet, auto-create it
+      const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
+        email: demoEmail,
+        password: demoPassword,
+        options: {
+          data: { display_name: 'Aarav (Demo Hero)' },
+        },
+      })
+
+      if (signUpErr && !signUpErr.message.toLowerCase().includes('already registered')) {
+        throw signUpErr
+      }
+
+      if (signUpData?.session) {
+        router.replace('/dashboard')
+        router.refresh()
+        return
+      }
+
+      // 3. Re-try sign in
+      const { error: retryErr } = await supabase.auth.signInWithPassword({
+        email: demoEmail,
+        password: demoPassword,
+      })
+
+      if (retryErr) {
+        throw retryErr
+      }
+
+      router.replace('/dashboard')
+      router.refresh()
+    } catch (err: unknown) {
+      setError(friendlyAuthError(err))
+    } finally {
+      setDemoLoading(false)
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -67,8 +130,6 @@ export default function LoginPage() {
         })
         if (error) throw error
 
-        // With Confirm email enabled Supabase intentionally returns no session.
-        // Redirecting to a protected page here causes a confusing login loop.
         if (!data.session) {
           setNotice('Account created. Check your inbox to confirm your email, then sign in.')
           return
@@ -120,63 +181,242 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: '#08080F' }}>
-      {/* Purple grid background */}
+    <div
+      style={{
+        minHeight: '100vh',
+        background: '#070710',
+        color: '#F3F4F6',
+        fontFamily: "'Inter', sans-serif",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '32px 16px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Background Neon Grid / Glows */}
       <div
-        className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(124, 58, 237, 0.15) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(124, 58, 237, 0.15) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
+          position: 'absolute',
+          top: '20%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 600,
+          height: 600,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0) 70%)',
+          filter: 'blur(70px)',
+          pointerEvents: 'none',
         }}
       />
-      {/* Glow effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full opacity-10 blur-3xl" style={{ background: '#7C3AED' }} />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: -50,
+          right: -50,
+          width: 400,
+          height: 400,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0) 70%)',
+          filter: 'blur(60px)',
+          pointerEvents: 'none',
+        }}
+      />
 
-      <div className="relative z-10 w-full max-w-md mx-auto px-4">
+      <div style={{ width: '100%', maxWidth: 440, position: 'relative', zIndex: 1 }}>
+        {/* Back Link */}
+        <div style={{ marginBottom: 18 }}>
+          <Link
+            href="/"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              color: '#9CA3AF',
+              textDecoration: 'none',
+              fontSize: 13.5,
+              fontWeight: 500,
+              transition: 'color 0.15s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#9CA3AF')}
+          >
+            <ArrowLeft size={15} />
+            <span>Back to main overview</span>
+          </Link>
+        </div>
+
+        {/* Dark Glowing Card */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="rounded-2xl p-8 border"
+          transition={{ duration: 0.4 }}
           style={{
-            background: '#13131F',
-            borderColor: '#7C3AED66',
-            boxShadow: '0 0 40px #7C3AED22, 0 0 80px #7C3AED11',
+            background: 'linear-gradient(145deg, #121324, #0B0C18)',
+            borderRadius: 22,
+            border: '1px solid rgba(124, 58, 237, 0.4)',
+            padding: '36px 30px',
+            boxShadow: '0 0 40px rgba(124, 58, 237, 0.2), 0 20px 40px rgba(0,0,0,0.7)',
           }}
         >
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="text-5xl mb-3">⚔️</div>
-            <h1 className="font-display text-3xl font-bold" style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
-              Life RPG OS
+          {/* Logo & Heading */}
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 14,
+                background: 'linear-gradient(135deg, #7C3AED, #F59E0B)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 12px',
+                boxShadow: '0 0 20px rgba(124, 58, 237, 0.5)',
+              }}
+            >
+              <Swords size={24} color="#FFFFFF" />
+            </div>
+            <h1
+              style={{
+                fontFamily: "'Oxanium', sans-serif",
+                fontSize: 26,
+                fontWeight: 800,
+                color: '#FFFFFF',
+                letterSpacing: '0.02em',
+                margin: '0 0 6px 0',
+              }}
+            >
+              LIFE RPG OS INDIA
             </h1>
-            <p className="mt-2" style={{ color: '#9B99B8' }}>
-              {mode === 'login' ? 'Your adventure continues here' : 'Your adventure begins here'}
+            <p style={{ fontSize: 13.5, color: '#9CA3AF', margin: 0 }}>
+              {mode === 'login' ? 'Your campaign continues here' : 'Begin your real-life campaign'}
             </p>
           </div>
 
-          {/* Mode toggle */}
-          <div className="flex rounded-lg mb-6 p-1" style={{ background: '#0F0F1A' }}>
-            {(['login', 'signup'] as Mode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => { setMode(m); setError(null) }}
-                className="flex-1 py-2 rounded-md text-sm font-medium transition-all duration-200 capitalize"
+          {/* 1-Click Instant Demo Login Banner */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(245, 158, 11, 0.15))',
+              border: '1px solid rgba(245, 158, 11, 0.4)',
+              borderRadius: 14,
+              padding: '14px 16px',
+              marginBottom: 22,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#F59E0B', fontWeight: 700, fontSize: 13 }}>
+                <Zap size={15} />
+                <span>Instant Demo Access</span>
+              </div>
+              <span
                 style={{
-                  background: mode === m ? '#7C3AED' : 'transparent',
-                  color: mode === m ? '#F1F0FF' : '#9B99B8',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: '#070710',
+                  background: '#F59E0B',
+                  padding: '2px 8px',
+                  borderRadius: 999,
                 }}
               >
-                {m === 'login' ? 'Sign In' : 'Create Account'}
-              </button>
-            ))}
+                1-Click
+              </span>
+            </div>
+            <p style={{ fontSize: 12.5, color: '#D1D5DB', margin: '0 0 10px 0', lineHeight: 1.4 }}>
+              Directly explore the full character sheet & daily habits with a pre-loaded hero account.
+            </p>
+            <button
+              id="demo-login-btn"
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={demoLoading || loading}
+              style={{
+                width: '100%',
+                padding: '10px 16px',
+                borderRadius: 10,
+                background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                color: '#070710',
+                border: 'none',
+                fontFamily: "'Oxanium', sans-serif",
+                fontSize: 13.5,
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                boxShadow: '0 0 16px rgba(245, 158, 11, 0.4)',
+                transition: 'all 0.15s ease',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1.1)')}
+              onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
+            >
+              {demoLoading ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  <span>Entering Realm...</span>
+                </>
+              ) : (
+                <>
+                  <UserCheck size={15} />
+                  <span>Login with Demo Hero (1-Click)</span>
+                </>
+              )}
+            </button>
+            <div
+              style={{
+                marginTop: 8,
+                fontSize: 11,
+                color: '#9CA3AF',
+                textAlign: 'center',
+                fontFamily: "'JetBrains Mono', monospace",
+              }}
+            >
+              demo@liferpg.os • demouser123
+            </div>
+          </div>
+
+          {/* Mode Toggle */}
+          <div
+            style={{
+              display: 'flex',
+              background: '#090A14',
+              borderRadius: 10,
+              padding: 4,
+              marginBottom: 20,
+              border: '1px solid #1F2038',
+            }}
+          >
+            {(['login', 'signup'] as Mode[]).map((m) => {
+              const isActive = mode === m
+              return (
+                <button
+                  key={m}
+                  onClick={() => {
+                    setMode(m)
+                    setError(null)
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '8px 0',
+                    borderRadius: 8,
+                    background: isActive ? '#7C3AED' : 'transparent',
+                    color: isActive ? '#FFFFFF' : '#9CA3AF',
+                    border: 'none',
+                    fontSize: 13.5,
+                    fontWeight: isActive ? 700 : 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {m === 'login' ? 'Sign In' : 'Create Hero'}
+                </button>
+              )
+            })}
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <AnimatePresence mode="wait">
               {mode === 'signup' && (
                 <motion.div
@@ -186,8 +426,8 @@ export default function LoginPage() {
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <label className="block text-sm mb-1" style={{ color: '#9B99B8' }}>
-                    Display Name
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#D1D5DB', marginBottom: 6 }}>
+                    Hero Name
                   </label>
                   <input
                     id="display-name"
@@ -195,22 +435,28 @@ export default function LoginPage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     required={mode === 'signup'}
-                    placeholder="Adventurer Name"
-                    className="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200 focus:ring-2"
+                    placeholder="e.g. Aarav / Warrior"
                     style={{
-                      background: '#0F0F1A',
-                      border: '1px solid #1E1E35',
-                      color: '#F1F0FF',
+                      width: '100%',
+                      padding: '11px 14px',
+                      borderRadius: 10,
+                      border: '1px solid #23233E',
+                      background: '#090A14',
+                      color: '#FFFFFF',
+                      fontSize: 14,
+                      outline: 'none',
                     }}
                     onFocus={(e) => (e.target.style.borderColor = '#7C3AED')}
-                    onBlur={(e) => (e.target.style.borderColor = '#1E1E35')}
+                    onBlur={(e) => (e.target.style.borderColor = '#23233E')}
                   />
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div>
-              <label className="block text-sm mb-1" style={{ color: '#9B99B8' }}>Email</label>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#D1D5DB', marginBottom: 6 }}>
+                Email Address
+              </label>
               <input
                 id="email"
                 type="email"
@@ -218,16 +464,26 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="hero@example.com"
-                className="w-full px-4 py-3 rounded-lg outline-none transition-all duration-200"
-                style={{ background: '#0F0F1A', border: '1px solid #1E1E35', color: '#F1F0FF' }}
+                style={{
+                  width: '100%',
+                  padding: '11px 14px',
+                  borderRadius: 10,
+                  border: '1px solid #23233E',
+                  background: '#090A14',
+                  color: '#FFFFFF',
+                  fontSize: 14,
+                  outline: 'none',
+                }}
                 onFocus={(e) => (e.target.style.borderColor = '#7C3AED')}
-                onBlur={(e) => (e.target.style.borderColor = '#1E1E35')}
+                onBlur={(e) => (e.target.style.borderColor = '#23233E')}
               />
             </div>
 
             <div>
-              <label className="block text-sm mb-1" style={{ color: '#9B99B8' }}>Password</label>
-              <div className="relative">
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#D1D5DB', marginBottom: 6 }}>
+                Password
+              </label>
+              <div style={{ position: 'relative' }}>
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -235,20 +491,35 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 pr-12 rounded-lg outline-none transition-all duration-200"
-                  style={{ background: '#0F0F1A', border: '1px solid #1E1E35', color: '#F1F0FF' }}
+                  style={{
+                    width: '100%',
+                    padding: '11px 40px 11px 14px',
+                    borderRadius: 10,
+                    border: '1px solid #23233E',
+                    background: '#090A14',
+                    color: '#FFFFFF',
+                    fontSize: 14,
+                    outline: 'none',
+                  }}
                   onFocus={(e) => (e.target.style.borderColor = '#7C3AED')}
-                  onBlur={(e) => (e.target.style.borderColor = '#1E1E35')}
+                  onBlur={(e) => (e.target.style.borderColor = '#23233E')}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
-                  style={{ color: '#5C5A7A' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#9B99B8')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#5C5A7A')}
+                  style={{
+                    position: 'absolute',
+                    right: 12,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#6B7280',
+                    cursor: 'pointer',
+                    padding: 0,
+                  }}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
@@ -262,8 +533,10 @@ export default function LoginPage() {
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <label className="block text-sm mb-1" style={{ color: '#9B99B8' }}>Confirm Password</label>
-                  <div className="relative">
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#D1D5DB', marginBottom: 6 }}>
+                    Confirm Password
+                  </label>
+                  <div style={{ position: 'relative' }}>
                     <input
                       id="confirm-password"
                       type={showConfirm ? 'text' : 'password'}
@@ -271,94 +544,178 @@ export default function LoginPage() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required={mode === 'signup'}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 pr-12 rounded-lg outline-none transition-all duration-200"
-                      style={{ background: '#0F0F1A', border: '1px solid #1E1E35', color: '#F1F0FF' }}
+                      style={{
+                        width: '100%',
+                        padding: '11px 40px 11px 14px',
+                        borderRadius: 10,
+                        border: '1px solid #23233E',
+                        background: '#090A14',
+                        color: '#FFFFFF',
+                        fontSize: 14,
+                        outline: 'none',
+                      }}
                       onFocus={(e) => (e.target.style.borderColor = '#7C3AED')}
-                      onBlur={(e) => (e.target.style.borderColor = '#1E1E35')}
+                      onBlur={(e) => (e.target.style.borderColor = '#23233E')}
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
-                      style={{ color: '#5C5A7A' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#9B99B8')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = '#5C5A7A')}
+                      style={{
+                        position: 'absolute',
+                        right: 12,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: 'none',
+                        border: 'none',
+                        color: '#6B7280',
+                        cursor: 'pointer',
+                        padding: 0,
+                      }}
                     >
-                      {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Error message */}
+            {/* Error Message */}
             <AnimatePresence>
               {error && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="p-3 rounded-lg text-sm"
-                  style={{ background: '#EF444422', border: '1px solid #EF444444', color: '#EF4444' }}
+                  exit={{ opacity: 0, y: -6 }}
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    color: '#F87171',
+                    fontSize: 13,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
                 >
-                  ⚠️ {error}
+                  <AlertTriangle size={15} style={{ flexShrink: 0 }} />
+                  <span>{error}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
+            {/* Notice Message */}
             <AnimatePresence>
               {notice && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm text-emerald-200">
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  style={{
+                    padding: '10px 14px',
+                    borderRadius: 10,
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(16, 185, 129, 0.4)',
+                    color: '#34D399',
+                    fontSize: 13,
+                  }}
+                >
                   {notice}
                 </motion.div>
               )}
             </AnimatePresence>
 
+            {/* Submit Button */}
             <button
               id="submit-btn"
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 mt-2"
               style={{
-                background: loading ? '#5B21B6' : '#7C3AED',
-                color: '#F1F0FF',
-                opacity: loading ? 0.8 : 1,
+                width: '100%',
+                padding: '12px 20px',
+                borderRadius: 999,
+                background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
+                color: '#FFFFFF',
+                border: '1px solid rgba(167, 139, 250, 0.4)',
+                fontSize: 14.5,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                boxShadow: '0 0 20px rgba(124, 58, 237, 0.4)',
+                transition: 'all 0.15s ease',
+                marginTop: 4,
               }}
-              onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#6D28D9' }}
-              onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = '#7C3AED' }}
+              onMouseEnter={(e) => {
+                if (!loading) e.currentTarget.style.boxShadow = '0 0 28px rgba(124, 58, 237, 0.6)'
+              }}
+              onMouseLeave={(e) => {
+                if (!loading) e.currentTarget.style.boxShadow = '0 0 20px rgba(124, 58, 237, 0.4)'
+              }}
             >
               {loading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  {mode === 'login' ? 'Signing in...' : 'Creating account...'}
+                  <span>{mode === 'login' ? 'Signing in...' : 'Creating hero...'}</span>
+                </>
+              ) : mode === 'login' ? (
+                <>
+                  <Swords size={16} />
+                  <span>Enter the Realm</span>
                 </>
               ) : (
-                mode === 'login' ? '⚔️ Enter the Realm' : '🌟 Begin Adventure'
+                <>
+                  <Sparkles size={16} />
+                  <span>Begin Adventure</span>
+                </>
               )}
             </button>
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-px" style={{ background: '#1E1E35' }} />
-            <span className="text-xs" style={{ color: '#5C5A7A' }}>or</span>
-            <div className="flex-1 h-px" style={{ background: '#1E1E35' }} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              margin: '18px 0',
+            }}
+          >
+            <div style={{ flex: 1, height: 1, background: '#23233E' }} />
+            <span style={{ fontSize: 12, color: '#6B7280' }}>or</span>
+            <div style={{ flex: 1, height: 1, background: '#23233E' }} />
           </div>
 
-          {/* Google OAuth */}
+          {/* Google OAuth Button */}
           <button
             id="google-btn"
             type="button"
             onClick={handleGoogle}
             disabled={googleLoading}
-            className="w-full py-3 rounded-lg font-medium text-sm transition-all duration-200 flex items-center justify-center gap-3"
             style={{
-              background: '#0F0F1A',
-              border: '1px solid #2E2E50',
-              color: '#F1F0FF',
+              width: '100%',
+              padding: '11px 20px',
+              borderRadius: 999,
+              background: '#090A14',
+              color: '#FFFFFF',
+              border: '1px solid #23233E',
+              fontSize: 13.5,
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+              transition: 'all 0.15s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#7C3AED66')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#2E2E50')}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#7C3AED'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#23233E'
+            }}
           >
             {googleLoading ? (
               <Loader2 size={16} className="animate-spin" />
@@ -370,7 +727,7 @@ export default function LoginPage() {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
             )}
-            Continue with Google
+            <span>Continue with Google</span>
           </button>
         </motion.div>
       </div>

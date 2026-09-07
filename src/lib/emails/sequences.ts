@@ -3,7 +3,7 @@ export const day3NudgeEmail = (name: string) => `
 <html lang="en">
 <body style="background:#08080F;color:#F1F0FF;font-family:'Segoe UI',sans-serif;padding:32px;max-width:520px;margin:0 auto;">
   <div style="text-align:center;margin-bottom:24px;">
-    <div style="font-size:48px;margin-bottom:8px;">⚠️</div>
+    <div style="display:inline-block;padding:8px 16px;border-radius:20px;background:#EF444422;border:1px solid #EF444455;color:#EF4444;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">QUEST ALERT</div>
     <h1 style="color:#F59E0B;font-size:20px;font-weight:800;margin:0;letter-spacing:1px;">LIFE RPG OS</h1>
   </div>
   <h2 style="color:#F1F0FF;font-size:19px;margin-bottom:12px;">${name}, your streak hasn't started yet.</h2>
@@ -35,7 +35,7 @@ export const day7ReportEmail = (name: string, stats: {
 <!DOCTYPE html>
 <html lang="en">
 <body style="background:#08080F;color:#F1F0FF;font-family:'Segoe UI',sans-serif;padding:32px;max-width:520px;margin:0 auto;">
-  <h1 style="color:#F59E0B;font-size:20px;font-weight:800;text-align:center;margin-bottom:4px;">⚡ WEEK 1 RPG REPORT</h1>
+  <h1 style="color:#F59E0B;font-size:20px;font-weight:800;text-align:center;margin-bottom:4px;">WEEK 1 RPG REPORT</h1>
   <p style="color:#9B99B8;text-align:center;font-size:13px;margin-bottom:24px;">Here's how ${name} performed this week</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
     <div style="background:#13131F;border:1px solid #7C3AED44;border-radius:12px;padding:16px;text-align:center;">
@@ -52,13 +52,13 @@ export const day7ReportEmail = (name: string, stats: {
     </div>
     <div style="background:#13131F;border:1px solid #7C3AED44;border-radius:12px;padding:16px;text-align:center;">
       <div style="font-size:28px;font-weight:800;color:#F59E0B;">${stats.streak}</div>
-      <div style="color:#9B99B8;font-size:11px;margin-top:4px;">Day Streak 🔥</div>
+      <div style="color:#9B99B8;font-size:11px;margin-top:4px;">Day Streak</div>
     </div>
   </div>
   <div style="text-align:center;margin:24px 0;">
     <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard"
        style="background:linear-gradient(135deg,#7C3AED,#9F67FF);color:white;padding:13px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;display:inline-block;">
-      View Full Dashboard ⚔️
+      View Full Dashboard →
     </a>
   </div>
   <p style="color:#5C5A7A;font-size:11px;text-align:center;">Life RPG OS · <a href="#" style="color:#5C5A7A;">Unsubscribe</a></p>
@@ -71,7 +71,7 @@ export const day30ComebackEmail = (name: string, level: number, xp: number) => `
 <html lang="en">
 <body style="background:#08080F;color:#F1F0FF;font-family:'Segoe UI',sans-serif;padding:32px;max-width:520px;margin:0 auto;">
   <div style="text-align:center;margin-bottom:24px;">
-    <div style="font-size:52px;">👑</div>
+    <div style="display:inline-block;padding:8px 16px;border-radius:20px;background:#F59E0B22;border:1px solid #F59E0B55;color:#F59E0B;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">WELCOME BACK</div>
   </div>
   <h2 style="color:#F1F0FF;font-size:19px;text-align:center;margin-bottom:12px;">${name}, your character is still here.</h2>
   <p style="color:#9B99B8;line-height:1.7;text-align:center;margin-bottom:20px;">
@@ -85,7 +85,7 @@ export const day30ComebackEmail = (name: string, level: number, xp: number) => `
   <div style="text-align:center;margin:24px 0;">
     <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard"
        style="background:linear-gradient(135deg,#F59E0B,#D97706);color:#000;padding:13px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;display:inline-block;">
-      Resume Your Journey ⚔️
+      Resume Your Journey →
     </a>
   </div>
   <p style="color:#5C5A7A;font-size:11px;text-align:center;">Life RPG OS · <a href="#" style="color:#5C5A7A;">Unsubscribe</a></p>

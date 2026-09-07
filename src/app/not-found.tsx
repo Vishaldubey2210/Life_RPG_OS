@@ -1,12 +1,15 @@
 import Link from 'next/link'
+import { Compass } from 'lucide-react'
 
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-6" style={{ background: '#08080F', color: '#F1F0FF' }}>
       <div className="text-center">
-        <p className="text-6xl mb-4">🗺️</p>
+        <div className="flex justify-center mb-4 text-purple-400">
+          <Compass size={56} />
+        </div>
         <h2 className="text-3xl font-bold font-display mb-2" style={{ color: '#F1F0FF' }}>
-          404 — Quest Not Found ⚔️
+          404 — Quest Not Found
         </h2>
         <p className="text-sm" style={{ color: '#9B99B8' }}>
           This page doesn&apos;t exist in your adventure. You might have wandered off the map.

@@ -7,11 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Users, Copy, Share2, Check, Swords,
   Plus, Link as LinkIcon, Flame, Zap,
-  Crown, ChevronRight,
+  Crown, ChevronRight, HeartHandshake, Scroll, Target, Skull, Award
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Sidebar from '@/components/layout/Sidebar'
 import TopNav from '@/components/layout/TopNav'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 
@@ -81,12 +82,12 @@ function isActiveNow(lastActive?: string): boolean {
 }
 
 const PARTY_TYPE_LABELS: Record<string, string> = {
-  friends: '👥 Friends',
-  couple: '💑 Couple',
-  family: '👨‍👩‍👧 Family',
+  friends: 'Friends',
+  couple: 'Couple',
+  family: 'Family',
 }
 
-const REACTIONS = ['🔥', '💪', '🎉', '⚡', '👑']
+const REACTIONS = ['flame', 'dumbbell', 'party_popper', 'zap', 'crown']
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -144,16 +145,21 @@ function MemberCard({
     >
       {active && (
         <div
-          className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-semibold"
+          className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1"
           style={{ background: '#22C55E22', color: '#22C55E', fontFamily: 'Oxanium, sans-serif' }}
         >
-          ⚡ Active
+          <Zap size={11} /> Active
         </div>
       )}
 
       {/* Avatar + Name */}
       <div className="flex items-center gap-3 mb-3">
-        <div className="text-3xl">{member.profile?.avatar_emoji ?? '⚔️'}</div>
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: '#7C3AED15', border: '1px solid #7C3AED33', color: '#9F67FF' }}
+        >
+          <DynamicIcon name={member.profile?.avatar_emoji ?? 'swords'} size={22} />
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="text-sm font-semibold truncate" style={{ color: '#F1F0FF' }}>
@@ -174,7 +180,9 @@ function MemberCard({
           <div className="flex items-center gap-2 mt-0.5 text-xs" style={{ color: '#9B99B8' }}>
             <span>Lv.{member.profile?.level ?? 1}</span>
             <span>•</span>
-            <span style={{ color: '#F59E0B' }}>🔥 {member.profile?.streak ?? 0}</span>
+            <span className="flex items-center gap-1" style={{ color: '#F59E0B' }}>
+              <Flame size={12} /> {member.profile?.streak ?? 0}
+            </span>
           </div>
         </div>
       </div>
@@ -210,7 +218,7 @@ function MemberCard({
             <button
               key={emoji}
               onClick={() => onReact(member.user_id, emoji)}
-              className="text-sm px-2 py-1 rounded-lg transition-all duration-200"
+              className="p-1.5 rounded-lg transition-all duration-200 text-slate-400 hover:text-white flex items-center justify-center"
               style={{ background: '#1E1E35' }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#2E2E50'
@@ -221,7 +229,7 @@ function MemberCard({
                 e.currentTarget.style.transform = 'scale(1)'
               }}
             >
-              {emoji}
+              <DynamicIcon name={emoji} size={15} />
             </button>
           ))}
         </div>
@@ -235,7 +243,9 @@ function ActivityFeed({ events }: { events: ActivityEvent[] }) {
     <div className="space-y-2">
       {events.length === 0 ? (
         <div className="text-center py-8">
-          <div className="text-3xl mb-2">📜</div>
+          <div className="flex justify-center mb-2">
+            <Scroll className="w-8 h-8 text-slate-600" />
+          </div>
           <div className="text-sm" style={{ color: '#5C5A7A' }}>No party activity yet</div>
         </div>
       ) : (
@@ -251,7 +261,12 @@ function ActivityFeed({ events }: { events: ActivityEvent[] }) {
               borderLeft: `3px solid ${ev.border_color}`,
             }}
           >
-            <span className="text-xl flex-shrink-0">{ev.user_avatar}</span>
+            <div
+              className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+              style={{ background: '#7C3AED15', color: '#9F67FF' }}
+            >
+              <DynamicIcon name={ev.user_avatar} size={16} />
+            </div>
             <div className="flex-1 min-w-0">
               <span className="text-xs font-semibold" style={{ color: '#F1F0FF' }}>
                 {ev.user_name}
@@ -292,7 +307,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
         .insert({
           name: partyName.trim(),
           party_type: partyType,
-          emoji: partyType === 'couple' ? '💑' : partyType === 'family' ? '👨‍👩‍👧' : '👥',
+          emoji: partyType === 'couple' ? 'couple' : partyType === 'family' ? 'family' : 'friends',
           created_by: user.id,
         })
         .select()
@@ -306,7 +321,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
         role: 'leader',
       })
 
-      toast.success(`⚔️ Party "${partyName}" created!`)
+      toast.success(`Party "${partyName}" created!`)
       onCreated()
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to create party')
@@ -346,7 +361,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
 
       if (joinErr) throw joinErr
 
-      toast.success(`🎉 Joined "${party.name}"!`)
+      toast.success(`Joined "${party.name}"!`)
       onCreated()
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to join party')
@@ -366,9 +381,11 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ repeat: Infinity, duration: 3 }}
-          className="text-7xl mb-4"
+          className="flex justify-center mb-4"
         >
-          👥
+          <div className="w-20 h-20 rounded-3xl flex items-center justify-center bg-purple-500/15 border border-purple-500/30 text-purple-400">
+            <Users size={40} />
+          </div>
         </motion.div>
         <h2 className="text-2xl font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>
           Adventure is better with others
@@ -387,7 +404,12 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
           }}
           onClick={() => setMode(mode === 'create' ? 'idle' : 'create')}
         >
-          <div className="text-3xl mb-3">⚔️</div>
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center mb-3"
+            style={{ background: '#7C3AED22', color: '#9F67FF' }}
+          >
+            <Swords size={24} />
+          </div>
           <h3 className="font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>Start a Party</h3>
           <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
             Create a new party and invite your friends
@@ -417,9 +439,9 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
 
                 <div className="flex gap-2 mb-4">
                   {[
-                    { value: 'friends', label: '👥 Friends' },
-                    { value: 'couple', label: '💑 Couple' },
-                    { value: 'family', label: '👨‍👩‍👧 Family' },
+                    { value: 'friends', label: 'Friends' },
+                    { value: 'couple', label: 'Couple' },
+                    { value: 'family', label: 'Family' },
                   ].map(({ value, label }) => (
                     <button
                       key={value}
@@ -438,7 +460,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                 <button
                   onClick={handleCreate}
                   disabled={loading}
-                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all"
+                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
                   style={{
                     background: loading ? '#5C5A7A' : '#7C3AED',
                     color: '#fff',
@@ -446,7 +468,8 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                     boxShadow: loading ? 'none' : '0 0 20px #7C3AED44',
                   }}
                 >
-                  {loading ? 'Creating...' : 'Create Party ⚔️'}
+                  <Swords size={16} />
+                  <span>{loading ? 'Creating...' : 'Create Party'}</span>
                 </button>
               </motion.div>
             )}
@@ -472,7 +495,12 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
           }}
           onClick={() => setMode(mode === 'join' ? 'idle' : 'join')}
         >
-          <div className="text-3xl mb-3">🔗</div>
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center mb-3"
+            style={{ background: '#22C55E22', color: '#22C55E' }}
+          >
+            <LinkIcon size={24} />
+          </div>
           <h3 className="font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>Join with Code</h3>
           <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
             Enter an 8-character invite code to join
@@ -506,7 +534,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                 <button
                   onClick={handleJoin}
                   disabled={loading}
-                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all"
+                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
                   style={{
                     background: loading ? '#5C5A7A' : '#22C55E',
                     color: loading ? '#fff' : '#08080F',
@@ -514,7 +542,8 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                     boxShadow: loading ? 'none' : '0 0 20px #22C55E44',
                   }}
                 >
-                  {loading ? 'Joining...' : 'Join Party 🔗'}
+                  <LinkIcon size={16} />
+                  <span>{loading ? 'Joining...' : 'Join Party'}</span>
                 </button>
               </motion.div>
             )}
@@ -560,7 +589,7 @@ function ShareQuestModal({
         habit_id: selected,
         shared_by: currentUserId,
       })
-      toast.success('Quest shared with party! 👥')
+      toast.success('Quest shared with party!')
       onClose()
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to share quest')
@@ -578,9 +607,12 @@ function ShareQuestModal({
         className="w-full max-w-sm rounded-2xl p-6"
         style={{ background: '#13131F', border: '1px solid #2E2E50' }}
       >
-        <h3 className="font-bold text-lg mb-1 font-display" style={{ color: '#F1F0FF' }}>
-          Share a Quest 👥
-        </h3>
+        <div className="flex items-center gap-2 mb-1">
+          <Users size={20} className="text-purple-400" />
+          <h3 className="font-bold text-lg font-display" style={{ color: '#F1F0FF' }}>
+            Share a Quest
+          </h3>
+        </div>
         <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
           Shared quests appear in all members&apos; quest lists.
         </p>
@@ -597,7 +629,12 @@ function ShareQuestModal({
                 color: '#F1F0FF',
               }}
             >
-              <span className="text-xl">{h.emoji}</span>
+              <div
+                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: '#7C3AED15', color: '#9F67FF' }}
+              >
+                <DynamicIcon name={h.emoji} size={18} />
+              </div>
               <span className="text-sm">{h.name}</span>
             </button>
           ))}
@@ -769,14 +806,14 @@ export default function PartyPage() {
           completed_at: string
           habits: { name: string; xp_reward: number } | { name: string; xp_reward: number }[]
         }) => {
-          const p = profileMap[c.user_id] ?? { display_name: 'Unknown', avatar_emoji: '⚔️' }
+          const p = profileMap[c.user_id] ?? { display_name: 'Unknown', avatar_emoji: 'swords' }
           const h = Array.isArray(c.habits) ? c.habits[0] : c.habits
           return {
             id: c.id,
             type: 'completion' as const,
             user_name: p.display_name,
             user_avatar: p.avatar_emoji,
-            message: `completed ${h?.name ?? 'a quest'} +${h?.xp_reward ?? 0} XP 🎯`,
+            message: `completed ${h?.name ?? 'a quest'} +${h?.xp_reward ?? 0} XP`,
             xp: h?.xp_reward ?? 0,
             timestamp: c.completed_at,
             border_color: '#22C55E',
@@ -824,14 +861,14 @@ export default function PartyPage() {
             type: 'completion',
             user_name: member.profile.display_name,
             user_avatar: member.profile.avatar_emoji,
-            message: `completed ${habitData?.name ?? 'a quest'} +${habitData?.xp_reward ?? 0} XP 🎯`,
+            message: `completed ${habitData?.name ?? 'a quest'} +${habitData?.xp_reward ?? 0} XP`,
             xp: habitData?.xp_reward ?? 0,
             timestamp: completion.completed_at,
             border_color: '#22C55E',
           }
 
           setActivity(prev => [newEvent, ...prev].slice(0, 20))
-          toast.success(`${member.profile.avatar_emoji} ${member.profile.display_name} completed a quest! 🎯`)
+          toast.success(`${member.profile.display_name} completed a quest!`)
         }
       )
       .subscribe()
@@ -848,10 +885,10 @@ export default function PartyPage() {
         p_completion_id: null,
         p_emoji: emoji,
       })
-      toast.success(`${emoji} reaction sent!`)
+      toast.success('Reaction sent!')
     } catch {
       // If RPC doesn't exist yet, just show toast
-      toast.success(`${emoji} sent to party member!`)
+      toast.success('Reaction sent to party member!')
     }
   }
 
@@ -859,7 +896,7 @@ export default function PartyPage() {
     if (!party) return
     navigator.clipboard.writeText(party.invite_code)
     setCodeCopied(true)
-    toast.success('Invite code copied! 📋')
+    toast.success('Invite code copied!')
     setTimeout(() => setCodeCopied(false), 2000)
   }
 
@@ -867,7 +904,7 @@ export default function PartyPage() {
     if (!party) return
     const url = `${window.location.origin}/party/join/${party.invite_code}`
     navigator.clipboard.writeText(`Join my party on Life RPG OS! Code: ${party.invite_code} → ${url}`)
-    toast.success('Share link copied! 🔗')
+    toast.success('Share link copied!')
   }
 
   const loading = profileLoading || partyLoading
@@ -875,7 +912,7 @@ export default function PartyPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen" style={{ background: '#08080F' }}>
-        <Sidebar userAvatar={profile?.avatar_emoji ?? '⚔️'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
+        <Sidebar userAvatar={profile?.avatar_emoji ?? 'swords'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
         <main className="flex-1 p-6 pt-20" style={{ marginLeft: 240 }}>
           <div className="max-w-6xl mx-auto">
             <div className="h-8 rounded w-48 mb-2 animate-pulse" style={{ background: '#13131F' }} />
@@ -892,13 +929,13 @@ export default function PartyPage() {
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji ?? 'swords'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
         completedToday={completions_today.length}
       />
       <TopNav
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji ?? 'swords'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -911,7 +948,7 @@ export default function PartyPage() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
-              Party System 👥
+              Party System
             </h1>
             <p style={{ color: '#9B99B8' }}>
               Team up, share quests, and conquer goals together.
@@ -941,7 +978,12 @@ export default function PartyPage() {
 
                 <div className="relative flex flex-col md:flex-row md:items-center gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="text-5xl">{party.emoji}</div>
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
+                    >
+                      <DynamicIcon name={party.emoji} size={28} />
+                    </div>
                     <div>
                       <div className="flex items-center gap-3 flex-wrap">
                         <h2 className="text-xl font-bold font-display" style={{ color: '#F1F0FF' }}>
@@ -1005,14 +1047,14 @@ export default function PartyPage() {
               {/* Tabs */}
               <div className="flex gap-2">
                 {[
-                  { key: 'members', label: '⚔️ Members' },
-                  { key: 'activity', label: '📜 Activity' },
-                  { key: 'quests', label: '👥 Shared Quests' },
-                ].map(({ key, label }) => (
+                  { key: 'members', label: 'Members', icon: Swords },
+                  { key: 'activity', label: 'Activity', icon: Scroll },
+                  { key: 'quests', label: 'Shared Quests', icon: Users },
+                ].map(({ key, label, icon: TabIcon }) => (
                   <button
                     key={key}
                     onClick={() => setActiveTab(key as typeof activeTab)}
-                    className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
+                    className="px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
                     style={{
                       background: activeTab === key ? '#7C3AED' : '#13131F',
                       color: activeTab === key ? '#fff' : '#9B99B8',
@@ -1020,7 +1062,8 @@ export default function PartyPage() {
                       fontFamily: 'Oxanium, sans-serif',
                     }}
                   >
-                    {label}
+                    <TabIcon size={15} />
+                    <span>{label}</span>
                   </button>
                 ))}
               </div>
@@ -1061,10 +1104,10 @@ export default function PartyPage() {
                         Party Activity Feed
                       </h3>
                       <span
-                        className="text-xs px-2 py-0.5 rounded-full"
+                        className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
                         style={{ background: '#22C55E22', color: '#22C55E' }}
                       >
-                        Live ⚡
+                        <Zap size={11} /> Live
                       </span>
                     </div>
                     <ActivityFeed events={activity} />
@@ -1106,7 +1149,14 @@ export default function PartyPage() {
                     </div>
 
                     <div className="text-center py-8">
-                      <div className="text-4xl mb-3">🎯</div>
+                      <div className="flex justify-center mb-3">
+                        <div
+                          className="w-12 h-12 rounded-xl flex items-center justify-center"
+                          style={{ background: '#7C3AED15', color: '#9F67FF' }}
+                        >
+                          <Target size={24} />
+                        </div>
+                      </div>
                       <p className="text-sm" style={{ color: '#9B99B8' }}>
                         {party.created_by === profile?.id
                           ? 'Share one of your quests with your party. All members get 50% bonus XP when completed.'
@@ -1134,13 +1184,19 @@ export default function PartyPage() {
                 />
                 <div className="relative flex items-center justify-between flex-wrap gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="text-5xl">😈</div>
+                    <div
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#EF444422', border: '1px solid #EF444444', color: '#EF4444' }}
+                    >
+                      <Skull size={32} />
+                    </div>
                     <div>
                       <div
-                        className="text-xs font-bold mb-1"
+                        className="text-xs font-bold mb-1 flex items-center gap-1.5"
                         style={{ color: '#EF4444', fontFamily: 'Oxanium, sans-serif' }}
                       >
-                        ⚔️ PARTY BOSS
+                        <Swords size={12} />
+                        <span>PARTY BOSS</span>
                       </div>
                       <div className="text-lg font-bold font-display" style={{ color: '#F1F0FF' }}>
                         Procrastination Demon
@@ -1192,7 +1248,12 @@ export default function PartyPage() {
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#EC489933')}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-4xl">💑</div>
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: '#EC489922', border: '1px solid #EC489944', color: '#EC4899' }}
+                    >
+                      <HeartHandshake size={24} />
+                    </div>
                     <div>
                       <div className="font-bold font-display" style={{ color: '#F1F0FF' }}>
                         Couple Mode

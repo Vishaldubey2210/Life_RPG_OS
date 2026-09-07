@@ -3,7 +3,6 @@ import { ImageResponse } from '@vercel/og'
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const title = searchParams.get('title') || 'Achievement Unlocked'
-  const emoji = searchParams.get('emoji') || '🏆'
   const desc = searchParams.get('desc') || 'Completed a legendary quest'
   const username = searchParams.get('username') || 'Adventurer'
 
@@ -25,11 +24,28 @@ export async function GET(request: Request) {
           position: 'relative',
         }}
       >
-        <div style={{ position: 'absolute', top: 20, right: 24, color: '#5C5A7A', fontSize: 14 }}>
-          ⚔️ Life RPG OS
+        <div style={{ position: 'absolute', top: 20, right: 24, color: '#5C5A7A', fontSize: 14, fontWeight: 700 }}>
+          Life RPG OS
         </div>
 
-        <div style={{ fontSize: 96, marginBottom: 16 }}>{emoji}</div>
+        <div
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 20,
+            background: 'rgba(245,158,11,0.15)',
+            border: '2px solid #F59E0B',
+            color: '#F59E0B',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 32,
+            fontWeight: 800,
+            marginBottom: 16,
+          }}
+        >
+          XP
+        </div>
 
         <div
           style={{
@@ -79,7 +95,7 @@ export async function GET(request: Request) {
             fontWeight: 700,
           }}
         >
-          Unlocked by {username} ⚔️
+          Unlocked by {username}
         </div>
       </div>
     ),

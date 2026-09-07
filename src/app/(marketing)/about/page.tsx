@@ -1,3 +1,5 @@
+import { Swords } from 'lucide-react'
+
 export default function AboutPage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-16 text-white">
@@ -16,7 +18,9 @@ export default function AboutPage() {
         <div className="rounded-2xl border border-slate-800 bg-[#101018] p-6">
           <h2 className="mb-3 text-2xl font-semibold">The team</h2>
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-purple-500/20 text-2xl">⚔️</div>
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-purple-500/20 text-purple-400">
+              <Swords size={24} />
+            </div>
             <div>
               <div className="font-semibold">Founder</div>
               <div className="text-slate-400">You</div>

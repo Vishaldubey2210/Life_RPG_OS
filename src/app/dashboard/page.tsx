@@ -196,7 +196,7 @@ export default function DashboardPage() {
           return {
             key: d.achievement_key as string,
             name: def?.name ?? '',
-            emoji: def?.emoji ?? '🏆',
+            emoji: def?.emoji ?? 'trophy',
             rarity: def?.rarity ?? 'common',
             earned_at: d.earned_at as string,
           }
@@ -217,8 +217,8 @@ export default function DashboardPage() {
       return
     }
 
-    const multiplierText = result.multiplier > 1 ? ` (${result.multiplier}x 🔥)` : ''
-    toast.success(`+${result.xp_earned} XP ⚡ Quest Complete!${multiplierText}`, { duration: 3000 })
+    const multiplierText = result.multiplier > 1 ? ` (${result.multiplier}x Streak Bonus)` : ''
+    toast.success(`+${result.xp_earned} XP Quest Complete!${multiplierText}`, { duration: 3000 })
 
     if (result.leveled_up) {
       setNewLevel(result.new_level)
@@ -269,7 +269,7 @@ export default function DashboardPage() {
     <>
       <div className="flex min-h-screen" style={{ background: '#08080F' }}>
         <Sidebar
-          userAvatar={profile?.avatar_emoji ?? '⚔️'}
+          userAvatar={profile?.avatar_emoji ?? 'swords'}
           userName={profile?.display_name ?? 'Adventurer'}
           userLevel={profile?.level ?? 1}
           completedToday={allCompleted.length}

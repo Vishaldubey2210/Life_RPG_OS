@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { Swords, Flame } from 'lucide-react'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 
 interface InvitePageProps {
   params: Promise<{ code: string }>
@@ -44,7 +46,23 @@ export default async function InvitePage({ params }: InvitePageProps) {
           boxShadow: '0 0 50px rgba(124,58,237,0.25)',
         }}
       >
-        <div style={{ fontSize: 64, marginBottom: 16 }}>⚔️</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+          <div
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 20,
+              background: 'rgba(124,58,237,0.2)',
+              border: '2px solid #7C3AED',
+              color: '#9F67FF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Swords size={36} />
+          </div>
+        </div>
         <h1
           style={{
             fontFamily: "'Oxanium', sans-serif",
@@ -74,7 +92,22 @@ export default async function InvitePage({ params }: InvitePageProps) {
             textAlign: 'left',
           }}
         >
-          <div style={{ fontSize: 40 }}>{inviter.avatar_emoji || '⚔️'}</div>
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 12,
+              background: 'rgba(124,58,237,0.15)',
+              border: '1px solid rgba(124,58,237,0.3)',
+              color: '#9F67FF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <DynamicIcon name={inviter.avatar_emoji || 'swords'} size={24} />
+          </div>
           <div>
             <div style={{ fontFamily: "'Oxanium', sans-serif", fontWeight: 700, fontSize: 16 }}>
               {inviter.display_name}
@@ -82,8 +115,9 @@ export default async function InvitePage({ params }: InvitePageProps) {
             <div style={{ color: '#7C3AED', fontSize: 13, fontWeight: 600 }}>
               Level {inviter.level || 1} • {inviter.total_xp || 0} XP
             </div>
-            <div style={{ color: '#F59E0B', fontSize: 12, marginTop: 4 }}>
-              🔥 {inviter.streak_days || 0} Day Streak
+            <div style={{ color: '#F59E0B', fontSize: 12, marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Flame size={12} />
+              <span>{inviter.streak_days || 0} Day Streak</span>
             </div>
           </div>
         </div>
@@ -91,7 +125,10 @@ export default async function InvitePage({ params }: InvitePageProps) {
         <Link
           href={`/login?ref=${code}`}
           style={{
-            display: 'block',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
             width: '100%',
             padding: '16px 0',
             background: 'linear-gradient(135deg, #7C3AED, #9F67FF)',
@@ -104,7 +141,8 @@ export default async function InvitePage({ params }: InvitePageProps) {
             boxShadow: '0 0 24px rgba(124,58,237,0.4)',
           }}
         >
-          Accept Challenge ⚔️
+          <Swords size={18} />
+          <span>Accept Challenge</span>
         </Link>
       </div>
     </div>

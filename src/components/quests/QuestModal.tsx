@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Loader2, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Zap, Clock, Timer, Layers, Sparkles } from 'lucide-react'
+import { X, Loader2, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Zap, Clock, Timer, Layers, Sparkles, Swords, Plus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 const CATEGORIES = [
@@ -17,12 +17,6 @@ const DIFFICULTIES = [
   { key: 'medium',    label: 'Medium',    xp: 25  },
   { key: 'hard',      label: 'Hard',      xp: 50  },
   { key: 'legendary', label: 'Legendary', xp: 100 },
-]
-
-const EMOJI_OPTIONS = [
-  '💪','🧠','🧘','💰','❤️','🗣️','📚','🏃','🥗','😴',
-  '💧','📝','🎯','🔥','⚡','🌟','💎','🏆','📖','🎵',
-  '🎨','💻','🌱','🤝','💫','🧪','🏋️','📊','🎮','🌙',
 ]
 
 const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
@@ -62,7 +56,7 @@ export default function QuestModal({
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('str')
   const [difficulty, setDifficulty] = useState('easy')
-  const [emoji, setEmoji] = useState('⚔️')
+  const [emoji, setEmoji] = useState('swords')
   const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'custom'>('daily')
   const [customDays, setCustomDays] = useState<number[]>([])
   const [scheduledTime, setScheduledTime] = useState('')
@@ -100,7 +94,7 @@ export default function QuestModal({
       setDescription(initialData.description ?? '')
       setCategory(initialData.stat_category ?? 'str')
       setDifficulty(initialData.difficulty ?? 'easy')
-      setEmoji(initialData.emoji ?? '⚔️')
+      setEmoji(initialData.emoji ?? 'swords')
       setFrequency(initialData.frequency ?? 'daily')
       setCustomDays(initialData.custom_days ?? [])
       setScheduledTime(initialData.scheduled_time ?? '')
@@ -135,7 +129,7 @@ export default function QuestModal({
         stat_category: category,
         difficulty,
         xp_reward: currentXP,
-        emoji: emoji || '📋',
+        emoji: emoji || 'swords',
         frequency,
         custom_days: customDays,
         scheduled_time: scheduledTime || undefined,
@@ -282,8 +276,8 @@ export default function QuestModal({
                     onChange={(e) => setScheduledTime(e.target.value)}
                     className="w-full px-3 py-2.5 rounded-xl outline-none text-sm bg-[#0F0F1A] border border-slate-800 text-white focus:border-purple-500"
                   />
-                  <p className="text-[11px] text-amber-400/80 mt-1">
-                    ⚡ Adding a time = 2x more likely to complete
+                  <p className="text-[11px] text-amber-400/80 mt-1 flex items-center gap-1">
+                    <Zap size={11} className="inline flex-shrink-0" /> Adding a time = 2x more likely to complete
                   </p>
                 </div>
 
@@ -345,9 +339,10 @@ export default function QuestModal({
                   <button
                     type="button"
                     onClick={generateIntentionTemplate}
-                    className="text-[11px] text-purple-400 hover:text-purple-300 font-semibold"
+                    className="text-[11px] text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-1"
                   >
-                    Auto-Fill Template ✨
+                    <Sparkles size={11} />
+                    <span>Auto-Fill Template</span>
                   </button>
                 </div>
                 <input
@@ -439,7 +434,10 @@ export default function QuestModal({
                 ) : editMode ? (
                   'Save Changes'
                 ) : (
-                  'Add Quest ⚔️'
+                  <>
+                    <Plus size={16} />
+                    <span>Add Quest</span>
+                  </>
                 )}
               </button>
             </div>

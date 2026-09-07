@@ -40,8 +40,8 @@ export async function GET(request: Request) {
           userId: user.id,
           title:
             user.streak_days > 0
-              ? `🔥 Don't break your ${user.streak_days}-day streak!`
-              : '⚔️ Your quests are waiting, adventurer!',
+              ? `Don't break your ${user.streak_days}-day streak!`
+              : 'Your quests are waiting, adventurer!',
           body: 'Complete your daily quests to earn XP and level up.',
           url: '/quests',
         }),

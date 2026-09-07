@@ -4,11 +4,15 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Copy, Check, Heart, Zap, Crown, Link as LinkIcon, ArrowLeft } from 'lucide-react'
+import {
+  Copy, Check, Heart, Zap, Crown, Link as LinkIcon,
+  ArrowLeft, Flame, Trophy, Sparkles, Hourglass, Camera, HeartHandshake, Target
+} from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
 import TopNav from '@/components/layout/TopNav'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 
@@ -51,19 +55,21 @@ function daysSince(dateStr: string): number {
 }
 
 const STAT_CONFIG = [
-  { key: 'str', label: 'STR', icon: '💪', color: '#EF4444' },
-  { key: 'int', label: 'INT', icon: '🧠', color: '#3B82F6' },
-  { key: 'wis', label: 'WIS', icon: '🧘', color: '#22C55E' },
-  { key: 'vit', label: 'VIT', icon: '❤️', color: '#EF4444' },
-  { key: 'gold', label: 'GOLD', icon: '💰', color: '#F59E0B' },
-  { key: 'cha', label: 'CHA', icon: '🗣️', color: '#9F67FF' },
+  { key: 'str', label: 'STR', icon: 'str', color: '#EF4444' },
+  { key: 'int', label: 'INT', icon: 'int', color: '#3B82F6' },
+  { key: 'wis', label: 'WIS', icon: 'wis', color: '#22C55E' },
+  { key: 'vit', label: 'VIT', icon: 'vit', color: '#EF4444' },
+  { key: 'gold', label: 'GOLD', icon: 'gold', color: '#F59E0B' },
+  { key: 'cha', label: 'CHA', icon: 'cha', color: '#9F67FF' },
 ]
 
 function StatBar({ value, color, label, icon }: { value: number; color: string; label: string; icon: string }) {
   const pct = Math.min(100, (value / 50) * 100)
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm w-4">{icon}</span>
+      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0" style={{ color }}>
+        <DynamicIcon name={icon} size={13} />
+      </div>
       <span className="text-xs font-semibold w-8" style={{ color: '#9B99B8', fontFamily: 'Oxanium, sans-serif' }}>{label}</span>
       <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
         <motion.div
@@ -129,7 +135,16 @@ function ProfilePanel({
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <div className="relative">
-            <div className="text-5xl">{profile.avatar_emoji}</div>
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center"
+              style={{
+                background: isMe ? '#7C3AED22' : '#EC489922',
+                border: `2px solid ${isMe ? '#7C3AED66' : '#EC489966'}`,
+                color: isMe ? '#9F67FF' : '#F472B6',
+              }}
+            >
+              <DynamicIcon name={profile.avatar_emoji ?? 'swords'} size={28} />
+            </div>
             <div
               className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
               style={{
@@ -202,21 +217,21 @@ function ProfilePanel({
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-2">
           <div className="text-center p-2 rounded-xl" style={{ background: '#0F0F1A' }}>
-            <div className="text-lg">🔥</div>
+            <Flame size={18} className="text-amber-400 mx-auto mb-1" />
             <div className="text-sm font-bold" style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
               {profile.streak}
             </div>
             <div className="text-xs" style={{ color: '#5C5A7A' }}>Streak</div>
           </div>
           <div className="text-center p-2 rounded-xl" style={{ background: '#0F0F1A' }}>
-            <div className="text-lg">⚡</div>
+            <Zap size={18} className="text-purple-400 mx-auto mb-1" />
             <div className="text-sm font-bold" style={{ color: '#9F67FF', fontFamily: 'Oxanium, sans-serif' }}>
               {weeklyXp}
             </div>
             <div className="text-xs" style={{ color: '#5C5A7A' }}>XP/week</div>
           </div>
           <div className="text-center p-2 rounded-xl" style={{ background: '#0F0F1A' }}>
-            <div className="text-lg">🏆</div>
+            <Trophy size={18} className="text-green-400 mx-auto mb-1" />
             <div className="text-sm font-bold" style={{ color: '#22C55E', fontFamily: 'Oxanium, sans-serif' }}>
               {profile.level * 100 + profile.xp}
             </div>
@@ -321,7 +336,7 @@ export default function CouplePage() {
 
       if (error) throw error
       setCoupleLink(data)
-      toast.success('💑 Invite link generated!')
+      toast.success('Invite link generated!')
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to generate invite')
     }
@@ -347,7 +362,7 @@ export default function CouplePage() {
 
       if (updateErr) throw updateErr
 
-      toast.success('💑 Linked! Welcome to Couple Mode!')
+      toast.success('Linked! Welcome to Couple Mode!')
       fetchCoupleData()
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to link')
@@ -371,7 +386,7 @@ export default function CouplePage() {
         a.click()
         URL.revokeObjectURL(url)
       })
-      toast.success('Report saved! 📸')
+      toast.success('Report saved!')
     } catch {
       toast.error('Failed to save report')
     }
@@ -382,7 +397,7 @@ export default function CouplePage() {
     const url = `${window.location.origin}/couple/join/${coupleLink.invite_code}`
     navigator.clipboard.writeText(url)
     setCodeCopied(true)
-    toast.success('Invite link copied! 💑')
+    toast.success('Invite link copied!')
     setTimeout(() => setCodeCopied(false), 2000)
   }
 
@@ -391,7 +406,7 @@ export default function CouplePage() {
   if (pageLoading) {
     return (
       <div className="flex min-h-screen" style={{ background: '#08080F' }}>
-        <Sidebar userAvatar={profile?.avatar_emoji ?? '⚔️'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
+        <Sidebar userAvatar={profile?.avatar_emoji ?? 'swords'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
         <main className="flex-1 p-6 pt-20" style={{ marginLeft: 240 }}>
           <SkeletonLoader />
         </main>
@@ -402,12 +417,12 @@ export default function CouplePage() {
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji ?? 'swords'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
       <TopNav
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji ?? 'swords'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -428,7 +443,7 @@ export default function CouplePage() {
             </Link>
             <div className="w-px h-4" style={{ background: '#2E2E50' }} />
             <h1 className="text-3xl font-bold font-display" style={{ color: '#F1F0FF' }}>
-              Couple Mode 💑
+              Couple Mode
             </h1>
           </div>
 
@@ -442,9 +457,11 @@ export default function CouplePage() {
               <motion.div
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
-                className="text-8xl mb-6"
+                className="flex justify-center mb-6"
               >
-                💑
+                <div className="w-20 h-20 rounded-3xl flex items-center justify-center bg-pink-500/15 border border-pink-500/30 text-pink-400">
+                  <HeartHandshake size={44} />
+                </div>
               </motion.div>
               <h2 className="text-2xl font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>
                 Couple Mode
@@ -456,7 +473,7 @@ export default function CouplePage() {
               <div className="flex flex-col gap-4 w-full max-w-sm">
                 <button
                   onClick={generateInvite}
-                  className="w-full py-3 rounded-xl font-bold text-sm transition-all"
+                  className="w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
                   style={{
                     background: 'linear-gradient(135deg, #7C3AED, #EC4899)',
                     color: '#fff',
@@ -464,7 +481,8 @@ export default function CouplePage() {
                     boxShadow: '0 0 20px #EC489944',
                   }}
                 >
-                  💑 Generate Invite Link
+                  <HeartHandshake size={16} />
+                  <span>Generate Invite Link</span>
                 </button>
 
                 <div className="flex items-center gap-3">
@@ -513,9 +531,11 @@ export default function CouplePage() {
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ repeat: Infinity, duration: 2 }}
-                className="text-7xl mb-6"
+                className="flex justify-center mb-6"
               >
-                ⏳
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-amber-500/15 border border-amber-500/30 text-amber-400">
+                  <Hourglass size={32} />
+                </div>
               </motion.div>
               <h2 className="text-xl font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>
                 Waiting for your partner...
@@ -562,23 +582,34 @@ export default function CouplePage() {
                   }}
                 />
                 <div className="relative flex items-center justify-center gap-6 flex-wrap">
-                  <div className="text-3xl">{profile.avatar_emoji}</div>
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
+                  >
+                    <DynamicIcon name={profile.avatar_emoji ?? 'swords'} size={24} />
+                  </div>
                   <div className="flex flex-col items-center gap-1">
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ repeat: Infinity, duration: 1.5 }}
-                      className="text-4xl"
+                      className="text-pink-400"
                     >
-                      💑
+                      <HeartHandshake size={32} />
                     </motion.div>
                     <div className="text-sm font-bold font-display" style={{ color: '#EC4899' }}>
                       {daysSince(coupleLink.created_at)} days together
                     </div>
-                    <div className="text-xs" style={{ color: '#9B99B8' }}>
-                      ⚡ {coupleLink.shared_xp} Shared XP earned together
+                    <div className="text-xs flex items-center gap-1" style={{ color: '#9B99B8' }}>
+                      <Zap size={12} className="text-pink-400" />
+                      <span>{coupleLink.shared_xp} Shared XP earned together</span>
                     </div>
                   </div>
-                  <div className="text-3xl">{partner.avatar_emoji}</div>
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: '#EC489922', border: '1px solid #EC489944', color: '#F472B6' }}
+                  >
+                    <DynamicIcon name={partner.avatar_emoji ?? 'swords'} size={24} />
+                  </div>
                 </div>
               </motion.div>
 
@@ -628,14 +659,15 @@ export default function CouplePage() {
                       onMouseEnter={(e) => (e.currentTarget.style.background = '#6D28D9')}
                       onMouseLeave={(e) => (e.currentTarget.style.background = '#7C3AED')}
                     >
-                      📸 Save as Image
+                      <Camera size={14} />
+                      <span>Save as Image</span>
                     </button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* XP Leader */}
                     <div className="p-4 rounded-xl text-center" style={{ background: '#0F0F1A' }}>
-                      <div className="text-2xl mb-1">⚡</div>
+                      <Zap size={20} className="text-purple-400 mx-auto mb-1" />
                       <div className="text-xs mb-2" style={{ color: '#9B99B8' }}>XP This Week</div>
                       <div className="flex items-center justify-center gap-3">
                         <div>
@@ -653,15 +685,16 @@ export default function CouplePage() {
                         </div>
                       </div>
                       {myWeeklyXp !== partnerWeeklyXp && (
-                        <div className="text-xs mt-2 font-bold" style={{ color: '#F59E0B' }}>
-                          👑 {myWeeklyXp > partnerWeeklyXp ? profile.display_name : partner.display_name} wins!
+                        <div className="text-xs mt-2 font-bold flex items-center justify-center gap-1" style={{ color: '#F59E0B' }}>
+                          <Crown size={12} />
+                          <span>{myWeeklyXp > partnerWeeklyXp ? profile.display_name : partner.display_name} wins!</span>
                         </div>
                       )}
                     </div>
 
                     {/* Combined XP */}
                     <div className="p-4 rounded-xl text-center" style={{ background: '#0F0F1A' }}>
-                      <div className="text-2xl mb-1">💑</div>
+                      <HeartHandshake size={20} className="text-pink-400 mx-auto mb-1" />
                       <div className="text-xs mb-2" style={{ color: '#9B99B8' }}>Power Couple Score</div>
                       <div
                         className="text-3xl font-bold"
@@ -679,20 +712,20 @@ export default function CouplePage() {
 
                     {/* Streak Comparison */}
                     <div className="p-4 rounded-xl text-center" style={{ background: '#0F0F1A' }}>
-                      <div className="text-2xl mb-1">🔥</div>
+                      <Flame size={20} className="text-amber-400 mx-auto mb-1" />
                       <div className="text-xs mb-2" style={{ color: '#9B99B8' }}>Streaks</div>
                       <div className="flex items-center justify-center gap-3">
                         <div>
                           <div className="text-xs" style={{ color: '#7C3AED' }}>{profile.display_name}</div>
                           <div className="font-bold text-lg" style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
-                            {profile.streak}🔥
+                            {profile.streak}
                           </div>
                         </div>
                         <span style={{ color: '#5C5A7A' }}>vs</span>
                         <div>
                           <div className="text-xs" style={{ color: '#EC4899' }}>{partner.display_name}</div>
                           <div className="font-bold text-lg" style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
-                            {partner.streak}🔥
+                            {partner.streak}
                           </div>
                         </div>
                       </div>
@@ -711,12 +744,12 @@ export default function CouplePage() {
                         border: '1px solid #22C55E44',
                       }}
                     >
-                      <div className="text-2xl mb-1">🎯</div>
+                      <Target size={20} className="text-green-400 mx-auto mb-1" />
                       <div className="font-bold font-display" style={{ color: '#22C55E' }}>
                         Perfect Sync!
                       </div>
                       <div className="text-sm" style={{ color: '#9B99B8' }}>
-                        Both of you completed all quests today! +25 bonus XP each 🎉
+                        Both of you completed all quests today! +25 bonus XP each
                       </div>
                     </motion.div>
                   )}
@@ -738,7 +771,7 @@ export default function CouplePage() {
                   </h3>
                 </div>
                 <div className="flex gap-3 flex-wrap">
-                  {['💪', '🔥', '😍', '👑', '❤️'].map(emoji => (
+                  {['dumbbell', 'flame', 'sparkles', 'crown', 'heart'].map(emoji => (
                     <button
                       key={emoji}
                       onClick={async () => {
@@ -751,9 +784,9 @@ export default function CouplePage() {
                             p_emoji: emoji,
                           })
                         } catch { /* ok */ }
-                        toast.success(`${emoji} sent to ${partner.display_name}!`)
+                        toast.success(`Reaction sent to ${partner.display_name}!`)
                       }}
-                      className="text-2xl px-4 py-3 rounded-xl transition-all duration-200"
+                      className="p-3 rounded-xl transition-all duration-200 text-pink-400 hover:text-white flex items-center justify-center"
                       style={{ background: '#1E1E35' }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.background = '#2E2E50'
@@ -764,7 +797,7 @@ export default function CouplePage() {
                         e.currentTarget.style.transform = 'scale(1) rotate(0deg)'
                       }}
                     >
-                      {emoji}
+                      <DynamicIcon name={emoji} size={20} />
                     </button>
                   ))}
                 </div>

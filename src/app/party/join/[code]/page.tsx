@@ -5,8 +5,9 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Users, ArrowRight, Shield } from 'lucide-react'
+import { Users, ArrowRight, Shield, Swords, XCircle, HeartHandshake } from 'lucide-react'
 import { toast } from 'sonner'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { createClient } from '@/lib/supabase/client'
 
 interface PageProps {
@@ -94,7 +95,7 @@ export default function PartyJoinPage({ params }: PageProps) {
 
       if (joinErr) throw joinErr
 
-      toast.success(`🎉 Joined "${party.name}"!`)
+      toast.success(`Joined "${party.name}"!`)
       router.push('/party')
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to join party')
@@ -103,13 +104,15 @@ export default function PartyJoinPage({ params }: PageProps) {
     }
   }
 
-  const typeLabel: Record<string, string> = { friends: '👥 Friends', couple: '💑 Couple', family: '👨‍👩‍👧 Family' }
+  const typeLabel: Record<string, string> = { friends: 'Friends', couple: 'Couple', family: 'Family' }
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#08080F' }}>
         <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">👥</div>
+          <div className="flex justify-center mb-4">
+            <Users className="w-10 h-10 text-purple-400 animate-pulse" />
+          </div>
           <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
             Loading party details...
           </div>
@@ -126,7 +129,9 @@ export default function PartyJoinPage({ params }: PageProps) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-sm"
         >
-          <div className="text-6xl mb-4">❌</div>
+          <div className="flex justify-center mb-4">
+            <XCircle className="w-14 h-14 text-red-500" />
+          </div>
           <h2 className="text-xl font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>Party Not Found</h2>
           <p className="text-sm mb-6" style={{ color: '#9B99B8' }}>{error}</p>
           <button
@@ -159,7 +164,14 @@ export default function PartyJoinPage({ params }: PageProps) {
           />
 
           <div className="relative">
-            <div className="text-6xl mb-4">{party.emoji}</div>
+            <div className="flex justify-center mb-4">
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                style={{ background: '#7C3AED22', border: '2px solid #7C3AED44', color: '#9F67FF' }}
+              >
+                <DynamicIcon name={party.emoji} size={32} />
+              </div>
+            </div>
 
             <div
               className="text-xs font-bold mb-2 px-3 py-1 rounded-full inline-block"
@@ -212,7 +224,11 @@ export default function PartyJoinPage({ params }: PageProps) {
                 onMouseLeave={(e) => { if (!joining) e.currentTarget.style.background = '#7C3AED' }}
               >
                 {joining ? 'Joining...' : (
-                  <>Join Party ⚔️ <ArrowRight size={16} /></>
+                  <>
+                    <Swords size={18} />
+                    <span>Join Party</span>
+                    <ArrowRight size={16} />
+                  </>
                 )}
               </button>
             )}
@@ -231,8 +247,9 @@ export default function PartyJoinPage({ params }: PageProps) {
 
         {/* Brand footer */}
         <div className="text-center mt-6">
-          <span className="text-sm" style={{ color: '#5C5A7A' }}>
-            ⚔️ <span style={{ fontFamily: 'Oxanium, sans-serif' }}>Life RPG OS</span> — Treat life like a game
+          <span className="text-sm flex items-center justify-center gap-1.5" style={{ color: '#5C5A7A' }}>
+            <Swords size={14} className="text-purple-400" />
+            <span style={{ fontFamily: 'Oxanium, sans-serif' }}>Life RPG OS</span> — Treat life like a game
           </span>
         </div>
       </motion.div>

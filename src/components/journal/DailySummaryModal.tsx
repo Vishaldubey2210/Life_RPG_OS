@@ -49,7 +49,7 @@ export function DailySummaryModal({ isOpen, onClose }: DailySummaryModalProps) {
         notes: winText.trim(),
       })
 
-      toast.success('Daily Summary saved! +50 Journal XP 📝')
+      toast.success('Daily Summary saved! +50 Journal XP')
       onClose()
     } catch (err) {
       console.error('Error saving daily summary:', err)
@@ -90,8 +90,9 @@ export function DailySummaryModal({ isOpen, onClose }: DailySummaryModalProps) {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Today&apos;s Biggest Win 🏆
+                <label className="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-1.5">
+                  <Trophy size={13} className="text-amber-400" />
+                  <span>Today&apos;s Biggest Win</span>
                 </label>
                 <input
                   type="text"
@@ -104,8 +105,9 @@ export function DailySummaryModal({ isOpen, onClose }: DailySummaryModalProps) {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Tomorrow I Will Improve 🎯
+                <label className="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-1.5">
+                  <Sparkles size={13} className="text-purple-400" />
+                  <span>Tomorrow I Will Improve</span>
                 </label>
                 <input
                   type="text"

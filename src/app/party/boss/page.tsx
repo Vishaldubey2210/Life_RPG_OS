@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Sidebar from '@/components/layout/Sidebar'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 
@@ -33,7 +34,7 @@ interface BossContribution {
   profiles?: { display_name: string; avatar_url?: string }
 }
 
-const BOSS_EMOJIS = ['👹', '🐉', '💀', '👾', '🔮', '☠️', '🦂', '🌋']
+const BOSS_EMOJIS = ['skull', 'dragon', 'ghost', 'ban', 'flame', 'swords', 'shield_alert', 'zap']
 
 const DIFFICULTY_CONFIG = {
   normal:    { label: 'Normal',    color: '#22C55E', xp: 500,  target: 50,  days: 7  },
@@ -52,7 +53,7 @@ export default function BossPage() {
 
   // Create form state
   const [bossName, setBossName] = useState('')
-  const [bossEmoji, setBossEmoji] = useState('👹')
+  const [bossEmoji, setBossEmoji] = useState('skull')
   const [bossDesc, setBossDesc] = useState('')
   const [difficulty, setDifficulty] = useState<'normal' | 'hard' | 'legendary'>('hard')
   const [creating, setCreating] = useState(false)
@@ -132,7 +133,7 @@ export default function BossPage() {
 
       setActiveBoss(data as BossBattle)
       setShowCreateForm(false)
-      toast.success(`Boss Battle "${bossName}" has been summoned! ⚔️`)
+      toast.success(`Boss Battle "${bossName}" has been summoned!`)
     } catch (err) {
       console.error('Create boss error:', err)
       toast.error('Failed to summon boss battle')
@@ -152,13 +153,8 @@ export default function BossPage() {
     )
   }
 
-  const bossHPPct = activeBoss
-    ? Math.max(0, ((activeBoss.target_completions - activeBoss.current_completions) / activeBoss.target_completions) * 100)
-    : 100
-
-  const daysRemaining = activeBoss
-    ? Math.max(0, Math.ceil((new Date(activeBoss.end_date).getTime() - Date.now()) / 86400000))
-    : 0
+  const daysRemaining = activeBoss ? Math.max(0, Math.ceil((new Date(activeBoss.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : 0
+  const bossHPPct = activeBoss ? Math.max(0, Math.round(((activeBoss.target_completions - activeBoss.current_completions) / activeBoss.target_completions) * 100)) : 100
 
   return (
     <div className="flex min-h-screen bg-[#08080F]">
@@ -169,11 +165,10 @@ export default function BossPage() {
           <div>
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-400 font-display mb-1.5">
               <Skull size={14} />
-              <span>Party Boss Battle</span>
+              <span>Co-op Raid</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-white font-display">
-              Guild Raid
-            </h1>
+            <h1 className="text-3xl font-extrabold text-white font-display">Party Boss Battles</h1>
+            <p className="text-slate-400 text-sm mt-1">Defeat massive bosses together as a party by completing habits.</p>
           </div>
           {isLeader && !activeBoss && (
             <button
@@ -195,7 +190,11 @@ export default function BossPage() {
           </div>
         ) : !activeBoss ? (
           <div className="p-12 text-center rounded-2xl border border-red-500/20 bg-[#13131F]">
-            <div className="text-6xl mb-4 grayscale opacity-40">👹</div>
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-red-500/10 border border-red-500/30 text-red-400/50">
+                <Skull size={36} />
+              </div>
+            </div>
             <h3 className="text-lg font-bold text-white font-display mb-2">No Active Raid</h3>
             <p className="text-xs text-slate-400 max-w-sm mx-auto mb-6">
               {isLeader
@@ -205,9 +204,10 @@ export default function BossPage() {
             {isLeader && (
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="px-6 py-3 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-500 font-display"
+                className="px-6 py-3 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-500 font-display flex items-center justify-center gap-2 mx-auto"
               >
-                Summon Boss Battle ⚔️
+                <Swords size={16} />
+                <span>Summon Boss Battle</span>
               </button>
             )}
           </div>
@@ -228,15 +228,16 @@ export default function BossPage() {
 
               <div className="flex items-start gap-5 mb-5">
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl flex-shrink-0"
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 text-red-400"
                   style={{ background: '#EF444420', border: '2px solid #EF444450', filter: 'drop-shadow(0 0 10px #EF4444)' }}
                 >
-                  {activeBoss.emoji}
+                  <DynamicIcon name={activeBoss.emoji} size={32} />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold uppercase tracking-wider text-red-400 font-display">
-                      ⚔️ ACTIVE RAID
+                    <span className="text-xs font-bold uppercase tracking-wider text-red-400 font-display flex items-center gap-1.5">
+                      <Swords size={13} />
+                      <span>ACTIVE RAID</span>
                     </span>
                     <span
                       className="text-xs font-bold px-2 py-0.5 rounded-full"
@@ -253,7 +254,7 @@ export default function BossPage() {
                   {activeBoss.description && (
                     <p className="text-xs text-slate-400 mt-1">{activeBoss.description}</p>
                   )}
-                </div>
+                </div>         
                 <div className="text-center flex-shrink-0">
                   <div className="text-2xl font-black text-amber-400 font-display">{daysRemaining}</div>
                   <div className="text-[10px] text-slate-400">days left</div>
@@ -372,12 +373,13 @@ export default function BossPage() {
                       {BOSS_EMOJIS.map((em) => (
                         <button
                           key={em}
+                          type="button"
                           onClick={() => setBossEmoji(em)}
-                          className={`w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all ${
-                            bossEmoji === em ? 'border-2 border-red-500 bg-red-500/15 scale-110' : 'border border-slate-800 bg-slate-900 opacity-70'
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${
+                            bossEmoji === em ? 'border-2 border-red-500 bg-red-500/15 scale-110 text-red-400' : 'border border-slate-800 bg-slate-900 opacity-70 text-slate-400'
                           }`}
                         >
-                          {em}
+                          <DynamicIcon name={em} size={20} />
                         </button>
                       ))}
                     </div>

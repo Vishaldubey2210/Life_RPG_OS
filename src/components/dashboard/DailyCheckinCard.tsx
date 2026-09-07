@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Flame, Heart, Zap, CheckCircle2 } from 'lucide-react'
+import { Flame, Heart, Zap, CheckCircle2, Frown, Meh, Smile, Laugh } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
 const MOOD_OPTIONS = [
-  { score: 1, emoji: '😔', label: 'Rough' },
-  { score: 2, emoji: '😐', label: 'Meh' },
-  { score: 3, emoji: '🙂', label: 'Good' },
-  { score: 4, emoji: '😊', label: 'Great' },
-  { score: 5, emoji: '🔥', label: 'On Fire' },
+  { score: 1, icon: Frown, label: 'Rough', color: '#EF4444' },
+  { score: 2, icon: Meh, label: 'Meh', color: '#F59E0B' },
+  { score: 3, icon: Smile, label: 'Good', color: '#3B82F6' },
+  { score: 4, icon: Laugh, label: 'Great', color: '#8B5CF6' },
+  { score: 5, icon: Flame, label: 'On Fire', color: '#EC4899' },
 ]
 
 interface DailyCheckin {
@@ -63,7 +63,7 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
       if (error) throw error
 
       setTodaysCheckin({ checkin_date: today, mood_score: selectedMood, energy_score: energyLevel })
-      toast.success('Daily check-in logged! ⚡')
+      toast.success('Daily check-in logged!')
     } catch (err) {
       console.error('Check-in error:', err)
       toast.error('Failed to save check-in')
@@ -76,7 +76,8 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
 
   // Already checked in today — show compact badge
   if (todaysCheckin) {
-    const moodEmoji = MOOD_OPTIONS.find((m) => m.score === todaysCheckin.mood_score)?.emoji ?? '🙂'
+    const MoodIcon = MOOD_OPTIONS.find((m) => m.score === todaysCheckin.mood_score)?.icon ?? Smile
+    const moodColor = MOOD_OPTIONS.find((m) => m.score === todaysCheckin.mood_score)?.color ?? '#3B82F6'
     return (
       <div
         className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-slate-800 bg-[#13131F] mb-4"
@@ -87,8 +88,8 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
           <span className="text-slate-400">Today&apos;s status logged</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1 text-xs font-bold text-pink-400">
-            {moodEmoji} {todaysCheckin.mood_score}/5
+          <span className="flex items-center gap-1.5 text-xs font-bold" style={{ color: moodColor }}>
+            <MoodIcon size={14} /> {todaysCheckin.mood_score}/5
           </span>
           <span className="flex items-center gap-1 text-xs font-bold text-amber-400">
             <Flame size={11} /> {todaysCheckin.energy_score}/10
@@ -118,21 +119,25 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
             <Heart size={11} className="text-pink-400" /> Mood
           </p>
           <div className="flex gap-1.5">
-            {MOOD_OPTIONS.map((m) => (
-              <button
-                key={m.score}
-                type="button"
-                onClick={() => setSelectedMood(m.score)}
-                title={m.label}
-                className={`flex-1 py-1.5 rounded-lg text-sm text-center transition-all ${
-                  selectedMood === m.score
-                    ? 'bg-purple-500/25 border-2 border-purple-500 scale-110'
-                    : 'bg-slate-900 border border-slate-800 opacity-60 hover:opacity-100'
-                }`}
-              >
-                {m.emoji}
-              </button>
-            ))}
+            {MOOD_OPTIONS.map((m) => {
+              const IconComp = m.icon
+              return (
+                <button
+                  key={m.score}
+                  type="button"
+                  onClick={() => setSelectedMood(m.score)}
+                  title={m.label}
+                  className={`flex-1 py-2 rounded-lg flex items-center justify-center transition-all ${
+                    selectedMood === m.score
+                      ? 'bg-purple-500/25 border-2 border-purple-500 scale-105'
+                      : 'bg-slate-900 border border-slate-800 opacity-60 hover:opacity-100'
+                  }`}
+                  style={{ color: m.color }}
+                >
+                  <IconComp size={16} />
+                </button>
+              )
+            })}
           </div>
         </div>
 

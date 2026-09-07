@@ -19,10 +19,12 @@ import {
   Mic2,
   LucideIcon,
   Shield,
+  Swords,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 
@@ -52,7 +54,7 @@ const HABIT_TEMPLATES: HabitPack[] = [
   {
     id: 'student-grind',
     name: 'Student Grind Pack',
-    emoji: '📚',
+    emoji: 'book',
     description: 'Built for students preparing for high-stakes exams, placements, and coding interviews.',
     category: 'productivity',
     color: '#3B82F6',
@@ -101,7 +103,7 @@ const HABIT_TEMPLATES: HabitPack[] = [
   {
     id: 'fitness-beginner',
     name: 'Fitness Starter Protocol',
-    emoji: '💪',
+    emoji: 'dumbbell',
     description: 'Go from zero to unstoppable consistency in 30 days without burnout.',
     category: 'fitness',
     color: '#EF4444',
@@ -150,7 +152,7 @@ const HABIT_TEMPLATES: HabitPack[] = [
   {
     id: 'entrepreneur-os',
     name: 'Founder & Builder Daily OS',
-    emoji: '🚀',
+    emoji: 'rocket',
     description: 'The daily operating system used by high-output startup founders and solopreneurs.',
     category: 'business',
     color: '#F59E0B',
@@ -199,7 +201,7 @@ const HABIT_TEMPLATES: HabitPack[] = [
   {
     id: 'mental-peace',
     name: 'Inner Peace & Stoic Protocol',
-    emoji: '🧘',
+    emoji: 'sparkles',
     description: 'Reduce cortisol, eliminate anxiety, and build unshakeable mental clarity.',
     category: 'wellness',
     color: '#8B5CF6',
@@ -248,7 +250,7 @@ const HABIT_TEMPLATES: HabitPack[] = [
   {
     id: 'wealth-builder',
     name: 'Wealth Compounder System',
-    emoji: '💰',
+    emoji: 'coins',
     description: 'Daily financial hygiene and discipline habits that build long-term freedom.',
     category: 'finance',
     color: '#10B981',
@@ -295,7 +297,7 @@ const HABIT_TEMPLATES: HabitPack[] = [
   {
     id: 'social-beast',
     name: 'Charisma & Social Magnetism',
-    emoji: '🗣️',
+    emoji: 'message',
     description: 'Master interpersonal influence, executive presence, and genuine relationship building.',
     category: 'social',
     color: '#EC4899',
@@ -418,7 +420,7 @@ export default function TemplatesPage() {
       })
 
       setInstalledPacks((prev) => [...prev, pack.id])
-      toast.success(`${pack.habits.length} quests added to your board! +Quest Pack Unlocked 🎯`)
+      toast.success(`${pack.habits.length} quests added to your board! Quest Pack Unlocked`)
       setActivePack(null)
     } catch (err) {
       console.error('Install pack error:', err)
@@ -433,7 +435,7 @@ export default function TemplatesPage() {
     if (navigator.share) {
       navigator.share({
         title: `${pack.name} — Life RPG OS`,
-        text: `Level up with the "${pack.name}" on Life RPG OS! ⚔️`,
+        text: `Level up with the "${pack.name}" on Life RPG OS!`,
         url,
       }).catch(() => {})
     } else {
@@ -513,9 +515,10 @@ export default function TemplatesPage() {
                       style={{
                         background: `${pack.color}18`,
                         border: `1px solid ${pack.color}33`,
+                        color: pack.color,
                       }}
                     >
-                      {pack.emoji}
+                      <DynamicIcon name={pack.emoji} size={24} />
                     </div>
 
                     <button
@@ -592,7 +595,16 @@ export default function TemplatesPage() {
               >
                 <div className="flex items-start justify-between pb-4 border-b border-slate-800">
                   <div className="flex items-center gap-3">
-                    <span className="text-3xl">{activePack.emoji}</span>
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center"
+                      style={{
+                        background: `${activePack.color}18`,
+                        border: `1px solid ${activePack.color}33`,
+                        color: activePack.color,
+                      }}
+                    >
+                      <DynamicIcon name={activePack.emoji} size={22} />
+                    </div>
                     <div>
                       <h2 className="text-xl font-bold text-white font-display">
                         {activePack.name}
@@ -674,7 +686,7 @@ export default function TemplatesPage() {
                     ) : (
                       <>
                         <Download size={16} />
-                        {installing ? 'Adding Quests...' : 'Use This Pack ⚔️'}
+                        {installing ? 'Adding Quests...' : 'Use This Pack'}
                       </>
                     )}
                   </button>

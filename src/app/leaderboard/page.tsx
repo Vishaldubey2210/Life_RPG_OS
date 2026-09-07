@@ -4,10 +4,11 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Trophy, Flame, Users, Globe, Swords, Clock, Crown, Medal, Zap, Sparkles } from 'lucide-react'
+import { Trophy, Flame, Users, Globe, Swords, Clock, Crown, Medal, Zap, Sparkles, Shield } from 'lucide-react'
 import Link from 'next/link'
 import Sidebar from '@/components/layout/Sidebar'
 import TopNav from '@/components/layout/TopNav'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 
@@ -122,10 +123,15 @@ function Podium({ entries }: { entries: LeaderboardEntry[] }) {
             {/* Crown & Avatar */}
             <div className="mb-2 flex items-center justify-center">{icons[i]}</div>
             <div
-              className={`text-4xl mb-2 ${isFirst ? 'text-5xl' : ''}`}
-              style={{ filter: isFirst ? `drop-shadow(0 0 12px ${glows[i]}88)` : undefined }}
+              className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 ${isFirst ? 'w-14 h-14' : ''}`}
+              style={{
+                background: `${glows[i]}15`,
+                border: `1px solid ${glows[i]}33`,
+                color: glows[i],
+                filter: isFirst ? `drop-shadow(0 0 12px ${glows[i]}88)` : undefined,
+              }}
             >
-              {entry.avatar_emoji}
+              <DynamicIcon name={entry.avatar_emoji} size={isFirst ? 30 : 24} />
             </div>
             <div
               className="text-xs font-semibold truncate w-full text-center mb-1"
@@ -195,7 +201,12 @@ function LeaderboardRow({
 
       {/* Avatar + Name */}
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div className="text-2xl flex-shrink-0">{entry.avatar_emoji}</div>
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: '#7C3AED15', border: '1px solid #7C3AED33', color: '#9F67FF' }}
+        >
+          <DynamicIcon name={entry.avatar_emoji} size={20} />
+        </div>
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold truncate" style={{ color: '#F1F0FF' }}>
@@ -448,7 +459,7 @@ export default function LeaderboardPage() {
             return {
               user_id: m.user_id,
               display_name: p?.display_name ?? 'Unknown',
-              avatar_emoji: p?.avatar_emoji ?? '⚔️',
+              avatar_emoji: p?.avatar_emoji ?? 'swords',
               level: p?.level ?? 1,
               xp_earned: m.xp_contributed,
               quests_completed: 0,
@@ -478,12 +489,12 @@ export default function LeaderboardPage() {
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji ?? 'swords'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
       <TopNav
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji ?? 'swords'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -495,8 +506,9 @@ export default function LeaderboardPage() {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
-              Leaderboard 🏆
+            <h1 className="text-3xl font-bold mb-1 font-display flex items-center gap-3" style={{ color: '#F1F0FF' }}>
+              <span>Leaderboard</span>
+              <Trophy className="w-8 h-8 text-amber-400 inline" />
             </h1>
             <p style={{ color: '#9B99B8' }}>See how you rank against other adventurers this week</p>
           </div>
@@ -572,14 +584,14 @@ export default function LeaderboardPage() {
           {/* Tabs */}
           <div className="flex gap-2 mb-6 flex-wrap">
             {[
-              { key: 'global', icon: Globe, label: 'Global 🌍' },
-              { key: 'friends', icon: Users, label: 'Friends 👥' },
-              { key: 'guild', icon: Trophy, label: 'Guild 🏰' },
-            ].map(({ key, label }) => (
+              { key: 'global', icon: Globe, label: 'Global' },
+              { key: 'friends', icon: Users, label: 'Friends' },
+              { key: 'guild', icon: Shield, label: 'Guild' },
+            ].map(({ key, icon: TabIcon, label }) => (
               <button
                 key={key}
                 onClick={() => setTab(key as 'global' | 'friends' | 'guild')}
-                className="px-5 py-2 rounded-xl text-sm font-medium transition-all"
+                className="px-5 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
                 style={{
                   background: tab === key ? '#7C3AED' : '#13131F',
                   color: tab === key ? '#fff' : '#9B99B8',
@@ -587,7 +599,8 @@ export default function LeaderboardPage() {
                   fontFamily: 'Oxanium, sans-serif',
                 }}
               >
-                {label}
+                <TabIcon size={16} />
+                <span>{label}</span>
               </button>
             ))}
           </div>
@@ -646,7 +659,9 @@ export default function LeaderboardPage() {
 
                     {globalEntries.length === 0 && (
                       <div className="text-center py-16">
-                        <div className="text-5xl mb-4">🏆</div>
+                        <div className="flex justify-center mb-4">
+                          <Trophy className="w-12 h-12 text-slate-600" />
+                        </div>
                         <h3 className="font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
                           No rankings yet
                         </h3>
@@ -671,7 +686,9 @@ export default function LeaderboardPage() {
                   <LeaderboardSkeleton />
                 ) : friendEntries.length === 0 ? (
                   <div className="text-center py-16">
-                    <div className="text-5xl mb-4">👥</div>
+                    <div className="flex justify-center mb-4">
+                      <Users className="w-12 h-12 text-slate-600" />
+                    </div>
                     <h3 className="font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>
                       No friends to compete with yet
                     </h3>
@@ -689,7 +706,7 @@ export default function LeaderboardPage() {
                       }}
                     >
                       <Users size={16} />
-                      Go to Party 👥
+                      <span>Go to Party</span>
                     </Link>
                   </div>
                 ) : (
@@ -741,7 +758,9 @@ export default function LeaderboardPage() {
                   <div className="space-y-2">
                     {guilds.length === 0 ? (
                       <div className="text-center py-12">
-                        <div className="text-5xl mb-4">🏰</div>
+                        <div className="flex justify-center mb-4">
+                          <Shield className="w-12 h-12 text-slate-600" />
+                        </div>
                         <p className="text-sm" style={{ color: '#9B99B8' }}>No guilds yet. Create one in the party page!</p>
                       </div>
                     ) : (
@@ -764,7 +783,12 @@ export default function LeaderboardPage() {
                           >
                             #{i + 1}
                           </div>
-                          <div className="text-2xl">{guild.emoji}</div>
+                          <div
+                            className="w-9 h-9 rounded-xl flex items-center justify-center"
+                            style={{ background: '#7C3AED15', border: '1px solid #7C3AED33', color: '#9F67FF' }}
+                          >
+                            <DynamicIcon name={guild.emoji || 'shield'} size={18} />
+                          </div>
                           <div className="flex-1 min-w-0">
                             <div className="font-semibold truncate" style={{ color: '#F1F0FF' }}>
                               {guild.name}
@@ -775,10 +799,10 @@ export default function LeaderboardPage() {
                           </div>
                           <div className="text-right">
                             <div
-                              className="font-bold text-sm"
+                              className="font-bold text-sm flex items-center justify-end gap-1"
                               style={{ color: '#9F67FF', fontFamily: 'Oxanium, sans-serif' }}
                             >
-                              ⚡ {guild.total_xp}
+                              <Zap size={12} /> {guild.total_xp}
                             </div>
                             <div className="text-xs" style={{ color: '#5C5A7A' }}>Total XP</div>
                           </div>
@@ -790,7 +814,9 @@ export default function LeaderboardPage() {
                   <div className="space-y-2">
                     {myGuildEntries.length === 0 ? (
                       <div className="text-center py-12">
-                        <div className="text-5xl mb-4">🏰</div>
+                        <div className="flex justify-center mb-4">
+                          <Shield className="w-12 h-12 text-slate-600" />
+                        </div>
                         <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
                           You&apos;re not in a guild yet.
                         </p>

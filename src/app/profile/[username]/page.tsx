@@ -5,9 +5,10 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Share2, Copy, Check, Swords } from 'lucide-react'
+import { Share2, Copy, Check, Swords, Flame, Scroll, Target, HelpCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { createClient } from '@/lib/supabase/client'
 
 interface PageProps {
@@ -42,12 +43,12 @@ interface RecentActivity {
 }
 
 const STAT_CONFIG = [
-  { key: 'str',  label: 'STR',  icon: '💪', color: '#EF4444' },
-  { key: 'int',  label: 'INT',  icon: '🧠', color: '#3B82F6' },
-  { key: 'wis',  label: 'WIS',  icon: '🧘', color: '#22C55E' },
-  { key: 'vit',  label: 'VIT',  icon: '❤️', color: '#EF4444' },
-  { key: 'gold', label: 'GOLD', icon: '💰', color: '#F59E0B' },
-  { key: 'cha',  label: 'CHA',  icon: '🗣️', color: '#9F67FF' },
+  { key: 'str',  label: 'STR',  icon: 'str',  color: '#EF4444' },
+  { key: 'int',  label: 'INT',  icon: 'int',  color: '#3B82F6' },
+  { key: 'wis',  label: 'WIS',  icon: 'wis',  color: '#22C55E' },
+  { key: 'vit',  label: 'VIT',  icon: 'vit',  color: '#EF4444' },
+  { key: 'gold', label: 'GOLD', icon: 'gold', color: '#F59E0B' },
+  { key: 'cha',  label: 'CHA',  icon: 'cha',  color: '#9F67FF' },
 ]
 
 function memberSince(dateStr: string): string {
@@ -70,7 +71,9 @@ function StatBar({ value, color, label, icon }: { value: number; color: string; 
   const pct = Math.min(100, (value / 50) * 100)
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm w-4">{icon}</span>
+      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0" style={{ color }}>
+        <DynamicIcon name={icon} size={13} />
+      </div>
       <span className="text-xs font-semibold w-8" style={{ color: '#9B99B8', fontFamily: 'Oxanium, sans-serif' }}>
         {label}
       </span>
@@ -192,7 +195,7 @@ export default function PublicProfilePage({ params }: PageProps) {
         .from('parties')
         .insert({
           name: `${profile.display_name}'s Challenge`,
-          emoji: '⚔️',
+          emoji: 'swords',
           party_type: 'friends',
           created_by: currentUserId,
         })
@@ -212,12 +215,12 @@ export default function PublicProfilePage({ params }: PageProps) {
         user_id: profile.id,
         type: 'party_invite',
         from_user_id: currentUserId,
-        title: 'Challenge Incoming! ⚔️',
+        title: 'Challenge Incoming!',
         body: `You've been challenged to a party on Life RPG OS! Code: ${party.invite_code}`,
         data: { party_id: party.id, invite_code: party.invite_code },
       })
 
-      toast.success(`⚔️ Challenge sent to ${profile.display_name}! Party code: ${party.invite_code}`)
+      toast.success(`Challenge sent to ${profile.display_name}! Party code: ${party.invite_code}`)
       router.push('/party')
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to send challenge')
@@ -227,7 +230,7 @@ export default function PublicProfilePage({ params }: PageProps) {
   function copyProfileUrl() {
     navigator.clipboard.writeText(window.location.href)
     setUrlCopied(true)
-    toast.success('Profile URL copied! 🔗')
+    toast.success('Profile URL copied!')
     setTimeout(() => setUrlCopied(false), 2000)
   }
 
@@ -235,7 +238,9 @@ export default function PublicProfilePage({ params }: PageProps) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#08080F' }}>
         <div className="text-center">
-          <div className="text-5xl mb-4 animate-pulse">⚔️</div>
+          <div className="flex justify-center mb-4 text-purple-400 animate-pulse">
+            <Swords size={40} />
+          </div>
           <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
             Loading profile...
           </div>
@@ -252,7 +257,9 @@ export default function PublicProfilePage({ params }: PageProps) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-sm"
         >
-          <div className="text-6xl mb-4">❓</div>
+          <div className="flex justify-center mb-4 text-slate-500">
+            <HelpCircle size={48} />
+          </div>
           <h2 className="text-xl font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>Profile Not Found</h2>
           <p className="text-sm mb-6" style={{ color: '#9B99B8' }}>{error}</p>
           <Link
@@ -285,7 +292,8 @@ export default function PublicProfilePage({ params }: PageProps) {
           className="flex items-center gap-2 text-sm"
           style={{ color: '#9B99B8' }}
         >
-          ⚔️ <span style={{ fontFamily: 'Oxanium, sans-serif' }}>Life RPG OS</span>
+          <Swords size={16} className="text-purple-400" />
+          <span style={{ fontFamily: 'Oxanium, sans-serif' }}>Life RPG OS</span>
         </Link>
         <div className="flex items-center gap-2">
           {currentUserId && currentUserId !== profile.id && (
@@ -340,7 +348,14 @@ export default function PublicProfilePage({ params }: PageProps) {
           />
 
           <div className="relative">
-            <div className="text-7xl mb-4">{profile.avatar_emoji}</div>
+            <div className="flex justify-center mb-4">
+              <div
+                className="w-20 h-20 rounded-2xl flex items-center justify-center"
+                style={{ background: '#7C3AED22', border: '2px solid #7C3AED44', color: '#9F67FF' }}
+              >
+                <DynamicIcon name={profile.avatar_emoji || 'swords'} size={40} />
+              </div>
+            </div>
             <h1 className="text-2xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
               {profile.display_name}
             </h1>
@@ -357,7 +372,7 @@ export default function PublicProfilePage({ params }: PageProps) {
             {/* Level Badge */}
             <div className="flex items-center justify-center gap-3 mb-4">
               <div
-                className="px-4 py-1.5 rounded-full text-sm font-bold"
+                className="px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-1.5"
                 style={{
                   background: '#7C3AED22',
                   color: '#9F67FF',
@@ -365,10 +380,11 @@ export default function PublicProfilePage({ params }: PageProps) {
                   fontFamily: 'Oxanium, sans-serif',
                 }}
               >
-                ⚔️ Level {profile.level}
+                <Swords size={14} />
+                <span>Level {profile.level}</span>
               </div>
               <div
-                className="px-4 py-1.5 rounded-full text-sm font-bold"
+                className="px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-1.5"
                 style={{
                   background: '#F59E0B22',
                   color: '#F59E0B',
@@ -376,7 +392,8 @@ export default function PublicProfilePage({ params }: PageProps) {
                   fontFamily: 'Oxanium, sans-serif',
                 }}
               >
-                🔥 {profile.streak} streak
+                <Flame size={14} />
+                <span>{profile.streak} streak</span>
               </div>
             </div>
 
@@ -411,8 +428,9 @@ export default function PublicProfilePage({ params }: PageProps) {
             className="p-6 rounded-2xl mb-6"
             style={{ background: '#13131F', border: '1px solid #1E1E35' }}
           >
-            <h2 className="font-bold mb-4 font-display" style={{ color: '#F1F0FF' }}>
-              ⚔️ Character Stats
+            <h2 className="font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+              <Swords size={18} className="text-purple-400" />
+              <span>Character Stats</span>
             </h2>
             <div className="space-y-3">
               {STAT_CONFIG.map(({ key, label, icon, color }) => (
@@ -436,8 +454,9 @@ export default function PublicProfilePage({ params }: PageProps) {
           className="p-6 rounded-2xl mb-6"
           style={{ background: '#13131F', border: '1px solid #1E1E35' }}
         >
-          <h2 className="font-bold mb-4 font-display" style={{ color: '#F1F0FF' }}>
-            📜 Recent Quests (Last 7)
+          <h2 className="font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+            <Scroll size={18} className="text-purple-400" />
+            <span>Recent Quests (Last 7)</span>
           </h2>
           {activity.length === 0 ? (
             <p className="text-sm" style={{ color: '#5C5A7A' }}>No recent activity</p>
@@ -453,7 +472,7 @@ export default function PublicProfilePage({ params }: PageProps) {
                   style={{ background: '#0F0F1A', borderLeft: '3px solid #22C55E' }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">🎯</span>
+                    <Target size={14} className="text-purple-400 flex-shrink-0" />
                     <span className="text-sm" style={{ color: '#F1F0FF' }}>
                       {item.habit_name}
                     </span>

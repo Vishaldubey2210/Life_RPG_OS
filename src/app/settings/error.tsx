@@ -1,9 +1,11 @@
 'use client'
 
+import { AlertTriangle } from 'lucide-react'
+
 export default function Error({ reset }: { reset: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4" style={{ background: '#08080F' }}>
-      <p className="text-4xl">⚠️</p>
+      <AlertTriangle size={40} className="text-amber-400" />
       <h2 className="text-xl font-bold font-display" style={{ color: '#F1F0FF' }}>
         Something went wrong
       </h2>

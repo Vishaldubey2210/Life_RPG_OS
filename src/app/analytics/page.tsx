@@ -12,6 +12,26 @@ import {
   BarChart, Bar, Cell,
   PieChart, Pie, Legend,
 } from 'recharts'
+import {
+  Dumbbell,
+  Brain,
+  Sparkles,
+  Heart,
+  Coins,
+  MessageSquare,
+  Flame,
+  Zap,
+  BarChart3,
+  TrendingUp,
+  Calendar,
+  AlertTriangle,
+  Target,
+  CheckCircle2,
+  Bot,
+  Star,
+  Activity,
+  LucideIcon,
+} from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
 import { AnimatedNumber } from '@/components/ui/AnimatedNumber'
 import { useProfile } from '@/hooks/useProfile'
@@ -20,13 +40,13 @@ import { createClient } from '@/lib/supabase/client'
 type TimeRange = '7d' | '30d' | '90d' | 'all'
 type StatKey = 'str' | 'int' | 'wis' | 'vit' | 'gold' | 'cha'
 
-const STAT_META: Record<StatKey, { label: string; color: string; icon: string }> = {
-  str:  { label: 'STR',  color: '#EF4444', icon: '💪' },
-  int:  { label: 'INT',  color: '#3B82F6', icon: '🧠' },
-  wis:  { label: 'WIS',  color: '#22C55E', icon: '🧘' },
-  vit:  { label: 'VIT',  color: '#F97316', icon: '❤️' },
-  gold: { label: 'GOLD', color: '#F59E0B', icon: '💰' },
-  cha:  { label: 'CHA',  color: '#7C3AED', icon: '🗣️' },
+const STAT_META: Record<StatKey, { label: string; color: string; icon: LucideIcon }> = {
+  str:  { label: 'STR',  color: '#EF4444', icon: Dumbbell },
+  int:  { label: 'INT',  color: '#3B82F6', icon: Brain },
+  wis:  { label: 'WIS',  color: '#22C55E', icon: Sparkles },
+  vit:  { label: 'VIT',  color: '#F97316', icon: Heart },
+  gold: { label: 'GOLD', color: '#F59E0B', icon: Coins },
+  cha:  { label: 'CHA',  color: '#7C3AED', icon: MessageSquare },
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -148,9 +168,9 @@ function ConsistencyHeatmap({ data }: { data: { date: string; pct: number }[] })
 }
 
 const INSIGHT_CONFIG = {
-  strength:    { icon: '💪', label: 'Strength',    border: '#22C55E', bg: '#22C55E10' },
-  warning:     { icon: '⚠️', label: 'Warning',     border: '#F59E0B', bg: '#F59E0B10' },
-  opportunity: { icon: '🎯', label: 'Opportunity', border: '#7C3AED', bg: '#7C3AED10' },
+  strength:    { icon: Dumbbell, label: 'Strength',    border: '#22C55E', bg: '#22C55E10' },
+  warning:     { icon: AlertTriangle, label: 'Warning',     border: '#F59E0B', bg: '#F59E0B10' },
+  opportunity: { icon: Target, label: 'Opportunity', border: '#7C3AED', bg: '#7C3AED10' },
 }
 
 export default function AnalyticsPage() {
@@ -301,7 +321,9 @@ export default function AnalyticsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
         <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">📊</div>
+          <div className="w-14 h-14 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 mx-auto mb-4 animate-pulse">
+            <BarChart3 size={28} />
+          </div>
           <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
             Compiling your legend...
           </div>
@@ -313,7 +335,7 @@ export default function AnalyticsPage() {
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -323,8 +345,9 @@ export default function AnalyticsPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
-                Analytics 📊
+              <h1 className="text-3xl font-bold mb-1 font-display flex items-center gap-2.5" style={{ color: '#F1F0FF' }}>
+                <BarChart3 size={28} className="text-purple-400" />
+                <span>Analytics</span>
               </h1>
               <p style={{ color: '#9B99B8' }}>Your growth, visualized.</p>
             </div>
@@ -355,7 +378,9 @@ export default function AnalyticsPage() {
           >
             {/* Total XP */}
             <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#F59E0B22' }}>
-              <div className="text-xl mb-1">⚡</div>
+              <div className="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center mb-2">
+                <Zap size={18} />
+              </div>
               <div className="text-2xl font-bold mb-1 font-display" style={{ color: '#F59E0B' }}>
                 <AnimatedNumber value={profile?.xp ?? 0} />
               </div>
@@ -367,7 +392,9 @@ export default function AnalyticsPage() {
 
             {/* Level */}
             <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#7C3AED22' }}>
-              <div className="text-xl mb-1">⭐</div>
+              <div className="w-8 h-8 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center mb-2">
+                <Star size={18} />
+              </div>
               <div className="text-2xl font-bold mb-1 font-display" style={{ color: '#7C3AED' }}>
                 <AnimatedNumber value={profile?.level ?? 1} />
               </div>
@@ -379,7 +406,9 @@ export default function AnalyticsPage() {
 
             {/* Quest completion rate */}
             <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#22C55E22' }}>
-              <div className="text-xl mb-1">✅</div>
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-2">
+                <CheckCircle2 size={18} />
+              </div>
               <div
                 className="text-2xl font-bold mb-1 font-display"
                 style={{ color: questsThisWeek > 0 ? '#22C55E' : '#5C5A7A' }}
@@ -394,12 +423,16 @@ export default function AnalyticsPage() {
 
             {/* Best streak */}
             <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#F59E0B22' }}>
-              <div className="text-xl mb-1">🔥</div>
+              <div className="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center mb-2">
+                <Flame size={18} />
+              </div>
               <div className="text-2xl font-bold mb-1 font-display" style={{ color: '#F59E0B' }}>
                 <AnimatedNumber value={profile?.streak ?? 0} suffix="d" />
               </div>
               <div className="text-xs mb-1" style={{ color: '#5C5A7A' }}>Current Streak</div>
-              <div className="text-xs" style={{ color: '#9B99B8' }}>Keep it alive! 🔥</div>
+              <div className="text-xs flex items-center gap-1" style={{ color: '#9B99B8' }}>
+                <Flame size={12} className="text-amber-500" /> Keep it alive!
+              </div>
             </div>
           </motion.div>
 
@@ -421,8 +454,9 @@ export default function AnalyticsPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.1 }}
                 >
-                  <h2 className="text-base font-bold mb-4 font-display" style={{ color: '#F1F0FF' }}>
-                    XP Over Time ⚡
+                  <h2 className="text-base font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                    <Zap size={16} className="text-amber-400" />
+                    <span>XP Over Time</span>
                   </h2>
                   {xpHistory.length > 0 ? (
                     <ResponsiveContainer width="100%" height={200}>
@@ -445,7 +479,7 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                   ) : (
                     <div className="h-48 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
-                      Complete quests to see XP history 📈
+                      Complete quests to see XP history
                     </div>
                   )}
                 </motion.div>
@@ -458,8 +492,9 @@ export default function AnalyticsPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.15 }}
                 >
-                  <h2 className="text-base font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
-                    Your Life Balance 🕸️
+                  <h2 className="text-base font-bold mb-1 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                    <Activity size={16} className="text-purple-400" />
+                    <span>Your Life Balance</span>
                   </h2>
                   <p className="text-xs mb-3" style={{ color: '#5C5A7A' }}>
                     Strongest: <span style={{ color: STAT_META[strongestStat as StatKey]?.color }}>{STAT_META[strongestStat as StatKey]?.label}</span>
@@ -484,8 +519,9 @@ export default function AnalyticsPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-base font-bold mb-4 font-display" style={{ color: '#F1F0FF' }}>
-                  Your Consistency Map 📅
+                <h2 className="text-base font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                  <Calendar size={16} className="text-blue-400" />
+                  <span>Your Consistency Map</span>
                 </h2>
                 <ConsistencyHeatmap data={heatmapData} />
               </motion.div>
@@ -501,27 +537,31 @@ export default function AnalyticsPage() {
                   transition={{ delay: 0.25 }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-base font-bold font-display" style={{ color: '#F1F0FF' }}>
-                      Stat Growth Over Time 📈
+                    <h2 className="text-base font-bold font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                      <TrendingUp size={16} className="text-emerald-400" />
+                      <span>Stat Growth Over Time</span>
                     </h2>
                   </div>
                   {/* Stat toggle */}
                   <div className="flex gap-1 flex-wrap mb-4">
-                    {(Object.keys(STAT_META) as StatKey[]).map(s => (
-                      <button
-                        key={s}
-                        onClick={() => setActiveStat(s)}
-                        className="px-2 py-1 rounded-lg text-xs font-semibold transition-all"
-                        style={{
-                          background: activeStat === s ? STAT_META[s].color + '33' : '#0F0F1A',
-                          color: activeStat === s ? STAT_META[s].color : '#5C5A7A',
-                          border: `1px solid ${activeStat === s ? STAT_META[s].color + '66' : '#1E1E35'}`,
-                          fontFamily: 'Oxanium, sans-serif',
-                        }}
-                      >
-                        {STAT_META[s].icon} {STAT_META[s].label}
-                      </button>
-                    ))}
+                    {(Object.keys(STAT_META) as StatKey[]).map(s => {
+                      const StatIcon = STAT_META[s].icon
+                      return (
+                        <button
+                          key={s}
+                          onClick={() => setActiveStat(s)}
+                          className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                          style={{
+                            background: activeStat === s ? STAT_META[s].color + '33' : '#0F0F1A',
+                            color: activeStat === s ? STAT_META[s].color : '#5C5A7A',
+                            border: `1px solid ${activeStat === s ? STAT_META[s].color + '66' : '#1E1E35'}`,
+                            fontFamily: 'Oxanium, sans-serif',
+                          }}
+                        >
+                          <StatIcon size={12} /> {STAT_META[s].label}
+                        </button>
+                      )
+                    })}
                   </div>
                   {snapshots.length > 0 ? (
                     <ResponsiveContainer width="100%" height={160}>
@@ -549,7 +589,7 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                   ) : (
                     <div className="h-40 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
-                      Complete quests to track stat growth 📊
+                      Complete quests to track stat growth
                     </div>
                   )}
                 </motion.div>
@@ -562,8 +602,9 @@ export default function AnalyticsPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <h2 className="text-base font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
-                    What You Focus On Most 🎯
+                  <h2 className="text-base font-bold mb-1 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                    <Target size={16} className="text-pink-400" />
+                    <span>What You Focus On Most</span>
                   </h2>
                   <p className="text-xs mb-4" style={{ color: '#5C5A7A' }}>{totalQuests} total quests</p>
                   {questsByCategory.length > 0 ? (
@@ -590,7 +631,7 @@ export default function AnalyticsPage() {
                     </ResponsiveContainer>
                   ) : (
                     <div className="h-48 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
-                      Complete quests to see distribution 🎯
+                      Complete quests to see distribution
                     </div>
                   )}
                 </motion.div>
@@ -604,8 +645,9 @@ export default function AnalyticsPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.35 }}
               >
-                <h2 className="text-base font-bold mb-4 font-display" style={{ color: '#F1F0FF' }}>
-                  Daily XP — Last 14 Days ⚡
+                <h2 className="text-base font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                  <Zap size={16} className="text-amber-400" />
+                  <span>Daily XP — Last 14 Days</span>
                 </h2>
                 {xpHistory.length > 0 ? (
                   <ResponsiveContainer width="100%" height={160}>
@@ -630,15 +672,16 @@ export default function AnalyticsPage() {
                   </ResponsiveContainer>
                 ) : (
                   <div className="h-40 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
-                    No XP data yet — start completing quests! ⚡
+                    No XP data yet — start completing quests!
                   </div>
                 )}
               </motion.div>
 
               {/* AI Insights */}
               <div>
-                <h2 className="text-lg font-bold mb-4 font-display" style={{ color: '#F1F0FF' }}>
-                  Your Insights 🤖
+                <h2 className="text-lg font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                  <Bot size={20} className="text-purple-400" />
+                  <span>Your Insights</span>
                 </h2>
                 {insightsLoading ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -652,6 +695,7 @@ export default function AnalyticsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {insights.map((insight, i) => {
                       const cfg = INSIGHT_CONFIG[insight.type]
+                      const InsightIcon = cfg.icon
                       return (
                         <motion.div
                           key={i}
@@ -665,7 +709,9 @@ export default function AnalyticsPage() {
                           transition={{ delay: i * 0.1 }}
                         >
                           <div className="flex items-center gap-2 mb-3">
-                            <span className="text-xl">{cfg.icon}</span>
+                            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${cfg.border}22`, color: cfg.border }}>
+                              <InsightIcon size={16} />
+                            </div>
                             <span className="text-xs font-bold uppercase tracking-wider" style={{ color: cfg.border, fontFamily: 'Oxanium, sans-serif' }}>
                               {cfg.label}
                             </span>
@@ -685,7 +731,9 @@ export default function AnalyticsPage() {
                   </div>
                 ) : (
                   <div className="p-6 rounded-2xl border text-center" style={{ background: '#13131F', borderColor: '#1E1E35' }}>
-                    <div className="text-3xl mb-2">🤖</div>
+                    <div className="w-12 h-12 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto mb-2">
+                      <Bot size={24} />
+                    </div>
                     <p className="text-sm" style={{ color: '#5C5A7A' }}>
                       Complete more quests to unlock AI insights about your journey.
                     </p>

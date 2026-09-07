@@ -22,7 +22,7 @@ export async function POST() {
 
     await sendEmail({
       to: user.email,
-      subject: `Welcome to Life RPG OS, ${name}! ⚔️`,
+      subject: `Welcome to Life RPG OS, ${name}!`,
       html: welcomeEmail(name),
     })
 

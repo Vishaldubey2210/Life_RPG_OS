@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Heart } from 'lucide-react'
 
 interface HPBarProps {
   hp: number
@@ -12,11 +13,11 @@ interface HPBarProps {
 
 function getHPTier(hp: number, hpMax: number) {
   const pct = hpMax > 0 ? (hp / hpMax) * 100 : 100
-  if (pct > 75) return { color: '#22C55E', label: 'Full Health ❤️', flash: false }
-  if (pct > 50) return { color: '#EAB308', label: 'Healthy 💛', flash: false }
-  if (pct > 25) return { color: '#F97316', label: 'Taking Damage 🧡', flash: false }
-  if (pct > 0)  return { color: '#EF4444', label: 'Critical! ❤️‍🩹', flash: true }
-  return { color: '#6B7280', label: 'Defeated 💀', flash: false }
+  if (pct > 75) return { color: '#22C55E', label: 'Full Health', flash: false }
+  if (pct > 50) return { color: '#EAB308', label: 'Healthy', flash: false }
+  if (pct > 25) return { color: '#F97316', label: 'Taking Damage', flash: false }
+  if (pct > 0)  return { color: '#EF4444', label: 'Critical!', flash: true }
+  return { color: '#6B7280', label: 'Defeated', flash: false }
 }
 
 export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPBarProps) {
@@ -36,7 +37,7 @@ export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPB
       const id = ++floatIdCounter
       setFloatTexts(prev => [...prev, {
         id,
-        text: isHeal ? `+${diff} HP ❤️` : `${diff} HP`,
+        text: isHeal ? `+${diff} HP` : `${diff} HP`,
         color: isHeal ? '#22C55E' : '#EF4444',
       }])
       setTimeout(() => setFloatTexts(prev => prev.filter(f => f.id !== id)), 900)
@@ -65,7 +66,9 @@ export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPB
       </AnimatePresence>
 
       <div className="flex justify-between text-xs mb-1">
-        <span style={{ color: '#9B99B8' }}>❤️ HP</span>
+        <span className="flex items-center gap-1" style={{ color: '#9B99B8' }}>
+          <Heart size={12} className="text-red-400 fill-red-400/20" /> HP
+        </span>
         <span style={{ color: tier.color, fontFamily: 'Oxanium, sans-serif' }}>
           {hp}/{hpMax} — {tier.label}
         </span>

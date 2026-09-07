@@ -1,5 +1,8 @@
 'use client'
 
+import { Flame } from 'lucide-react'
+import DynamicIcon from '../ui/DynamicIcon'
+
 interface XPCardProps {
   displayName: string
   avatarEmoji: string
@@ -66,7 +69,22 @@ export function XPCard({
       </div>
 
       {/* Avatar */}
-      <div style={{ fontSize: 64, marginTop: 24 }}>{avatarEmoji || '👑'}</div>
+      <div
+        style={{
+          width: 80,
+          height: 80,
+          borderRadius: 20,
+          background: 'rgba(124,58,237,0.15)',
+          border: '1px solid rgba(124,58,237,0.4)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 24,
+          color: '#9F67FF',
+        }}
+      >
+        <DynamicIcon name={avatarEmoji} size={40} />
+      </div>
 
       {/* Name + Level */}
       <div
@@ -174,9 +192,13 @@ export function XPCard({
           fontSize: 18,
           fontWeight: 700,
           fontFamily: "'Oxanium', sans-serif",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
         }}
       >
-        {streakDays} Day Streak 🔥
+        <Flame size={18} color="#F59E0B" />
+        <span>{streakDays} Day Streak</span>
       </div>
 
       {/* Footer */}

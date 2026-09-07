@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Copy, Clock, Zap, Target, CheckCircle2, Plus,
-  X, Loader2, Users2, Award
+  X, Loader2, Users2, Award, Sparkles, Share2, Swords, Trophy, Users
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Sidebar from '@/components/layout/Sidebar'
@@ -184,7 +184,7 @@ export default function ShadowClonePage() {
       })
 
       await loadData()
-      toast.success('Joined Shadow Clone session! Work together! 🔮')
+      toast.success('Joined Shadow Clone session! Work together!')
     } catch (err) {
       console.error('Join error:', err)
       toast.error('Failed to join session')
@@ -205,7 +205,7 @@ export default function ShadowClonePage() {
       await supabase.rpc('increment_xp', { user_id: profile.id, xp_amount: mySession.xp_bonus })
 
       setMySession(null)
-      toast.success(`🔮 Shadow Clone complete! +${mySession.xp_bonus} XP bonus!`)
+      toast.success(`Shadow Clone complete! +${mySession.xp_bonus} XP bonus!`)
     } catch (err) {
       console.error('Complete error:', err)
       toast.error('Failed to complete session')
@@ -266,7 +266,9 @@ export default function ShadowClonePage() {
             <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-10 bg-purple-500 pointer-events-none" />
 
             <div className="text-center mb-6">
-              <div className="inline-block text-5xl mb-3">🔮</div>
+              <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center bg-purple-500/20 border border-purple-500/40 text-purple-400 mb-3">
+                <Sparkles size={32} />
+              </div>
               <div className="text-xs font-bold uppercase tracking-wider text-purple-400 font-display mb-1">
                 {mySession.status === 'waiting' ? 'Waiting for Partner' : 'Session Active'}
               </div>
@@ -348,13 +350,14 @@ export default function ShadowClonePage() {
                     className="w-full px-3 py-2.5 rounded-xl text-sm bg-[#0F0F1A] border border-slate-800 text-white outline-none focus:border-purple-500"
                   >
                     {habits.map((h) => (
-                      <option key={h.id} value={h.id}>{h.icon} {h.name}</option>
+                      <option key={h.id} value={h.id}>{h.name}</option>
                     ))}
                   </select>
                 )}
               </div>
-              <div className="px-3 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300 mb-4">
-                🔮 Earn +150 XP when your partner completes the same habit.
+              <div className="px-3 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-xs text-purple-300 mb-4 flex items-center gap-1.5">
+                <Sparkles size={14} className="text-purple-400 flex-shrink-0" />
+                <span>Earn +150 XP when your partner completes the same habit.</span>
               </div>
               <button
                 onClick={handleCreate}
@@ -382,8 +385,9 @@ export default function ShadowClonePage() {
                   className="w-full px-3 py-2.5 rounded-xl text-sm bg-[#0F0F1A] border border-slate-800 text-white outline-none focus:border-cyan-500 font-display tracking-widest text-center font-bold text-lg"
                 />
               </div>
-              <div className="px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300 mb-4">
-                👥 Enter a code from your partner to work together in sync.
+              <div className="px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300 mb-4 flex items-center gap-1.5">
+                <Users size={14} className="text-cyan-400 flex-shrink-0" />
+                <span>Enter a code from your partner to work together in sync.</span>
               </div>
               <button
                 onClick={handleJoin}
@@ -402,19 +406,24 @@ export default function ShadowClonePage() {
           <h3 className="text-sm font-bold text-white font-display mb-4">How Shadow Clone Works</h3>
           <div className="space-y-3">
             {[
-              { icon: '🔮', title: 'Create a session', desc: 'Choose a habit and generate a session code' },
-              { icon: '📤', title: 'Share the code', desc: 'Send the 6-character code to your accountability partner' },
-              { icon: '⚔️', title: 'Work together', desc: 'Both of you complete your respective habits' },
-              { icon: '🏆', title: 'Both earn bonus XP', desc: 'Mark complete to collect +150 bonus XP each' },
-            ].map((step, idx) => (
-              <div key={idx} className="flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-slate-900 text-sm flex items-center justify-center flex-shrink-0">{step.icon}</div>
-                <div>
-                  <div className="text-xs font-bold text-white">{step.title}</div>
-                  <div className="text-[11px] text-slate-400">{step.desc}</div>
+              { icon: Sparkles, title: 'Create a session', desc: 'Choose a habit and generate a session code' },
+              { icon: Share2, title: 'Share the code', desc: 'Send the 6-character code to your accountability partner' },
+              { icon: Swords, title: 'Work together', desc: 'Both of you complete your respective habits' },
+              { icon: Trophy, title: 'Both earn bonus XP', desc: 'Mark complete to collect +150 bonus XP each' },
+            ].map((step, idx) => {
+              const StepIcon = step.icon
+              return (
+                <div key={idx} className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-slate-900 text-purple-400 flex items-center justify-center flex-shrink-0">
+                    <StepIcon size={16} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">{step.title}</div>
+                    <div className="text-[11px] text-slate-400">{step.desc}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </main>

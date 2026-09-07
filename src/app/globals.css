@@ -1,42 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oxanium:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
-@theme inline {
-  --color-bg-primary: #08080F;
-  --color-bg-secondary: #0F0F1A;
-  --color-bg-card: #13131F;
-  --color-bg-elevated: #1A1A2E;
-  --color-accent-purple: #7C3AED;
-  --color-accent-purple-light: #9F67FF;
-  --color-accent-gold: #F59E0B;
-  --color-accent-green: #22C55E;
-  --color-accent-red: #EF4444;
-  --color-accent-blue: #3B82F6;
-  --color-text-primary: #F1F0FF;
-  --color-text-secondary: #9B99B8;
-  --color-text-muted: #5C5A7A;
-  --color-border: #1E1E35;
-  --color-border-bright: #2E2E50;
-  --font-display: 'Oxanium', sans-serif;
-  --font-body: 'Inter', sans-serif;
-}
-
 :root {
-  --bg-primary: #08080F;
-  --bg-secondary: #0F0F1A;
-  --bg-card: #13131F;
-  --bg-elevated: #1A1A2E;
-  --accent-purple: #7C3AED;
-  --accent-purple-light: #9F67FF;
+  --bg-primary: #070710;
+  --bg-secondary: #0D0E1C;
+  --bg-card: #131427;
+  --bg-card-hover: #1A1B35;
+  --border-color: #23233E;
+  --border-glow: #7C3AED55;
+  --text-primary: #F3F4F6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+  --primary: #7C3AED;
+  --primary-hover: #6D28D9;
+  --primary-light: #9333EA;
   --accent-gold: #F59E0B;
-  --accent-green: #22C55E;
-  --accent-red: #EF4444;
-  --accent-blue: #3B82F6;
-  --text-primary: #F1F0FF;
-  --text-secondary: #9B99B8;
-  --text-muted: #5C5A7A;
-  --border: #1E1E35;
-  --border-bright: #2E2E50;
+  --accent-emerald: #10B981;
+  --accent-crimson: #EF4444;
+  --accent-cyan: #06B6D4;
 }
 
 * { box-sizing: border-box; }
@@ -49,6 +30,7 @@ body {
 }
 
 .font-display { font-family: 'Oxanium', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
 
 /* XP bar animation */
 @keyframes xp-fill {

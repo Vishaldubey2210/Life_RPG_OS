@@ -16,7 +16,6 @@ export default async function Image({
     .single()
 
   const displayName = profile?.display_name || username || 'Adventurer'
-  const avatarEmoji = profile?.avatar_emoji || '⚔️'
   const level = profile?.level || 1
   const totalXp = profile?.total_xp || 0
   const streakDays = profile?.streak_days || 0
@@ -38,11 +37,28 @@ export default async function Image({
           position: 'relative',
         }}
       >
-        <div style={{ position: 'absolute', top: 32, right: 40, color: '#5C5A7A', fontSize: 18 }}>
-          ⚔️ Life RPG OS
+        <div style={{ position: 'absolute', top: 32, right: 40, color: '#5C5A7A', fontSize: 18, fontWeight: 700 }}>
+          Life RPG OS
         </div>
 
-        <div style={{ fontSize: 100, marginBottom: 16 }}>{avatarEmoji}</div>
+        <div
+          style={{
+            width: 96,
+            height: 96,
+            borderRadius: 24,
+            background: 'rgba(124,58,237,0.2)',
+            border: '2px solid #7C3AED',
+            color: '#9F67FF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 36,
+            fontWeight: 800,
+            marginBottom: 16,
+          }}
+        >
+          LV.{level}
+        </div>
 
         <div
           style={{
@@ -70,7 +86,7 @@ export default async function Image({
         </div>
 
         <div style={{ color: '#F59E0B', fontSize: 28, fontWeight: 700 }}>
-          🔥 {streakDays} Day Streak
+          {streakDays} Day Streak
         </div>
       </div>
     ),

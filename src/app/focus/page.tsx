@@ -23,6 +23,7 @@ import {
 import { toast } from 'sonner'
 import confetti from 'canvas-confetti'
 import Sidebar from '@/components/layout/Sidebar'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 import { playAmbientSound, stopAmbientSound, AmbientSoundType } from '@/lib/ambientSound'
@@ -39,10 +40,10 @@ interface PresetConfig {
 }
 
 const PRESETS: Record<SessionPreset, PresetConfig> = {
-  pomodoro: { name: 'Pomodoro', durationMinutes: 25, breakMinutes: 5, xpReward: 25, icon: '🍅', label: '25m Work / 5m Rest' },
-  sprint:   { name: 'Sprint',   durationMinutes: 15, breakMinutes: 3, xpReward: 15, icon: '⚡', label: '15m High Intensity' },
-  deepwork: { name: 'Deep Work',durationMinutes: 50, breakMinutes: 10,xpReward: 60, icon: '🏔️', label: '50m Deep Flow' },
-  custom:   { name: 'Custom',   durationMinutes: 30, breakMinutes: 5, xpReward: 30, icon: '🎯', label: 'Custom Target' },
+  pomodoro: { name: 'Pomodoro', durationMinutes: 25, breakMinutes: 5, xpReward: 25, icon: 'timer', label: '25m Work / 5m Rest' },
+  sprint:   { name: 'Sprint',   durationMinutes: 15, breakMinutes: 3, xpReward: 15, icon: 'zap', label: '15m High Intensity' },
+  deepwork: { name: 'Deep Work',durationMinutes: 50, breakMinutes: 10,xpReward: 60, icon: 'mountain', label: '50m Deep Flow' },
+  custom:   { name: 'Custom',   durationMinutes: 30, breakMinutes: 5, xpReward: 30, icon: 'target', label: 'Custom Target' },
 }
 
 export default function FocusPage() {
@@ -158,7 +159,7 @@ export default function FocusPage() {
         user_id: profile.id,
         completed_at: new Date().toISOString(),
       })
-      toast.success('Linked quest marked as complete! 🎯')
+      toast.success('Linked quest marked as complete!')
     } catch {
       toast.error('Could not complete quest')
     }
@@ -191,11 +192,10 @@ export default function FocusPage() {
           </motion.div>
         )}
 
-        {/* Quest Linking Select */}
-        <div className="w-full max-w-md mb-6">
-          <label className="block text-xs font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5">
-            <Layers size={13} className="text-purple-400" />
-            <span>Focus Target Quest (Optional)</span>
+        {/* Linked Habit Selector */}
+        <div className="w-full max-w-sm mb-6">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 font-display mb-2 text-center">
+            Link Quest to Focus Session (Optional)
           </label>
           <select
             disabled={isActive}
@@ -206,7 +206,7 @@ export default function FocusPage() {
             <option value="">-- Standalone Focus Session --</option>
             {habits.map((h) => (
               <option key={h.id} value={h.id}>
-                ⚔️ {h.name}
+                {h.name}
               </option>
             ))}
           </select>
@@ -228,7 +228,7 @@ export default function FocusPage() {
                       : 'bg-[#13131F] text-slate-400 border border-slate-800 hover:text-white'
                   }`}
                 >
-                  <span>{cfg.icon}</span>
+                  <DynamicIcon name={cfg.icon} size={15} />
                   <span>{cfg.name}</span>
                   <span className="text-[10px] opacity-80">({cfg.durationMinutes}m)</span>
                 </button>
@@ -305,7 +305,7 @@ export default function FocusPage() {
               </>
             ) : (
               <>
-                <Play size={20} className="fill-white" /> Start Focus ⚔️
+                <Play size={20} className="fill-white" /> Start Focus
               </>
             )}
           </button>

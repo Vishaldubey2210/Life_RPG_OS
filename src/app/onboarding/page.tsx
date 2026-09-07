@@ -6,46 +6,47 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { Check, Loader2 } from 'lucide-react'
+import { Check, Loader2, Swords, Dumbbell, Brain, Sparkles, Heart, Coins, MessageSquare, Zap } from 'lucide-react'
 import { toast } from 'sonner'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 
-const AVATARS = ['⚔️', '🧙', '🏹', '🛡️', '🔮', '🦅', '🐉', '👑', '🌟', '🔥', '💎', '🌙']
+const AVATARS = ['swords', 'wizard', 'archer', 'shield', 'crystal', 'eagle', 'dragon', 'crown', 'star', 'flame', 'diamond', 'moon']
 
 type GoalId = 'strong' | 'mind' | 'peace' | 'wealth' | 'health' | 'social'
 
 const GOALS: { id: GoalId; emoji: string; label: string }[] = [
-  { id: 'strong', emoji: '💪', label: 'Get Physically Strong' },
-  { id: 'mind', emoji: '🧠', label: 'Level Up My Mind' },
-  { id: 'peace', emoji: '🧘', label: 'Find Inner Peace' },
-  { id: 'wealth', emoji: '💰', label: 'Build My Wealth' },
-  { id: 'health', emoji: '❤️', label: 'Improve My Health' },
-  { id: 'social', emoji: '🗣️', label: 'Master Social Skills' },
+  { id: 'strong', emoji: 'dumbbell', label: 'Get Physically Strong' },
+  { id: 'mind', emoji: 'brain', label: 'Level Up My Mind' },
+  { id: 'peace', emoji: 'sparkles', label: 'Find Inner Peace' },
+  { id: 'wealth', emoji: 'coins', label: 'Build My Wealth' },
+  { id: 'health', emoji: 'heart', label: 'Improve My Health' },
+  { id: 'social', emoji: 'message', label: 'Master Social Skills' },
 ]
 
 const HABIT_MAP: Record<GoalId, { name: string; difficulty: string; xp: number; stat: string; emoji: string }[]> = {
   strong: [
-    { name: 'Morning Workout', difficulty: 'Hard', xp: 50, stat: 'STR', emoji: '🏋️' },
-    { name: 'Evening Walk', difficulty: 'Easy', xp: 10, stat: 'STR', emoji: '🚶' },
+    { name: 'Morning Workout', difficulty: 'Hard', xp: 50, stat: 'STR', emoji: 'dumbbell' },
+    { name: 'Evening Walk', difficulty: 'Easy', xp: 10, stat: 'STR', emoji: 'footprints' },
   ],
   mind: [
-    { name: 'Read 20 Pages', difficulty: 'Medium', xp: 25, stat: 'INT', emoji: '📚' },
-    { name: 'Learn Something New', difficulty: 'Medium', xp: 25, stat: 'INT', emoji: '💡' },
+    { name: 'Read 20 Pages', difficulty: 'Medium', xp: 25, stat: 'INT', emoji: 'book' },
+    { name: 'Learn Something New', difficulty: 'Medium', xp: 25, stat: 'INT', emoji: 'lightbulb' },
   ],
   peace: [
-    { name: '10min Meditation', difficulty: 'Easy', xp: 10, stat: 'WIS', emoji: '🧘' },
-    { name: 'Gratitude Journal', difficulty: 'Easy', xp: 10, stat: 'WIS', emoji: '📓' },
+    { name: '10min Meditation', difficulty: 'Easy', xp: 10, stat: 'WIS', emoji: 'sparkles' },
+    { name: 'Gratitude Journal', difficulty: 'Easy', xp: 10, stat: 'WIS', emoji: 'doc' },
   ],
   wealth: [
-    { name: 'Track Expenses', difficulty: 'Easy', xp: 10, stat: 'GOLD', emoji: '💰' },
-    { name: 'Save ₹X Today', difficulty: 'Medium', xp: 25, stat: 'GOLD', emoji: '🏦' },
+    { name: 'Track Expenses', difficulty: 'Easy', xp: 10, stat: 'GOLD', emoji: 'coins' },
+    { name: 'Save ₹X Today', difficulty: 'Medium', xp: 25, stat: 'GOLD', emoji: 'bank' },
   ],
   health: [
-    { name: 'Sleep by 11pm', difficulty: 'Medium', xp: 25, stat: 'VIT', emoji: '😴' },
-    { name: 'Drink 3L Water', difficulty: 'Easy', xp: 10, stat: 'VIT', emoji: '💧' },
+    { name: 'Sleep by 11pm', difficulty: 'Medium', xp: 25, stat: 'VIT', emoji: 'moon' },
+    { name: 'Drink 3L Water', difficulty: 'Easy', xp: 10, stat: 'VIT', emoji: 'droplets' },
   ],
   social: [
-    { name: 'Call a Friend', difficulty: 'Medium', xp: 25, stat: 'CHA', emoji: '📞' },
-    { name: 'Meet Someone New', difficulty: 'Hard', xp: 50, stat: 'CHA', emoji: '🤝' },
+    { name: 'Call a Friend', difficulty: 'Medium', xp: 25, stat: 'CHA', emoji: 'message' },
+    { name: 'Meet Someone New', difficulty: 'Hard', xp: 50, stat: 'CHA', emoji: 'couple' },
   ],
 }
 
@@ -83,7 +84,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0)
   const [direction, setDirection] = useState(1)
   const [displayName, setDisplayName] = useState('')
-  const [selectedAvatar, setSelectedAvatar] = useState('⚔️')
+  const [selectedAvatar, setSelectedAvatar] = useState('swords')
   const [selectedGoals, setSelectedGoals] = useState<GoalId[]>([])
   const [selectedHabits, setSelectedHabits] = useState<Habit[]>([])
   const [loading, setLoading] = useState(false)
@@ -105,92 +106,86 @@ export default function OnboardingPage() {
     )
   }
 
-  function toggleHabit(habit: Habit) {
-    setSelectedHabits((prev) => {
-      const exists = prev.some((h) => h.name === habit.name)
-      if (exists) return prev.filter((h) => h.name !== habit.name)
-      return [...prev, habit]
-    })
-    // Auto-select on step 2 → 3 transition
-  }
-
-  // Ensure habits are auto-selected when moving to step 3
   function handleGoalsDone() {
-    setSelectedHabits(allGeneratedHabits)
+    // Populate starter habits from selected goals
+    const habits = selectedGoals.flatMap((g) => HABIT_MAP[g])
+    // Deduplicate by name
+    const unique = habits.filter((h, i, arr) => arr.findIndex((x) => x.name === h.name) === i)
+    setSelectedHabits(unique)
     goNext()
   }
 
-  const totalDailyXP = selectedHabits.reduce((sum, h) => sum + h.xp, 0)
+  function toggleHabit(habit: Habit) {
+    setSelectedHabits((prev) =>
+      prev.some((h) => h.name === habit.name)
+        ? prev.filter((h) => h.name !== habit.name)
+        : [...prev, habit]
+    )
+  }
 
   async function handleBeginQuest() {
     setLoading(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { router.replace('/login'); return }
+      if (!user) throw new Error('Not authenticated')
 
       // Upsert profile
-      const { error: profileError } = await supabase.from('profiles').upsert({
+      const { error: profileErr } = await supabase.from('profiles').upsert({
         id: user.id,
-        display_name: displayName || 'Adventurer',
+        display_name: displayName.trim() || 'Adventurer',
         avatar_emoji: selectedAvatar,
-        onboarding_completed: true,
         level: 1,
         xp: 0,
-        hp: 100,
-        hp_max: 100,
-        xp_to_next: 100,
-        streak: 0,
+        streak_days: 0,
+        created_at: new Date().toISOString(),
       })
-      if (profileError) throw profileError
+      if (profileErr) throw profileErr
 
-      const { error: statsError } = await supabase.from('stats').upsert({ user_id: user.id })
-      if (statsError) throw statsError
-
-      // Insert habits
+      // Insert starting habits
       if (selectedHabits.length > 0) {
-        const { error: habitsError } = await supabase.from('habits').insert(
-          selectedHabits.map((h) => ({
-            user_id: user.id,
-            name: h.name,
-            difficulty: h.difficulty.toLowerCase(),
-            xp_reward: h.xp,
-            stat_category: h.stat.toLowerCase(),
-            emoji: h.emoji,
-            is_active: true,
-          }))
-        )
-        if (habitsError) throw habitsError
+        const habitRows = selectedHabits.map((h) => ({
+          user_id: user.id,
+          name: h.name,
+          difficulty: h.difficulty.toLowerCase(),
+          xp_reward: h.xp,
+          stat_category: h.stat.toLowerCase(),
+          icon: h.emoji,
+          is_active: true,
+          created_at: new Date().toISOString(),
+        }))
+        const { error: habitErr } = await supabase.from('habits').insert(habitRows)
+        if (habitErr) throw habitErr
       }
 
-      router.replace('/dashboard')
-      router.refresh()
+      toast.success('Character forged! Welcome to Life RPG OS.')
+      router.push('/dashboard')
     } catch (err: unknown) {
-      console.error(err)
-      toast.error(err instanceof Error ? err.message : 'Could not save your character. Please try again.')
+      const msg = err instanceof Error ? err.message : 'Something went wrong'
+      toast.error(msg)
     } finally {
       setLoading(false)
     }
   }
 
+  const totalDailyXP = selectedHabits.reduce((sum, h) => sum + h.xp, 0)
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center" style={{ background: '#08080F' }}>
-      {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-1" style={{ background: '#1E1E35' }}>
-        <motion.div
-          className="h-full"
-          style={{ background: '#7C3AED' }}
-          initial={{ width: '0%' }}
-          animate={{ width: `${((step + 1) / 4) * 100}%` }}
-          transition={{ duration: 0.4 }}
-        />
-      </div>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#08080F' }}>
+      <div className="w-full max-w-lg">
+        {/* Step Indicator */}
+        <div className="flex justify-center gap-2 mb-8">
+          {[0, 1, 2, 3].map((s) => (
+            <div
+              key={s}
+              className="h-1.5 rounded-full transition-all duration-300"
+              style={{
+                width: step === s ? '32px' : '8px',
+                background: step >= s ? '#7C3AED' : '#1E1E35',
+              }}
+            />
+          ))}
+        </div>
 
-      {/* Step indicator */}
-      <div className="fixed top-4 right-6 text-sm" style={{ color: '#5C5A7A' }}>
-        {step + 1} / 4
-      </div>
-
-      <div className="w-full max-w-2xl mx-auto px-4 py-16">
         <AnimatePresence custom={direction} mode="wait">
           {/* STEP 1 */}
           {step === 0 && (
@@ -217,19 +212,27 @@ export default function OnboardingPage() {
                     <button
                       key={av}
                       onClick={() => setSelectedAvatar(av)}
-                      className="text-3xl p-2 rounded-xl transition-all duration-200"
+                      className="p-2.5 rounded-xl transition-all duration-200 flex items-center justify-center"
                       style={{
                         background: selectedAvatar === av ? '#7C3AED22' : '#13131F',
                         border: selectedAvatar === av ? '2px solid #7C3AED' : '2px solid #1E1E35',
+                        color: selectedAvatar === av ? '#9F67FF' : '#9B99B8',
                         transform: selectedAvatar === av ? 'scale(1.1)' : 'scale(1)',
                       }}
                     >
-                      {av}
+                      <DynamicIcon name={av} size={22} />
                     </button>
                   ))}
                 </div>
                 {/* Preview */}
-                <div className="mt-6 text-6xl">{selectedAvatar}</div>
+                <div className="mt-6 flex justify-center">
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                    style={{ background: '#7C3AED22', border: '2px solid #7C3AED', color: '#9F67FF' }}
+                  >
+                    <DynamicIcon name={selectedAvatar} size={36} />
+                  </div>
+                </div>
               </div>
 
               {/* Name input */}
@@ -292,13 +295,18 @@ export default function OnboardingPage() {
                     <button
                       key={goal.id}
                       onClick={() => toggleGoal(goal.id)}
-                      className="p-5 rounded-xl text-left transition-all duration-200 card-glow"
+                      className="p-5 rounded-xl text-left transition-all duration-200"
                       style={{
                         background: selected ? '#7C3AED22' : '#13131F',
                         border: selected ? '2px solid #7C3AED' : '2px solid #1E1E35',
                       }}
                     >
-                      <div className="text-3xl mb-2">{goal.emoji}</div>
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+                        style={{ background: '#7C3AED15', color: '#9F67FF' }}
+                      >
+                        <DynamicIcon name={goal.emoji} size={22} />
+                      </div>
                       <div className="font-medium" style={{ color: '#F1F0FF' }}>{goal.label}</div>
                       {selected && (
                         <div className="mt-2 flex items-center gap-1 text-xs" style={{ color: '#7C3AED' }}>
@@ -363,7 +371,12 @@ export default function OnboardingPage() {
                         opacity: isSelected ? 1 : 0.5,
                       }}
                     >
-                      <div className="text-2xl">{habit.emoji}</div>
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                        style={{ background: '#7C3AED15', color: '#9F67FF' }}
+                      >
+                        <DynamicIcon name={habit.emoji} size={18} />
+                      </div>
                       <div className="flex-1">
                         <div className="font-medium" style={{ color: '#F1F0FF', textDecoration: isSelected ? 'none' : 'line-through' }}>
                           {habit.name}
@@ -387,8 +400,8 @@ export default function OnboardingPage() {
               {/* Total XP */}
               <div className="p-4 rounded-xl mb-6 text-center" style={{ background: '#13131F', border: '1px solid #2E2E50' }}>
                 <span style={{ color: '#9B99B8' }}>Daily XP Potential: </span>
-                <span className="text-xl font-bold" style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
-                  ⚡ {totalDailyXP} XP
+                <span className="text-xl font-bold flex items-center justify-center gap-1 inline-flex" style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
+                  <Zap size={16} /> {totalDailyXP} XP
                 </span>
               </div>
 
@@ -441,7 +454,14 @@ export default function OnboardingPage() {
                   boxShadow: '0 0 30px #7C3AED22',
                 }}
               >
-                <div className="text-6xl mb-3">{selectedAvatar}</div>
+                <div className="flex justify-center mb-3">
+                  <div
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                    style={{ background: '#7C3AED22', border: '2px solid #7C3AED', color: '#9F67FF' }}
+                  >
+                    <DynamicIcon name={selectedAvatar} size={36} />
+                  </div>
+                </div>
                 <div className="text-2xl font-bold mb-1" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}>
                   {displayName}
                 </div>
@@ -456,23 +476,26 @@ export default function OnboardingPage() {
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2 mt-4">
                   {[
-                    { label: '💪 STR', val: 1 },
-                    { label: '🧠 INT', val: 1 },
-                    { label: '🧘 WIS', val: 1 },
-                    { label: '❤️ VIT', val: 1 },
-                    { label: '💰 GOLD', val: 1 },
-                    { label: '🗣️ CHA', val: 1 },
+                    { statKey: 'str', label: 'STR', val: 1 },
+                    { statKey: 'int', label: 'INT', val: 1 },
+                    { statKey: 'wis', label: 'WIS', val: 1 },
+                    { statKey: 'vit', label: 'VIT', val: 1 },
+                    { statKey: 'gold', label: 'GOLD', val: 1 },
+                    { statKey: 'cha', label: 'CHA', val: 1 },
                   ].map((s) => (
                     <motion.div
-                      key={s.label}
+                      key={s.statKey}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.4 }}
-                      className="text-center p-2 rounded-lg"
+                      className="text-center p-2 rounded-lg flex flex-col items-center"
                       style={{ background: '#0F0F1A' }}
                     >
-                      <div className="text-xs" style={{ color: '#5C5A7A' }}>{s.label}</div>
-                      <div className="font-bold" style={{ fontFamily: 'Oxanium, sans-serif', color: '#7C3AED' }}>{s.val}</div>
+                      <div className="text-xs flex items-center gap-1" style={{ color: '#5C5A7A' }}>
+                        <DynamicIcon name={s.statKey} size={11} />
+                        <span>{s.label}</span>
+                      </div>
+                      <div className="font-bold mt-0.5" style={{ fontFamily: 'Oxanium, sans-serif', color: '#7C3AED' }}>{s.val}</div>
                     </motion.div>
                   ))}
                 </div>
@@ -486,7 +509,7 @@ export default function OnboardingPage() {
                   id="begin-quest-btn"
                   onClick={handleBeginQuest}
                   disabled={loading}
-                  className="flex-1 py-3 rounded-xl font-bold text-lg transition-all duration-200 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 rounded-xl font-bold text-base transition-all duration-200 flex items-center justify-center gap-2"
                   style={{
                     background: '#7C3AED',
                     color: '#F1F0FF',
@@ -494,7 +517,14 @@ export default function OnboardingPage() {
                     boxShadow: '0 0 20px #7C3AED44',
                   }}
                 >
-                  {loading ? <Loader2 size={20} className="animate-spin" /> : '⚔️ Begin Your Quest'}
+                  {loading ? (
+                    <Loader2 size={20} className="animate-spin" />
+                  ) : (
+                    <>
+                      <Swords size={18} />
+                      <span>Begin Quest</span>
+                    </>
+                  )}
                 </button>
               </div>
             </motion.div>

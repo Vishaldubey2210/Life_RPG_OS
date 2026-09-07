@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Flame } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 interface User {
@@ -116,7 +117,12 @@ export default function AdminUsersPage() {
                   <td className="p-3"><div className="font-semibold text-white">{user.display_name}</div><div className="text-xs text-slate-500">{user.id.slice(0, 8)}</div></td>
                   <td className="p-3">Lv. {user.level}</td>
                   <td className="p-3">{user.xp} XP</td>
-                  <td className="p-3">🔥 {user.streak}</td>
+                  <td className="p-3">
+                    <span className="inline-flex items-center gap-1">
+                      <Flame size={13} className="text-amber-400" />
+                      <span>{user.streak}</span>
+                    </span>
+                  </td>
                   <td className="p-3">{new Date(user.created_at).toLocaleDateString()}</td>
                   <td className="p-3">
                     <div className="flex gap-2">

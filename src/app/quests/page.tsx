@@ -281,8 +281,8 @@ export default function QuestsPage() {
         return
       }
 
-      const multiplierText = result.multiplier > 1 ? ` (${result.multiplier}x 🔥)` : ''
-      toast.success(`+${result.xp_earned} XP ⚡ Quest Complete!${multiplierText}`, {
+      const multiplierText = result.multiplier > 1 ? ` (${result.multiplier}x Streak Bonus)` : ''
+      toast.success(`+${result.xp_earned} XP Quest Complete!${multiplierText}`, {
         duration: 3000,
       })
       refetch()
@@ -308,7 +308,7 @@ export default function QuestsPage() {
     })
 
     if (error) { toast.error('Failed to create quest'); throw error }
-    toast.success('New Quest added! 🎯')
+    toast.success('New Quest added!')
     setIsModalOpen(false)
     refetch()
   }
@@ -355,7 +355,7 @@ export default function QuestsPage() {
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
         completedToday={allCompleted.length}
@@ -367,10 +367,11 @@ export default function QuestsPage() {
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
             <div>
               <h1
-                className="text-3xl font-bold mb-1"
+                className="text-3xl font-bold mb-1 flex items-center gap-2.5"
                 style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
               >
-                Quest Manager ⚡
+                <Zap size={28} className="text-amber-400" />
+                <span>Quest Manager</span>
               </h1>
               <p style={{ color: '#9B99B8' }}>
                 <span style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>

@@ -5,8 +5,9 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Heart, ArrowRight } from 'lucide-react'
+import { Heart, ArrowRight, HeartHandshake, HeartCrack, HelpCircle, Swords } from 'lucide-react'
 import { toast } from 'sonner'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { createClient } from '@/lib/supabase/client'
 
 interface PageProps {
@@ -18,7 +19,7 @@ export default function CoupleJoinPage({ params }: PageProps) {
   const router = useRouter()
   const [code, setCode] = useState<string>('')
   const [partnerName, setPartnerName] = useState<string>('')
-  const [partnerAvatar, setPartnerAvatar] = useState<string>('💑')
+  const [partnerAvatar, setPartnerAvatar] = useState<string>('swords')
   const [partnerLevel, setPartnerLevel] = useState<number>(1)
   const [loading, setLoading] = useState(true)
   const [accepting, setAccepting] = useState(false)
@@ -92,7 +93,7 @@ export default function CoupleJoinPage({ params }: PageProps) {
 
       if (updateErr) throw updateErr
 
-      toast.success(`💑 Linked with ${partnerName}! Welcome to Couple Mode!`)
+      toast.success(`Linked with ${partnerName}! Welcome to Couple Mode!`)
       router.push('/party/couple')
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Failed to accept invite')
@@ -108,9 +109,9 @@ export default function CoupleJoinPage({ params }: PageProps) {
           <motion.div
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
-            className="text-5xl mb-4"
+            className="flex justify-center mb-4 text-pink-400"
           >
-            💑
+            <HeartHandshake size={48} />
           </motion.div>
           <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
             Loading couple invite...
@@ -128,7 +129,9 @@ export default function CoupleJoinPage({ params }: PageProps) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-sm"
         >
-          <div className="text-6xl mb-4">💔</div>
+          <div className="flex justify-center mb-4 text-red-400">
+            <HeartCrack size={56} />
+          </div>
           <h2 className="text-xl font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>Invite Not Found</h2>
           <p className="text-sm mb-6" style={{ color: '#9B99B8' }}>{error}</p>
           <button
@@ -167,20 +170,30 @@ export default function CoupleJoinPage({ params }: PageProps) {
             <motion.div
               animate={{ scale: [1, 1.15, 1] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className="text-6xl mb-2"
+              className="flex justify-center mb-4 text-pink-400"
             >
-              💑
+              <HeartHandshake size={56} />
             </motion.div>
 
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="text-4xl">{partnerAvatar}</div>
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ background: '#EC489922', border: '1px solid #EC489944', color: '#F472B6' }}
+              >
+                <DynamicIcon name={partnerAvatar} size={24} />
+              </div>
               <motion.div
                 animate={{ scale: [1, 1.3, 1] }}
                 transition={{ repeat: Infinity, duration: 1 }}
               >
                 <Heart size={24} fill="#EC4899" style={{ color: '#EC4899' }} />
               </motion.div>
-              <div className="text-4xl">❓</div>
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ background: '#1E1E35', border: '1px solid #2E2E50', color: '#5C5A7A' }}
+              >
+                <HelpCircle size={24} />
+              </div>
             </div>
 
             <h1 className="text-2xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
@@ -207,7 +220,11 @@ export default function CoupleJoinPage({ params }: PageProps) {
                 }}
               >
                 {accepting ? 'Linking...' : (
-                  <>Accept &amp; Link Up 💑 <ArrowRight size={16} /></>
+                  <>
+                    <HeartHandshake size={18} />
+                    <span>Accept &amp; Link Up</span>
+                    <ArrowRight size={16} />
+                  </>
                 )}
               </button>
 
@@ -225,8 +242,9 @@ export default function CoupleJoinPage({ params }: PageProps) {
         </div>
 
         <div className="text-center mt-6">
-          <span className="text-sm" style={{ color: '#5C5A7A' }}>
-            ⚔️ <span style={{ fontFamily: 'Oxanium, sans-serif' }}>Life RPG OS</span> — Build habits together
+          <span className="text-sm flex items-center justify-center gap-1.5" style={{ color: '#5C5A7A' }}>
+            <Swords size={14} className="text-purple-400" />
+            <span style={{ fontFamily: 'Oxanium, sans-serif' }}>Life RPG OS</span> — Build habits together
           </span>
         </div>
       </motion.div>

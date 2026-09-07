@@ -5,14 +5,17 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
-import { User, Bell, Shield, AlertTriangle, Download, KeyRound } from 'lucide-react'
+import { User, Bell, Shield, AlertTriangle, Download, KeyRound, Palette, Settings as SettingsIcon } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 
 const AVATAR_OPTIONS = [
-  '⚔️','🧙','🏹','🛡️','🔮','⚡','🐉','🦁','🐺','🦅',
-  '🌙','☀️','🌊','🔥','💎','👑','🌟','🎯','💪','🧠',
+  'swords', 'wizard', 'archer', 'shield', 'crystal', 'zap',
+  'dragon', 'lion', 'wolf', 'eagle', 'moon', 'sun',
+  'droplets', 'flame', 'diamond', 'crown', 'star', 'target',
+  'dumbbell', 'brain'
 ]
 
 export default function SettingsPage() {
@@ -30,7 +33,7 @@ export default function SettingsPage() {
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name ?? '')
-      setAvatarEmoji(profile.avatar_emoji ?? '⚔️')
+      setAvatarEmoji(profile.avatar_emoji ?? 'swords')
     }
     supabase.auth.getUser().then((res: any) => {
       if (res.data?.user) setUserEmail(res.data.user.email ?? '')
@@ -46,7 +49,7 @@ export default function SettingsPage() {
         .update({ display_name: displayName, avatar_emoji: avatarEmoji, updated_at: new Date().toISOString() })
         .eq('id', profile.id)
       if (error) throw error
-      toast.success('Profile saved! ✅')
+      toast.success('Profile saved!')
       refetch()
     } catch (err) {
       toast.error('Failed to save profile')
@@ -89,7 +92,7 @@ export default function SettingsPage() {
       a.download = `life-rpg-data-${new Date().toISOString().split('T')[0]}.json`
       a.click()
       URL.revokeObjectURL(url)
-      toast.success('Data exported! 📥')
+      toast.success('Data exported!')
     } catch {
       toast.error('Export failed')
     }
@@ -106,7 +109,7 @@ export default function SettingsPage() {
       await supabase.from('stats').update({
         str: 0, int: 0, wis: 0, vit: 0, gold: 0, cha: 0,
       }).eq('user_id', profile.id)
-      toast.success('Progress reset. Fresh start, adventurer! ⚔️')
+      toast.success('Progress reset. Fresh start, adventurer!')
       setShowReset(false)
       setResetInput('')
       refetch()
@@ -119,7 +122,9 @@ export default function SettingsPage() {
     return (
       <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
         <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">⚙️</div>
+          <div className="flex justify-center mb-4 text-purple-400">
+            <SettingsIcon className="w-10 h-10 animate-spin" />
+          </div>
           <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>Loading settings...</div>
         </div>
       </div>
@@ -129,7 +134,7 @@ export default function SettingsPage() {
   return (
     <div className="flex min-h-screen" style={{ background: '#08080F' }}>
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? '⚔️'}
+        userAvatar={profile?.avatar_emoji ?? 'swords'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -137,7 +142,7 @@ export default function SettingsPage() {
       <main className="flex-1 overflow-y-auto" style={{ marginLeft: 240 }}>
         <div className="p-6 xl:p-8 max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-            <h1 className="text-3xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>Settings ⚙️</h1>
+            <h1 className="text-3xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>Settings</h1>
             <p style={{ color: '#9B99B8' }}>Manage your account and preferences.</p>
           </motion.div>
 
@@ -157,20 +162,22 @@ export default function SettingsPage() {
 
               {/* Avatar picker */}
               <div className="mb-5">
-                <label className="block text-xs mb-2" style={{ color: '#9B99B8' }}>Avatar Emoji</label>
+                <label className="block text-xs mb-2" style={{ color: '#9B99B8' }}>Avatar Icon</label>
                 <div className="flex flex-wrap gap-2">
                   {AVATAR_OPTIONS.map(emoji => (
                     <button
                       key={emoji}
+                      type="button"
                       onClick={() => setAvatarEmoji(emoji)}
-                      className="text-2xl p-2 rounded-xl transition-all duration-150"
+                      className="p-2.5 rounded-xl transition-all duration-150 flex items-center justify-center"
                       style={{
                         background: avatarEmoji === emoji ? '#7C3AED33' : '#0F0F1A',
                         border: `2px solid ${avatarEmoji === emoji ? '#7C3AED' : '#1E1E35'}`,
+                        color: avatarEmoji === emoji ? '#9F67FF' : '#9B99B8',
                         transform: avatarEmoji === emoji ? 'scale(1.15)' : 'scale(1)',
                       }}
                     >
-                      {emoji}
+                      <DynamicIcon name={emoji} size={22} />
                     </button>
                   ))}
                 </div>
@@ -317,9 +324,12 @@ export default function SettingsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}
             >
-              <h2 className="font-bold font-display mb-3" style={{ color: '#F1F0FF' }}>Appearance 🎨</h2>
+              <h2 className="font-bold font-display mb-3 flex items-center gap-2" style={{ color: '#F1F0FF' }}>
+                <Palette size={16} className="text-purple-400" />
+                <span>Appearance</span>
+              </h2>
               <div className="py-4 text-center rounded-xl" style={{ background: '#0F0F1A', border: '1px dashed #2E2E50' }}>
-                <div className="text-2xl mb-2">🎨</div>
+                <Palette size={24} className="text-purple-400 mx-auto mb-2" />
                 <p className="text-sm" style={{ color: '#5C5A7A' }}>Custom themes coming soon</p>
               </div>
             </motion.section>
@@ -349,9 +359,11 @@ export default function SettingsPage() {
                 </button>
               ) : (
                 <div className="p-4 rounded-xl" style={{ background: '#EF444411', border: '1px solid #EF444444' }}>
-                  <p className="text-sm mb-3" style={{ color: '#EF4444' }}>
-                    ⚠️ This will clear all XP, levels, stats, and completions. Your habits/quests will remain.
-                    Type <strong>RESET</strong> to confirm.
+                  <p className="text-sm mb-3 flex items-start gap-1.5" style={{ color: '#EF4444' }}>
+                    <AlertTriangle size={14} className="flex-shrink-0 mt-0.5 text-amber-400" />
+                    <span>
+                      This will clear all XP, levels, stats, and completions. Your habits/quests will remain. Type <strong>RESET</strong> to confirm.
+                    </span>
                   </p>
                   <div className="flex gap-2">
                     <input

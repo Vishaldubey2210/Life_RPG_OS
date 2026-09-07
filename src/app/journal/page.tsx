@@ -110,7 +110,7 @@ export default function JournalPage() {
         setEntries((prev) => [data as JournalEntry, ...prev])
       }
 
-      toast.success('Journal entry saved! 📝')
+      toast.success('Journal entry saved!')
       setShowNewEntry(false)
       setNewContent('')
       setNewTags('')

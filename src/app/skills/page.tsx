@@ -11,8 +11,11 @@ import {
   Coins,
   Mic2,
   Sparkles,
+  Lock,
+  Target,
 } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
+import DynamicIcon from '@/components/ui/DynamicIcon'
 import { useProfile } from '@/hooks/useProfile'
 import { SKILL_TREES, SKILL_TREE_ORDER, SkillNode } from '@/lib/skillTree'
 import { Stats } from '@/hooks/useProfile'
@@ -130,15 +133,15 @@ function SkillNodeCircle({ node, color, statVal, isCurrent }: SkillNodeCirclePro
         }
         transition={isCurrent ? { duration: 1.5, repeat: Infinity } : {}}
       >
-        <span className="text-3xl" style={{ filter: unlocked ? 'none' : 'grayscale(1) opacity(0.3)' }}>
-          {node.icon}
-        </span>
+        <div className="flex items-center justify-center" style={{ filter: unlocked ? 'none' : 'grayscale(1) opacity(0.3)', color: unlocked ? color : '#5C5A7A' }}>
+          <DynamicIcon name={node.icon} size={28} />
+        </div>
         {!unlocked && (
           <div
-            className="absolute bottom-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs"
+            className="absolute bottom-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs text-slate-400"
             style={{ background: '#13131F', border: '1px solid #2E2E50' }}
           >
-            🔒
+            <Lock size={10} />
           </div>
         )}
         {unlocked && node.xp_bonus > 0 && (
@@ -490,11 +493,17 @@ export default function SkillsPage() {
                     border: `1px solid ${nextUnlock.branch.color}33`,
                   }}
                 >
-                  <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: nextUnlock.branch.color }}>
-                    🎯 Next Unlock
+                  <div className="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5" style={{ color: nextUnlock.branch.color }}>
+                    <Target size={14} />
+                    <span>Next Unlock</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{nextUnlock.node.icon}</span>
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: `${nextUnlock.branch.color}22`, color: nextUnlock.branch.color }}
+                    >
+                      <DynamicIcon name={nextUnlock.node.icon} size={20} />
+                    </div>
                     <div>
                       <div className="font-semibold text-sm" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}>
                         {nextUnlock.node.name}

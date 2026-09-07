@@ -10,18 +10,29 @@ export async function GET(request: Request) {
   }
 
   const supabase = await createClient()
+  // Query by display_name (username field doesn't exist in schema)
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*, stats(*)')
-    .eq('username', username)
-    .single()
+    .select('id, display_name, avatar_emoji, level, xp, streak')
+    .ilike('display_name', username)
+    .maybeSingle()
+
+  // Fetch stats separately using the profile id
+  let stats = null
+  if (profile?.id) {
+    const { data: statsData } = await supabase
+      .from('stats')
+      .select('str, int, wis, vit, gold, cha')
+      .eq('user_id', profile.id)
+      .maybeSingle()
+    stats = statsData
+  }
 
   const displayName = profile?.display_name || username || 'Adventurer'
-  const avatarEmoji = profile?.avatar_emoji || '⚔️'
   const level = profile?.level || 1
-  const totalXp = profile?.total_xp || 0
-  const streakDays = profile?.streak_days || 0
-  const stats = profile?.stats || { strength: 10, intelligence: 10, wisdom: 10, vitality: 10, gold: 10, charisma: 10 }
+  // Use correct column names: xp (not total_xp), streak (not streak_days)
+  const totalXp = profile?.xp || 0
+  const streakDays = profile?.streak || 0
 
   return new ImageResponse(
     (
@@ -48,13 +59,31 @@ export async function GET(request: Request) {
             right: 20,
             color: '#5C5A7A',
             fontSize: 12,
+            fontWeight: 700,
           }}
         >
-          ⚔️ Life RPG OS
+          Life RPG OS
         </div>
 
-        {/* Avatar */}
-        <div style={{ fontSize: 72, marginTop: 24 }}>{avatarEmoji}</div>
+        {/* Level Avatar Badge */}
+        <div
+          style={{
+            width: 72,
+            height: 72,
+            borderRadius: 18,
+            background: 'rgba(124,58,237,0.2)',
+            border: '2px solid #7C3AED',
+            color: '#9F67FF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 28,
+            fontWeight: 800,
+            marginTop: 24,
+          }}
+        >
+          LV.{level}
+        </div>
 
         {/* Name + Level */}
         <div
@@ -89,7 +118,7 @@ export async function GET(request: Request) {
             marginTop: 20,
           }}
         >
-          ⚡ {totalXp.toLocaleString()} XP
+          {totalXp.toLocaleString()} XP
         </div>
 
         {/* Stats */}
@@ -103,18 +132,18 @@ export async function GET(request: Request) {
           }}
         >
           {[
-            ['💪 STR', stats?.strength || 10, '#EF4444'],
-            ['🧠 INT', stats?.intelligence || 10, '#3B82F6'],
-            ['🧘 WIS', stats?.wisdom || 10, '#8B5CF6'],
-            ['❤️ VIT', stats?.vitality || 10, '#22C55E'],
-            ['💰 GOLD', stats?.gold || 10, '#F59E0B'],
-            ['🗣️ CHA', stats?.charisma || 10, '#EC4899'],
+            ['STR', stats?.str || 10, '#EF4444'],
+            ['INT', stats?.int || 10, '#3B82F6'],
+            ['WIS', stats?.wis || 10, '#8B5CF6'],
+            ['VIT', stats?.vit || 10, '#22C55E'],
+            ['GOLD', stats?.gold || 10, '#F59E0B'],
+            ['CHA', stats?.cha || 10, '#EC4899'],
           ].map(([label, val, color]) => (
             <div
               key={label as string}
               style={{ display: 'flex', alignItems: 'center', gap: 8 }}
             >
-              <span style={{ color: '#9B99B8', fontSize: 12, width: 60 }}>
+              <span style={{ color: '#9B99B8', fontSize: 12, width: 48, fontWeight: 700 }}>
                 {label}
               </span>
               <div
@@ -143,8 +172,8 @@ export async function GET(request: Request) {
         </div>
 
         {/* Streak */}
-        <div style={{ marginTop: 20, color: '#F59E0B', fontSize: 20 }}>
-          🔥 {streakDays} Day Streak
+        <div style={{ marginTop: 20, color: '#F59E0B', fontSize: 20, fontWeight: 700 }}>
+          {streakDays} Day Streak
         </div>
 
         {/* Footer */}

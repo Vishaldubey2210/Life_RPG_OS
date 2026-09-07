@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { Check, Zap, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Sparkles, LucideIcon, Clock, Timer, Layers } from 'lucide-react'
 import DifficultyBadge from './DifficultyBadge'
 
+import DynamicIcon from './DynamicIcon'
+
 export interface Habit {
   id: string
   name: string
@@ -74,14 +76,14 @@ export default function QuestCard({ habit, isCompleted, onComplete }: QuestCardP
     >
       {/* Icon / Category Badge */}
       <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
         style={{
           background: `${statColor}18`,
           border: `1px solid ${statColor}33`,
           color: statColor,
         }}
       >
-        {habit.emoji ? habit.emoji : <IconComp size={18} />}
+        <DynamicIcon name={habit.emoji} fallback={IconComp} size={18} />
       </div>
 
       {/* Details */}
@@ -109,8 +111,9 @@ export default function QuestCard({ habit, isCompleted, onComplete }: QuestCardP
             </span>
           )}
           {!isCompleted && habit.is_stack_ready && (
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">
-              ⚡ Ready to Stack
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center gap-1">
+              <Zap size={10} className="text-amber-400" />
+              <span>Ready to Stack</span>
             </span>
           )}
         </div>
