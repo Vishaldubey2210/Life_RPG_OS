@@ -19,42 +19,33 @@ import {
   Flame,
   Activity,
   Award,
-  Lock,
-  Compass,
-  Milestone,
-  CheckCircle2,
-  Heart,
-  Crown,
-  BookOpen,
-  Dumbbell,
-  Code2,
 } from 'lucide-react'
 
-// Indian Localized FAQ Items
+// FAQ Items Data
 const FAQS = [
   {
-    q: 'Kya Life RPG OS sach me free hai?',
-    a: 'Haan! The Adventurer tier is 100% Free Forever with zero credit card required. Isme unlimited daily quests, 6-attribute stat progression, streak mechanics, aur Level 20 tak ka progression included hai.',
+    q: 'Is Life RPG OS really free to start?',
+    a: 'Yes. The Adventurer tier is free forever with zero credit card required. It includes core daily quests, full 6-attribute stat calculation, streak tracking, and progression up to Level 20.',
   },
   {
-    q: 'Ye standard habit trackers (Notion/Todoist) se kaise alag hai?',
-    a: 'Boring checklists roz reset ho jaati hain aur burden lagne lagti hain. Life RPG OS me aapki har real-life habit (DSA question, Gym workout, UPSC answer writing, Book reading) aapke character ko XP deti hai, stats (Strength, Intellect, Vitality) badhati hai, aur weekly World Boss battles me raid damage karti hai.',
+    q: 'How is this different from standard habit trackers?',
+    a: 'Traditional trackers treat habits as binary checklists that quickly feel like chores. Life RPG OS is an active character progression engine: real habits award XP, scale attributes (Strength, Intellect, Wisdom, Vitality, Charisma), unlock skill tree perks, and deal raid damage to weekly boss battles.',
   },
   {
-    q: 'Can students (JEE / NEET / UPSC / GATE) and Coders use this?',
-    a: 'Bilkul! 50,000+ Indian students aur software engineers isko study routines, 100 Days of LeetCode, daily revision schedules, aur physical fitness ke liye use kar rahe hain. Har subject ya task ek specific attribute (Intellect / Wisdom / Focus) ko level up karta hai.',
+    q: 'How does the AI Tactical Coach work?',
+    a: 'Your AI Coach analyzes your daily completion rate, consistency patterns, and energy levels. It delivers morning briefings, detects burnout risks before they happen, and generates weekly strategic reports tailored to your archetype.',
   },
   {
-    q: 'How does Couple Mode & Guild Party work?',
-    a: 'Aap apne dosto ya partner ke saath 6-player squad bana sakte ho. Saath me weekly boss (Procrastination Demon) ko defeat karo, shared streak multipliers enjoy karo, aur ek dusre ko accountability do.',
+    q: 'Can I play with friends or my partner?',
+    a: 'Yes. Form a guild party of up to 6 players to take on collective boss raids. Couple Mode pairs two adventurers with shared streak multipliers, co-op health pools, and joint milestone rewards.',
   },
   {
-    q: 'What payment methods are supported in India?',
-    a: 'All plans support instant UPI (Google Pay, PhonePe, Paytm), Indian Debit/Credit Cards, and Netbanking with automatic rupee invoicing.',
+    q: 'What happens if I miss a daily habit?',
+    a: 'Skipping a quest deals calculated damage to your daily HP bar. Maintain high vitality to resist penalties, or execute recovery habits and streak freezes to restore health before daily reset.',
   },
   {
-    q: 'Does it work offline on mobile (Android / iOS)?',
-    a: 'Haan, Life RPG OS installable PWA hai jo lightweight hai, instant load hoti hai, aur offline sync ke saath smooth chalti hai.',
+    q: 'Does it work offline and across devices?',
+    a: 'Yes. Engineered as an installable progressive web app with full offline caching and instant cloud sync across iOS, Android, macOS, and Windows.',
   },
 ]
 
@@ -64,51 +55,47 @@ export default function MarketingPage() {
 
   const featureTabs = [
     {
-      title: '6-Attribute Character Sheet',
+      title: 'Attribute Matrix',
       badge: 'Core Engine',
       description:
-        'Aapki har daily activity 6 core RPG stats me convert hoti hai: Strength (Gym/Fitness), Intellect (Coding/Studies), Wisdom (Reading/Meditation), Vitality (Sleep/Hydration), Charisma (Public Speaking/Networking), aur Focus (Deep Work).',
+        'Every real-world habit routes XP into 6 core RPG attributes: Strength, Intellect, Wisdom, Vitality, Charisma, and Focus. Watch your spider-chart and character sheet evolve in real time.',
       stats: [
-        { label: 'Strength (Gym & 5AM Workout)', value: '88%', color: '#7C3AED', level: 'Lvl 24' },
-        { label: 'Intellect (DSA / Exam Prep)', value: '94%', color: '#F59E0B', level: 'Lvl 31' },
-        { label: 'Vitality (Sleep & Recovery)', value: '76%', color: '#10B981', level: 'Lvl 19' },
-        { label: 'Wisdom (Reading & Gita)', value: '82%', color: '#06B6D4', level: 'Lvl 22' },
+        { label: 'Discipline / STR', value: '88%', color: '#5B57F0', level: 'Lvl 24' },
+        { label: 'Intellect / INT', value: '94%', color: '#F0955B', level: 'Lvl 31' },
+        { label: 'Vitality / VIT', value: '76%', color: '#2FA36B', level: 'Lvl 19' },
       ],
     },
     {
-      title: 'Skill Tree & Talent Perks',
+      title: 'Skill Tree Mastery',
       badge: 'Progression',
       description:
-        'Jaise jaise aap streak maintain karte ho, aapko talent points milte hain. Unlock passives like "120-Min Deep Work Flow State", "Zero Sugar Discipline", aur "Athletic Recovery Aura".',
+        'Unlock active passives and lifestyle perks as you maintain streaks. Earn specialized talent points to invest in Deep Work Mastery, Athletic Endurance, and Emotional Resilience nodes.',
       stats: [
-        { label: 'Deep Focus Node (Tier 3)', value: '85%', color: '#7C3AED', level: 'Active' },
-        { label: '100-Days-Of-Code Master', value: '72%', color: '#F59E0B', level: 'Lvl 18' },
-        { label: 'Cold Shower Resilience', value: '90%', color: '#10B981', level: 'Tier 4' },
-        { label: 'Early Riser (5:30 AM Aura)', value: '95%', color: '#06B6D4', level: 'Tier 5' },
+        { label: 'Deep Focus Node', value: '82%', color: '#5B57F0', level: 'Tier 3' },
+        { label: 'Endurance Path', value: '68%', color: '#F0955B', level: 'Tier 2' },
+        { label: 'Recovery Aura', value: '90%', color: '#2FA36B', level: 'Tier 4' },
       ],
     },
     {
-      title: 'Guild Raids & Boss Battles',
-      badge: 'Co-op India',
+      title: 'Guild Boss Raids',
+      badge: 'Social Co-op',
       description:
-        'Apne college friends, flatmates, ya team ke saath Party banao. Har completed habit giant weekly boss (Procrastination Demon, Burnout Titan) par live DPS damage karti hai.',
+        'Rally up to 6 party members or enter Couple Mode. Every completed habit strikes calculated damage against giant weekly bosses like Procrastination Demon and Burnout Titan.',
       stats: [
-        { label: 'Bengaluru Squad DPS', value: '89%', color: '#7C3AED', level: '3,800 XP/day' },
-        { label: 'Procrastination Demon HP', value: '38%', color: '#EF4444', level: 'Phase 3' },
-        { label: 'Party Shield Multiplier', value: '98%', color: '#10B981', level: 'Active 1.5x' },
-        { label: 'Weekly Loot Drop', value: '100%', color: '#F59E0B', level: 'Chest Ready' },
+        { label: 'Party Raid DPS', value: '85%', color: '#5B57F0', level: '2,450 XP/d' },
+        { label: 'Boss HP Depleted', value: '62%', color: '#F0955B', level: 'Phase 2' },
+        { label: 'Guild Shielding', value: '96%', color: '#2FA36B', level: 'Active' },
       ],
     },
     {
-      title: 'AI Tactical Chanakya / Coach',
-      badge: 'AI Briefings',
+      title: 'AI Tactical Briefings',
+      badge: 'Intelligence',
       description:
-        'Aapka personal AI strategist jo aapke study aur habit patterns ko analyze karke subah daily morning briefing deta hai, burnout se bachata hai, aur personalized daily schedule optimize karta hai.',
+        'A dedicated AI Dungeon Master that analyzes velocity patterns, detects friction debuffs, and provides calm, adaptive coaching suggestions each morning.',
       stats: [
-        { label: 'Consistency Velocity', value: '92%', color: '#7C3AED', level: '+18% MoM' },
-        { label: 'Burnout Recovery', value: '80%', color: '#10B981', level: 'Optimal' },
-        { label: 'Daily Briefing Alignment', value: '96%', color: '#F59E0B', level: 'Peak' },
-        { label: 'Target Exam Velocity', value: '86%', color: '#06B6D4', level: 'On Track' },
+        { label: 'Consistency Velocity', value: '91%', color: '#5B57F0', level: '+14% MoM' },
+        { label: 'Debuff Recovery', value: '74%', color: '#F0955B', level: 'Optimal' },
+        { label: 'Energy Alignment', value: '88%', color: '#2FA36B', level: 'Peak' },
       ],
     },
   ]
@@ -116,48 +103,35 @@ export default function MarketingPage() {
   return (
     <div
       style={{
-        background: '#070710',
-        color: '#F3F4F6',
+        background: '#FBFAF7',
+        color: '#232019',
         fontFamily: "'Inter', sans-serif",
         overflowX: 'hidden',
       }}
     >
       {/* ─────────────────────────────────────────────────────────
-          1. HERO SECTION (Dark Glowing RPG HUD)
+          1. HERO SECTION
+          Matches hero-light-creative-v1.html specifications exactly
       ───────────────────────────────────────────────────────── */}
       <section
         style={{
           position: 'relative',
-          padding: '90px 24px 80px',
-          maxWidth: 1200,
+          padding: '110px 24px 100px',
+          maxWidth: 1140,
           margin: '0 auto',
         }}
       >
-        {/* Glowing radial ambient lights */}
+        {/* Warm background blob (radial gradient blur, top-right) */}
         <div
           style={{
             position: 'absolute',
-            top: -60,
-            left: '30%',
-            width: 600,
-            height: 600,
+            top: -40,
+            right: -60,
+            width: 580,
+            height: 580,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(124, 58, 237, 0) 70%)',
-            filter: 'blur(70px)',
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            top: 100,
-            right: -80,
-            width: 500,
-            height: 500,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0) 70%)',
-            filter: 'blur(70px)',
+            background: 'radial-gradient(circle, #EDECFD 0%, rgba(237, 236, 253, 0) 70%)',
+            filter: 'blur(40px)',
             pointerEvents: 'none',
             zIndex: 0,
           }}
@@ -168,55 +142,52 @@ export default function MarketingPage() {
             position: 'relative',
             zIndex: 1,
             display: 'grid',
-            gridTemplateColumns: '1.1fr 0.9fr',
-            gap: 48,
+            gridTemplateColumns: '1.15fr 0.85fr',
+            gap: 56,
             alignItems: 'center',
           }}
           className="hero-grid"
         >
           {/* Left Column: Text & CTAs */}
           <div>
-            {/* Eyebrow Badge */}
+            {/* Eyebrow with ✦ mark */}
             <div
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                background: 'rgba(124, 58, 237, 0.15)',
-                border: '1px solid rgba(124, 58, 237, 0.4)',
-                color: '#C4B5FD',
-                fontSize: 13,
+                color: '#5B57F0',
+                fontSize: 13.5,
                 fontWeight: 600,
-                padding: '6px 14px',
-                borderRadius: 999,
+                letterSpacing: '-0.01em',
                 marginBottom: 20,
               }}
             >
-              <Zap size={14} className="text-amber-400" />
-              <span>India’s #1 Real-Life Gamification OS · v2.4</span>
+              <span>✦</span>
+              <span>Life RPG OS v2.4 · Real life character sheet</span>
             </div>
 
-            {/* Headline */}
+            {/* Headline with single Fraunces italic signature */}
             <h1
               style={{
-                fontFamily: "'Oxanium', sans-serif",
                 fontSize: 54,
                 lineHeight: 1.1,
-                letterSpacing: '-0.01em',
-                fontWeight: 800,
-                color: '#FFFFFF',
-                margin: '0 0 20px 0',
+                letterSpacing: '-0.025em',
+                fontWeight: 700,
+                color: '#232019',
+                margin: '0 0 22px 0',
               }}
             >
-              Stop tracking habits.{' '}
+              Stop tracking habits. Start leveling{' '}
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #A78BFA, #F59E0B)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  fontFamily: "'Fraunces', Georgia, serif",
+                  fontStyle: 'italic',
+                  fontWeight: 600,
+                  color: '#5B57F0',
                 }}
               >
-                Level up your real life.
+                up.
               </span>
             </h1>
 
@@ -225,13 +196,13 @@ export default function MarketingPage() {
               style={{
                 fontSize: 17,
                 lineHeight: 1.6,
-                color: '#9CA3AF',
-                margin: '0 0 32px 0',
-                maxWidth: 520,
+                color: '#6E6A61',
+                margin: '0 0 36px 0',
+                maxWidth: 480,
               }}
             >
-              Turn your daily studies, coding grind, 5AM gym, and reading into an epic RPG adventure.
-              Earn XP, upgrade 6 attributes, conquer weekly guild bosses, and build unstoppable discipline.
+              Transform your daily discipline, fitness, and career routines into an interactive RPG
+              character progression engine. Real habits earn XP, unlock talent trees, and slay procrastination.
             </p>
 
             {/* Action Row */}
@@ -239,68 +210,57 @@ export default function MarketingPage() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 16,
-                marginBottom: 40,
+                gap: 20,
+                marginBottom: 44,
                 flexWrap: 'wrap',
               }}
             >
               <Link
                 href="/login"
                 style={{
-                  background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
+                  background: '#232019',
                   color: '#FFFFFF',
                   textDecoration: 'none',
                   fontSize: 15,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   padding: '14px 28px',
                   borderRadius: 999,
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 8,
-                  boxShadow: '0 0 24px rgba(124, 58, 237, 0.5)',
-                  border: '1px solid rgba(167, 139, 250, 0.4)',
+                  boxShadow: '0 4px 16px rgba(35, 32, 25, 0.12)',
                   transition: 'all 0.18s ease',
                 }}
                 onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#38342C'
                   e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 0 32px rgba(124, 58, 237, 0.7)'
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(35, 32, 25, 0.18)'
                 }}
                 onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#232019'
                   e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 0 24px rgba(124, 58, 237, 0.5)'
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(35, 32, 25, 0.12)'
                 }}
               >
-                <Swords size={16} />
-                <span>Start Your Campaign Free</span>
+                <span>Get started free</span>
                 <ArrowRight size={16} />
               </Link>
 
               <a
                 href="#how-it-works"
                 style={{
-                  background: '#131427',
-                  border: '1px solid #23233E',
-                  color: '#D1D5DB',
+                  color: '#232019',
                   textDecoration: 'none',
                   fontSize: 15,
-                  fontWeight: 600,
-                  padding: '14px 24px',
-                  borderRadius: 999,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  transition: 'all 0.15s ease',
+                  fontWeight: 500,
+                  borderBottom: '1.5px solid #232019',
+                  paddingBottom: 2,
+                  transition: 'opacity 0.15s ease',
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#7C3AED'
-                  e.currentTarget.style.color = '#FFFFFF'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#23233E'
-                  e.currentTarget.style.color = '#D1D5DB'
-                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.7')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
               >
-                How It Works
+                How it works →
               </a>
             </div>
 
@@ -316,205 +276,292 @@ export default function MarketingPage() {
                   <img
                     key={i}
                     src={src}
-                    alt="Indian Adventurer"
+                    alt="Adventurer"
                     style={{
-                      width: 34,
-                      height: 34,
+                      width: 32,
+                      height: 32,
                       borderRadius: '50%',
-                      border: '2px solid #070710',
-                      marginLeft: i > 0 ? -10 : 0,
+                      border: '2px solid #FBFAF7',
+                      marginLeft: i > 0 ? -8 : 0,
                       objectFit: 'cover',
                     }}
                   />
                 ))}
               </div>
-              <div style={{ fontSize: 13.5, color: '#9CA3AF' }}>
-                <strong style={{ color: '#F59E0B' }}>50,000+</strong> Indian aspirants & coders leveling up daily
+              <div style={{ fontSize: 13.5, color: '#6E6A61', fontWeight: 500 }}>
+                <span style={{ color: '#232019', fontWeight: 700 }}>10,000+</span> adventurers leveling up daily
               </div>
             </div>
           </div>
 
-          {/* Right Column: Character Card (Dark Glowing HUD) */}
-          <div style={{ position: 'relative' }}>
+          {/* Right Column: Character Card with Signature Radial Level Ring + 3 Mini Bars */}
+          <div
+            style={{
+              position: 'relative',
+              perspective: 1000,
+            }}
+          >
             <div
               style={{
-                background: 'linear-gradient(145deg, #101124, #0B0C18)',
-                borderRadius: 20,
-                border: '1px solid rgba(124, 58, 237, 0.4)',
-                padding: '28px 24px',
-                boxShadow: '0 0 40px rgba(124, 58, 237, 0.25), 0 20px 40px rgba(0,0,0,0.6)',
-                position: 'relative',
+                background: '#FFFFFF',
+                borderRadius: 22,
+                border: '1px solid #EAE6DD',
+                padding: '32px 28px',
+                boxShadow: '0 24px 60px rgba(35, 32, 25, 0.09)',
+                transform: 'rotate(2.5deg)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'rotate(0deg) translateY(-4px)'
+                e.currentTarget.style.boxShadow = '0 32px 70px rgba(35, 32, 25, 0.12)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'rotate(2.5deg)'
+                e.currentTarget.style.boxShadow = '0 24px 60px rgba(35, 32, 25, 0.09)'
               }}
             >
-              {/* Card Header with Level & Class */}
+              {/* Card Header */}
               <div
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  marginBottom: 20,
-                  paddingBottom: 16,
-                  borderBottom: '1px solid rgba(35, 35, 62, 0.8)',
+                  marginBottom: 24,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div
-                    style={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: 12,
-                      background: 'linear-gradient(135deg, #7C3AED, #F59E0B)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 0 16px rgba(124, 58, 237, 0.4)',
-                    }}
-                  >
-                    <Crown size={22} color="#FFFFFF" />
+                <div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: '#232019' }}>
+                    Aether Paladin
                   </div>
-                  <div>
-                    <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 18, fontWeight: 700, color: '#FFFFFF' }}>
-                      Aarav Sharma
-                    </div>
-                    <div style={{ fontSize: 12.5, color: '#9CA3AF' }}>
-                      Class: <strong style={{ color: '#A78BFA' }}>SDE Paladin · Bengaluru</strong>
-                    </div>
+                  <div style={{ fontSize: 13, color: '#A19C90', marginTop: 2 }}>
+                    Daily Quest Completion: <strong style={{ color: '#5B57F0' }}>100%</strong>
                   </div>
                 </div>
-                {/* Level Badge */}
                 <div
                   style={{
-                    background: 'rgba(245, 158, 11, 0.15)',
-                    border: '1px solid rgba(245, 158, 11, 0.4)',
-                    color: '#F59E0B',
-                    fontFamily: "'Oxanium', sans-serif",
-                    fontWeight: 700,
-                    fontSize: 13,
+                    background: '#EDECFD',
+                    color: '#5B57F0',
+                    fontSize: 12,
+                    fontWeight: 600,
                     padding: '4px 12px',
                     borderRadius: 999,
                   }}
                 >
-                  Level 24
+                  Season 4
                 </div>
               </div>
 
-              {/* XP Bar & HP Bar */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
-                {/* XP Bar */}
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-                    <span style={{ color: '#C4B5FD', fontWeight: 600 }}>XP Progress</span>
-                    <span style={{ color: '#A78BFA', fontFamily: "'JetBrains Mono', monospace" }}>8,450 / 10,000 XP (84%)</span>
-                  </div>
-                  <div style={{ height: 8, borderRadius: 999, background: '#1B1C33', overflow: 'hidden' }}>
-                    <div
-                      style={{
-                        width: '84%',
-                        height: '100%',
-                        borderRadius: 999,
-                        background: 'linear-gradient(90deg, #7C3AED, #A78BFA)',
-                        boxShadow: '0 0 12px rgba(124, 58, 237, 0.8)',
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* HP Bar */}
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-                    <span style={{ color: '#FCA5A5', fontWeight: 600 }}>Health / Vitality</span>
-                    <span style={{ color: '#F87171', fontFamily: "'JetBrains Mono', monospace" }}>95 / 100 HP</span>
-                  </div>
-                  <div style={{ height: 8, borderRadius: 999, background: '#1B1C33', overflow: 'hidden' }}>
-                    <div
-                      style={{
-                        width: '95%',
-                        height: '100%',
-                        borderRadius: 999,
-                        background: 'linear-gradient(90deg, #EF4444, #F87171)',
-                        boxShadow: '0 0 12px rgba(239, 68, 68, 0.6)',
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Live Quests Checklist */}
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
-                  Today’s Campaign Quests
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {[
-                    { title: 'Solve 2 LeetCode Mediums (Trees & Graphs)', xp: '+250 XP', stat: 'INT +3', done: true, icon: Code2 },
-                    { title: '5:30 AM Gym Workout (Chest & Triceps)', xp: '+300 XP', stat: 'STR +4', done: true, icon: Dumbbell },
-                    { title: 'Read 15 Pages of Bhagavad Gita / Deep Work', xp: '+150 XP', stat: 'WIS +2', done: true, icon: BookOpen },
-                    { title: 'System Design Mock / UPSC GS Revision', xp: '+400 XP', stat: 'FOC +5', done: false, icon: Brain },
-                  ].map((q, idx) => {
-                    const Icon = q.icon
-                    return (
-                      <div
-                        key={idx}
-                        style={{
-                          background: q.done ? 'rgba(16, 185, 129, 0.08)' : 'rgba(20, 21, 39, 0.8)',
-                          border: `1px solid ${q.done ? 'rgba(16, 185, 129, 0.3)' : 'rgba(35, 35, 62, 0.8)'}`,
-                          borderRadius: 10,
-                          padding: '8px 12px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <div
-                            style={{
-                              width: 20,
-                              height: 20,
-                              borderRadius: '50%',
-                              background: q.done ? '#10B981' : 'transparent',
-                              border: `1.5px solid ${q.done ? '#10B981' : '#4B5563'}`,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              color: '#FFFFFF',
-                            }}
-                          >
-                            {q.done && <Check size={12} strokeWidth={3} />}
-                          </div>
-                          <span style={{ fontSize: 13, color: q.done ? '#E5E7EB' : '#9CA3AF', textDecoration: q.done ? 'line-through' : 'none' }}>
-                            {q.title}
-                          </span>
-                        </div>
-                        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                          <span style={{ fontSize: 10.5, color: '#A78BFA', fontWeight: 600 }}>{q.stat}</span>
-                          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#F59E0B', fontWeight: 600 }}>
-                            {q.xp}
-                          </span>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-
-              {/* Streak Footer Badge */}
+              {/* Central Radial Level Ring */}
               <div
                 style={{
-                  background: 'rgba(245, 158, 11, 0.1)',
-                  border: '1px solid rgba(245, 158, 11, 0.3)',
-                  borderRadius: 10,
-                  padding: '8px 12px',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  fontSize: 12,
+                  padding: '16px 0 24px',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#F59E0B', fontWeight: 600 }}>
-                  <Flame size={15} />
-                  <span>48-Day Active Streak</span>
+                <div style={{ position: 'relative', width: 140, height: 140 }}>
+                  <svg width="140" height="140" viewBox="0 0 140 140" style={{ transform: 'rotate(-90deg)' }}>
+                    {/* Background Track */}
+                    <circle
+                      cx="70"
+                      cy="70"
+                      r="58"
+                      stroke="#F0EEE6"
+                      strokeWidth="9"
+                      fill="none"
+                    />
+                    {/* Progress Stroke */}
+                    <circle
+                      cx="70"
+                      cy="70"
+                      r="58"
+                      stroke="#5B57F0"
+                      strokeWidth="9"
+                      strokeDasharray="364.4"
+                      strokeDashoffset="80"
+                      strokeLinecap="round"
+                      fill="none"
+                    />
+                  </svg>
+                  {/* Inside Text */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontSize: 26,
+                        fontWeight: 600,
+                        color: '#232019',
+                        lineHeight: 1,
+                      }}
+                    >
+                      Lvl 18
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11.5,
+                        color: '#6E6A61',
+                        fontWeight: 500,
+                        marginTop: 4,
+                      }}
+                    >
+                      7,850 / 10k XP
+                    </span>
+                  </div>
                 </div>
-                <span style={{ color: '#D1D5DB' }}>+20% Party Bonus Active</span>
+              </div>
+
+              {/* 3 Mini Stat Bars (Strictly using --accent, --accent-2, --success) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {/* Stat 1: Discipline / STR */}
+                <div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontSize: 13,
+                      marginBottom: 6,
+                    }}
+                  >
+                    <span style={{ color: '#232019', fontWeight: 600 }}>Discipline (STR)</span>
+                    <span
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        color: '#5B57F0',
+                        fontWeight: 600,
+                      }}
+                    >
+                      88%
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      height: 7,
+                      borderRadius: 999,
+                      background: '#F0EEE6',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '88%',
+                        height: '100%',
+                        borderRadius: 999,
+                        background: '#5B57F0',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Stat 2: Intellect / INT */}
+                <div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontSize: 13,
+                      marginBottom: 6,
+                    }}
+                  >
+                    <span style={{ color: '#232019', fontWeight: 600 }}>Intellect (INT)</span>
+                    <span
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        color: '#F0955B',
+                        fontWeight: 600,
+                      }}
+                    >
+                      94%
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      height: 7,
+                      borderRadius: 999,
+                      background: '#F0EEE6',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '94%',
+                        height: '100%',
+                        borderRadius: 999,
+                        background: '#F0955B',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Stat 3: Vitality / VIT */}
+                <div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontSize: 13,
+                      marginBottom: 6,
+                    }}
+                  >
+                    <span style={{ color: '#232019', fontWeight: 600 }}>Vitality (VIT)</span>
+                    <span
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        color: '#2FA36B',
+                        fontWeight: 600,
+                      }}
+                    >
+                      76%
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      height: 7,
+                      borderRadius: 999,
+                      background: '#F0EEE6',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '76%',
+                        height: '100%',
+                        borderRadius: 999,
+                        background: '#2FA36B',
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Active Perk Pill at bottom */}
+              <div
+                style={{
+                  marginTop: 22,
+                  padding: '10px 14px',
+                  borderRadius: 12,
+                  background: '#FBFAF7',
+                  border: '1px solid #EAE6DD',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  fontSize: 12.5,
+                  color: '#6E6A61',
+                }}
+              >
+                <Flame size={15} color="#F0955B" />
+                <span>
+                  Active Perk: <strong style={{ color: '#232019' }}>42-Day Deep Work Streak</strong> (+15% XP)
+                </span>
               </div>
             </div>
           </div>
@@ -522,88 +569,363 @@ export default function MarketingPage() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-          2. STATS ROW (India Scale)
+          2. TESTIMONIALS SECTION
+          "People stopped treating life like a checklist"
       ───────────────────────────────────────────────────────── */}
       <section
         style={{
-          borderTop: '1px solid #23233E',
-          borderBottom: '1px solid #23233E',
-          background: '#0D0E1C',
-          padding: '60px 24px',
+          padding: '96px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
         }}
       >
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 60px' }}>
+          <div
+            style={{
+              color: '#5B57F0',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+              marginBottom: 12,
+            }}
+          >
+            Player experiences
+          </div>
+          <h2
+            style={{
+              fontSize: 38,
+              lineHeight: 1.15,
+              letterSpacing: '-0.015em',
+              fontWeight: 700,
+              color: '#232019',
+              margin: '0 0 16px 0',
+            }}
+          >
+            People stopped treating life like a{' '}
+            <span
+              style={{
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontStyle: 'italic',
+                fontWeight: 600,
+                color: '#5B57F0',
+              }}
+            >
+              checklist.
+            </span>
+          </h2>
+          <p style={{ fontSize: 16, color: '#6E6A61', margin: 0, lineHeight: 1.6 }}>
+            Read how software engineers, founders, and students converted mundane habit tracking into
+            a self-sustaining RPG engine.
+          </p>
+        </div>
+
+        {/* Testimonials Grid: Featured Large Card + 3 Compact Cards */}
         <div
           style={{
-            maxWidth: 1200,
-            margin: '0 auto',
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: 24,
-            textAlign: 'center',
           }}
-          className="stats-grid"
+          className="testimonials-grid"
         >
-          <div>
-            <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 44, fontWeight: 800, color: '#A78BFA', marginBottom: 6 }}>
-              50,000+
+          {/* Featured Card (Spans 2 columns) */}
+          <div
+            style={{
+              gridColumn: 'span 2',
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid #EAE6DD',
+              padding: '36px 36px',
+              boxShadow: '0 20px 50px rgba(35, 32, 25, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+            className="featured-testimonial"
+          >
+            <div>
+              {/* Stars */}
+              <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={16} fill="#5B57F0" color="#5B57F0" />
+                ))}
+              </div>
+              <blockquote
+                style={{
+                  fontSize: 20,
+                  lineHeight: 1.5,
+                  color: '#232019',
+                  fontWeight: 500,
+                  margin: '0 0 28px 0',
+                }}
+              >
+                &ldquo;I’ve tried Notion templates, Todoist, and Streaks. Life RPG OS is the only thing that
+                actually worked because missing a workout damages my party in our weekly boss raid. The stakes
+                make consistency genuinely fun.&rdquo;
+              </blockquote>
             </div>
-            <div style={{ fontSize: 14, color: '#9CA3AF' }}>Active Indian Heroes</div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: 20,
+                borderTop: '1px solid #F0EEE6',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <img
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                  alt="Sarah Lin"
+                  style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover' }}
+                />
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 15, color: '#232019' }}>Sarah Lin</div>
+                  <div style={{ fontSize: 13, color: '#6E6A61' }}>Staff Engineer @ Scale AI</div>
+                </div>
+              </div>
+              <span
+                style={{
+                  background: '#EDECFD',
+                  color: '#5B57F0',
+                  fontSize: 12.5,
+                  fontWeight: 600,
+                  padding: '6px 14px',
+                  borderRadius: 999,
+                }}
+              >
+                Lvl 24 Paladin
+              </span>
+            </div>
           </div>
-          <div>
-            <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 44, fontWeight: 800, color: '#F59E0B', marginBottom: 6 }}>
-              1.2M+
+
+          {/* Card 2 */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid #EAE6DD',
+              padding: '30px 28px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} fill="#5B57F0" color="#5B57F0" />
+                ))}
+              </div>
+              <p style={{ fontSize: 15, lineHeight: 1.6, color: '#232019', margin: '0 0 20px 0' }}>
+                &ldquo;Couple Mode completely revolutionized how my partner and I split chores and study sessions.
+                Leveling up together feels rewarding.&rdquo;
+              </p>
             </div>
-            <div style={{ fontSize: 14, color: '#9CA3AF' }}>Quests Completed</div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: 16,
+                borderTop: '1px solid #F0EEE6',
+              }}
+            >
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: '#232019' }}>Marcus Vance</div>
+                <div style={{ fontSize: 12.5, color: '#6E6A61' }}>Product Designer</div>
+              </div>
+              <span
+                style={{
+                  background: '#EDECFD',
+                  color: '#5B57F0',
+                  fontSize: 11.5,
+                  fontWeight: 600,
+                  padding: '4px 10px',
+                  borderRadius: 999,
+                }}
+              >
+                Lvl 19 Ranger
+              </span>
+            </div>
           </div>
-          <div>
-            <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 44, fontWeight: 800, color: '#10B981', marginBottom: 6 }}>
-              89%
+
+          {/* Card 3 */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid #EAE6DD',
+              padding: '30px 28px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} fill="#5B57F0" color="#5B57F0" />
+                ))}
+              </div>
+              <p style={{ fontSize: 15, lineHeight: 1.6, color: '#232019', margin: '0 0 20px 0' }}>
+                &ldquo;The AI tactical briefings catch my burnout patterns 3 days before I crash.
+                It suggested a recovery quest that saved my entire month.&rdquo;
+              </p>
             </div>
-            <div style={{ fontSize: 14, color: '#9CA3AF' }}>30-Day Streak Retention</div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: 16,
+                borderTop: '1px solid #F0EEE6',
+              }}
+            >
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: '#232019' }}>Elena Rostova</div>
+                <div style={{ fontSize: 12.5, color: '#6E6A61' }}>Medical Resident</div>
+              </div>
+              <span
+                style={{
+                  background: '#EDECFD',
+                  color: '#5B57F0',
+                  fontSize: 11.5,
+                  fontWeight: 600,
+                  padding: '4px 10px',
+                  borderRadius: 999,
+                }}
+              >
+                Lvl 31 Archmage
+              </span>
+            </div>
           </div>
-          <div>
-            <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 44, fontWeight: 800, color: '#06B6D4', marginBottom: 6 }}>
-              ₹0
+
+          {/* Card 4 */}
+          <div
+            style={{
+              gridColumn: 'span 2',
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid #EAE6DD',
+              padding: '30px 32px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+            className="featured-testimonial"
+          >
+            <div>
+              <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={15} fill="#5B57F0" color="#5B57F0" />
+                ))}
+              </div>
+              <p style={{ fontSize: 16, lineHeight: 1.6, color: '#232019', margin: '0 0 20px 0' }}>
+                &ldquo;Seeing my physical health turn into a tangible Vitality stat and my reading into Intellect XP
+                made me realize where my life was out of balance. It is clean, calm, and addictive.&rdquo;
+              </p>
             </div>
-            <div style={{ fontSize: 14, color: '#9CA3AF' }}>Forever Free to Start</div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: 16,
+                borderTop: '1px solid #F0EEE6',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <img
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80"
+                  alt="Devon Park"
+                  style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }}
+                />
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: '#232019' }}>Devon Park</div>
+                  <div style={{ fontSize: 12.5, color: '#6E6A61' }}>Founder @ Hyperfocus</div>
+                </div>
+              </div>
+              <span
+                style={{
+                  background: '#EDECFD',
+                  color: '#5B57F0',
+                  fontSize: 11.5,
+                  fontWeight: 600,
+                  padding: '4px 10px',
+                  borderRadius: 999,
+                }}
+              >
+                Lvl 42 Grandmaster
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-          3. FEATURES / 6-ATTRIBUTES & SKILL TREES
+          3. FEATURES / MODULES SECTION
+          "The UI is the character sheet"
       ───────────────────────────────────────────────────────── */}
       <section
         id="features"
         style={{
-          padding: '90px 24px',
-          maxWidth: 1200,
+          padding: '96px 24px',
+          maxWidth: 1140,
           margin: '0 auto',
         }}
       >
-        <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 60px' }}>
-          <div style={{ color: '#F59E0B', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
-            Engine Capabilities
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 60px' }}>
+          <div
+            style={{
+              color: '#5B57F0',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+              marginBottom: 12,
+            }}
+          >
+            Character Architecture
           </div>
-          <h2 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 38, fontWeight: 800, color: '#FFFFFF', margin: '0 0 16px 0' }}>
-            Transform Real Life Into A Character Sheet
+          <h2
+            style={{
+              fontSize: 38,
+              lineHeight: 1.15,
+              letterSpacing: '-0.015em',
+              fontWeight: 700,
+              color: '#232019',
+              margin: '0 0 16px 0',
+            }}
+          >
+            The UI is your character{' '}
+            <span
+              style={{
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontStyle: 'italic',
+                fontWeight: 600,
+                color: '#5B57F0',
+              }}
+            >
+              sheet.
+            </span>
           </h2>
-          <p style={{ fontSize: 16, color: '#9CA3AF', margin: 0, lineHeight: 1.6 }}>
-            Har daily activity aapke real attributes ko boost karti hai. Chahe aap coding kar rahe ho, padhai kar rahe ho, ya gym ja rahe ho.
+          <p style={{ fontSize: 16, color: '#6E6A61', margin: 0, lineHeight: 1.6 }}>
+            Select any engine module to view how your real-world activities map to your living avatar.
           </p>
         </div>
 
-        {/* Feature Interactive Tabs */}
+        {/* Clean Vertical Tab List + Right Panel View */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '0.9fr 1.1fr',
-            gap: 36,
+            gridTemplateColumns: '1fr 1.35fr',
+            gap: 40,
             alignItems: 'center',
           }}
           className="features-grid"
         >
-          {/* Left: Tab Buttons */}
+          {/* Left: Clean Vertical Tabs */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {featureTabs.map((tab, idx) => {
               const isActive = activeTab === idx
@@ -613,25 +935,31 @@ export default function MarketingPage() {
                   onClick={() => setActiveTab(idx)}
                   style={{
                     textAlign: 'left',
-                    background: isActive ? 'rgba(124, 58, 237, 0.15)' : '#0D0E1C',
-                    border: `1px solid ${isActive ? '#7C3AED' : '#23233E'}`,
-                    borderLeft: isActive ? '4px solid #F59E0B' : `1px solid #23233E`,
-                    borderRadius: 12,
-                    padding: '20px 22px',
+                    background: isActive ? '#EDECFD' : 'transparent',
+                    border: 'none',
+                    borderLeft: isActive ? '4px solid #5B57F0' : '4px solid transparent',
+                    borderRadius: '0 16px 16px 0',
+                    padding: '20px 24px',
                     cursor: 'pointer',
                     transition: 'all 0.18s ease',
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 18, fontWeight: 700, color: isActive ? '#FFFFFF' : '#D1D5DB' }}>
+                    <span
+                      style={{
+                        fontSize: 17,
+                        fontWeight: isActive ? 700 : 500,
+                        color: isActive ? '#232019' : '#6E6A61',
+                      }}
+                    >
                       {tab.title}
                     </span>
                     <span
                       style={{
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: isActive ? '#F59E0B' : '#9CA3AF',
-                        background: isActive ? 'rgba(245, 158, 11, 0.15)' : '#1B1C33',
+                        fontSize: 11.5,
+                        fontWeight: 600,
+                        color: isActive ? '#5B57F0' : '#A19C90',
+                        background: isActive ? '#FFFFFF' : '#F0EEE6',
                         padding: '3px 10px',
                         borderRadius: 999,
                       }}
@@ -640,7 +968,14 @@ export default function MarketingPage() {
                     </span>
                   </div>
                   {isActive && (
-                    <p style={{ fontSize: 14, color: '#9CA3AF', margin: '10px 0 0 0', lineHeight: 1.55 }}>
+                    <p
+                      style={{
+                        fontSize: 14,
+                        lineHeight: 1.55,
+                        color: '#6E6A61',
+                        margin: '10px 0 0 0',
+                      }}
+                    >
                       {tab.description}
                     </p>
                   )}
@@ -649,61 +984,87 @@ export default function MarketingPage() {
             })}
           </div>
 
-          {/* Right: Live Interactive Stats Panel */}
+          {/* Right: Dynamic Interactive Preview Panel */}
           <div
             style={{
-              background: '#101124',
-              borderRadius: 20,
-              border: '1px solid rgba(124, 58, 237, 0.3)',
-              padding: '32px 28px',
-              boxShadow: '0 0 30px rgba(124, 58, 237, 0.15)',
+              background: '#FFFFFF',
+              borderRadius: 22,
+              border: '1px solid #EAE6DD',
+              padding: '36px 32px',
+              boxShadow: '0 24px 60px rgba(35, 32, 25, 0.08)',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 28,
+              }}
+            >
               <div>
-                <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 20, fontWeight: 700, color: '#FFFFFF' }}>
+                <div style={{ fontSize: 20, fontWeight: 700, color: '#232019' }}>
                   {featureTabs[activeTab].title}
                 </div>
-                <div style={{ fontSize: 12.5, color: '#9CA3AF', marginTop: 2 }}>
-                  Live Telemetry · Real-Time Calculation
+                <div style={{ fontSize: 13, color: '#A19C90', marginTop: 3 }}>
+                  Active Module Telemetry · Live Sync
                 </div>
               </div>
               <div
                 style={{
                   width: 36,
                   height: 36,
-                  borderRadius: 10,
-                  background: 'rgba(124, 58, 237, 0.2)',
+                  borderRadius: '50%',
+                  background: '#EDECFD',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Activity size={18} color="#A78BFA" />
+                <Sparkles size={18} color="#5B57F0" />
               </div>
             </div>
 
-            {/* Stat Bars */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 24 }}>
+            {/* Central Stat Bars in Module */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginBottom: 28 }}>
               {featureTabs[activeTab].stats.map((st, i) => (
                 <div key={i}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 6 }}>
-                    <span style={{ color: '#E5E7EB', fontWeight: 600 }}>{st.label}</span>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                      <span style={{ fontSize: 12, color: '#9CA3AF' }}>{st.level}</span>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", color: st.color, fontWeight: 700 }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      fontSize: 13.5,
+                      marginBottom: 7,
+                    }}
+                  >
+                    <span style={{ color: '#232019', fontWeight: 600 }}>{st.label}</span>
+                    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                      <span style={{ fontSize: 12, color: '#6E6A61', fontWeight: 500 }}>{st.level}</span>
+                      <span
+                        style={{
+                          fontFamily: "'IBM Plex Mono', monospace",
+                          color: st.color,
+                          fontWeight: 600,
+                        }}
+                      >
                         {st.value}
                       </span>
                     </div>
                   </div>
-                  <div style={{ height: 8, borderRadius: 999, background: '#1A1B33', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      height: 8,
+                      borderRadius: 999,
+                      background: '#F0EEE6',
+                      overflow: 'hidden',
+                    }}
+                  >
                     <div
                       style={{
                         width: st.value,
                         height: '100%',
                         borderRadius: 999,
                         background: st.color,
-                        boxShadow: `0 0 10px ${st.color}88`,
                         transition: 'width 0.4s ease',
                       }}
                     />
@@ -712,26 +1073,33 @@ export default function MarketingPage() {
               ))}
             </div>
 
-            {/* Bottom Perk Banner */}
+            {/* Quick Action in Panel */}
             <div
               style={{
-                background: 'rgba(124, 58, 237, 0.1)',
-                border: '1px solid rgba(124, 58, 237, 0.3)',
-                borderRadius: 12,
-                padding: '12px 16px',
+                padding: '16px 18px',
+                borderRadius: 14,
+                background: '#FBFAF7',
+                border: '1px solid #EAE6DD',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Sparkles size={16} className="text-amber-400" />
-                <span style={{ fontSize: 13, color: '#E5E7EB', fontWeight: 600 }}>
-                  Automated streak recalculation every midnight (IST)
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Check size={16} color="#2FA36B" />
+                <span style={{ fontSize: 13, color: '#232019', fontWeight: 500 }}>
+                  Automated streak recalculation every midnight
                 </span>
               </div>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#F59E0B', fontWeight: 700 }}>
-                +350 XP
+              <span
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 12,
+                  color: '#5B57F0',
+                  fontWeight: 600,
+                }}
+              >
+                +250 XP
               </span>
             </div>
           </div>
@@ -739,563 +1107,643 @@ export default function MarketingPage() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-          4. HOW IT WORKS (3 Simple Steps)
+          4. PROCESS / PHASES
+          "Continuous progression in 3 steps"
       ───────────────────────────────────────────────────────── */}
       <section
         id="how-it-works"
         style={{
-          background: '#0D0E1C',
-          borderTop: '1px solid #23233E',
-          borderBottom: '1px solid #23233E',
-          padding: '90px 24px',
-        }}
-      >
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 60px' }}>
-            <div style={{ color: '#F59E0B', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
-              How It Works
-            </div>
-            <h2 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 38, fontWeight: 800, color: '#FFFFFF', margin: '0 0 16px 0' }}>
-              Your Adventure In 3 Easy Steps
-            </h2>
-            <p style={{ fontSize: 16, color: '#9CA3AF', margin: 0 }}>
-              Zero complicated setup. 60 seconds me apna hero create karo aur grind start karo.
-            </p>
-          </div>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 28,
-            }}
-            className="steps-grid"
-          >
-            {/* Step 1 */}
-            <div
-              style={{
-                background: '#131427',
-                borderRadius: 18,
-                border: '1px solid #23233E',
-                padding: '32px 26px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
-                  background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
-                  color: '#FFFFFF',
-                  fontFamily: "'Oxanium', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 18,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 20,
-                  boxShadow: '0 0 16px rgba(124, 58, 237, 0.4)',
-                }}
-              >
-                01
-              </div>
-              <h3 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 20, fontWeight: 700, color: '#FFFFFF', margin: '0 0 10px 0' }}>
-                Choose Your Class & Goals
-              </h3>
-              <p style={{ fontSize: 14.5, color: '#9CA3AF', lineHeight: 1.6, margin: 0 }}>
-                Select whether you are a Coder Paladin, UPSC/JEE Scholar, Fitness Warrior, or Freelance Alchemist.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div
-              style={{
-                background: '#131427',
-                borderRadius: 18,
-                border: '1px solid #23233E',
-                padding: '32px 26px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
-                  background: 'linear-gradient(135deg, #F59E0B, #D97706)',
-                  color: '#FFFFFF',
-                  fontFamily: "'Oxanium', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 18,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 20,
-                  boxShadow: '0 0 16px rgba(245, 158, 11, 0.4)',
-                }}
-              >
-                02
-              </div>
-              <h3 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 20, fontWeight: 700, color: '#FFFFFF', margin: '0 0 10px 0' }}>
-                Complete Daily Quests
-              </h3>
-              <p style={{ fontSize: 14.5, color: '#9CA3AF', lineHeight: 1.6, margin: 0 }}>
-                Log coding blocks, gym reps, or study chapters. Har check-in se instant XP, gold coins, aur streak multiplier milta hai.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div
-              style={{
-                background: '#131427',
-                borderRadius: 18,
-                border: '1px solid #23233E',
-                padding: '32px 26px',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 12,
-                  background: 'linear-gradient(135deg, #10B981, #059669)',
-                  color: '#FFFFFF',
-                  fontFamily: "'Oxanium', sans-serif",
-                  fontWeight: 800,
-                  fontSize: 18,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 20,
-                  boxShadow: '0 0 16px rgba(16, 185, 129, 0.4)',
-                }}
-              >
-                03
-              </div>
-              <h3 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 20, fontWeight: 700, color: '#FFFFFF', margin: '0 0 10px 0' }}>
-                Level Up In Real Life
-              </h3>
-              <p style={{ fontSize: 14.5, color: '#9CA3AF', lineHeight: 1.6, margin: 0 }}>
-                Unlock high-tier perks, slay weekly guild bosses with your friends, aur AI Chanakya se weekly strategic growth reports pao.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────
-          5. INDIAN TESTIMONIALS
-      ───────────────────────────────────────────────────────── */}
-      <section
-        style={{
-          padding: '90px 24px',
-          maxWidth: 1200,
+          padding: '96px 24px',
+          maxWidth: 1140,
           margin: '0 auto',
         }}
       >
-        <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 60px' }}>
-          <div style={{ color: '#F59E0B', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
-            Player Stories
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 60px' }}>
+          <div
+            style={{
+              color: '#5B57F0',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+              marginBottom: 12,
+            }}
+          >
+            How it works
           </div>
-          <h2 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 38, fontWeight: 800, color: '#FFFFFF', margin: '0 0 16px 0' }}>
-            Loved by 50,000+ Indian Achievers
+          <h2
+            style={{
+              fontSize: 38,
+              lineHeight: 1.15,
+              letterSpacing: '-0.015em',
+              fontWeight: 700,
+              color: '#232019',
+              margin: '0 0 16px 0',
+            }}
+          >
+            Continuous progression in three{' '}
+            <span
+              style={{
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontStyle: 'italic',
+                fontWeight: 600,
+                color: '#5B57F0',
+              }}
+            >
+              steps.
+            </span>
           </h2>
-          <p style={{ fontSize: 16, color: '#9CA3AF', margin: 0 }}>
-            Real reviews from engineers, aspirants, couples, and startup founders across India.
+          <p style={{ fontSize: 16, color: '#6E6A61', margin: 0, lineHeight: 1.6 }}>
+            A frictionless loop designed to turn daily habits into an effortless dopamine feedback cycle.
           </p>
         </div>
 
+        {/* 3 Numbered Cards */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 24,
+            gap: 28,
           }}
-          className="testimonials-grid"
+          className="steps-grid"
         >
-          {/* Review 1 */}
+          {/* Step 01 */}
           <div
             style={{
-              background: '#101124',
-              borderRadius: 18,
-              border: '1px solid #23233E',
-              padding: '28px',
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid #EAE6DD',
+              padding: '36px 30px',
+              boxShadow: '0 12px 30px rgba(35, 32, 25, 0.05)',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between',
             }}
           >
-            <div>
-              <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
-              <p style={{ fontSize: 15, lineHeight: 1.6, color: '#E5E7EB', margin: '0 0 20px 0' }}>
-                &ldquo;Main pichle 2 saal se LeetCode aur gym me consistent nahi ho pa raha tha. Life RPG OS ne isko game bana diya. Aaj 60-day streak par hu aur Level 28 Paladin!&rdquo;
-              </p>
+            <div
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: '50%',
+                background: '#5B57F0',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                fontSize: 16,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 24,
+              }}
+            >
+              01
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #1F2038', paddingTop: 16 }}>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 14.5, color: '#FFFFFF' }}>Aarav Sharma</div>
-                <div style={{ fontSize: 12, color: '#9CA3AF' }}>SDE-2 @ Bengaluru</div>
-              </div>
-              <span style={{ background: 'rgba(124, 58, 237, 0.2)', color: '#C4B5FD', fontSize: 11.5, fontWeight: 700, padding: '3px 10px', borderRadius: 999 }}>
-                Lvl 28 Paladin
-              </span>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#232019', margin: '0 0 12px 0' }}>
+              Choose your archetype
+            </h3>
+            <p style={{ fontSize: 14.5, lineHeight: 1.6, color: '#6E6A61', margin: 0 }}>
+              Select a class that matches your real goals (Paladin for fitness & discipline, Scholar for deep work,
+              or Alchemist for habit experimentation).
+            </p>
+          </div>
+
+          {/* Step 02 */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid #EAE6DD',
+              padding: '36px 30px',
+              boxShadow: '0 12px 30px rgba(35, 32, 25, 0.05)',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <div
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: '50%',
+                background: '#5B57F0',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                fontSize: 16,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 24,
+              }}
+            >
+              02
+            </div>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#232019', margin: '0 0 12px 0' }}>
+              Complete daily quests
+            </h3>
+            <p style={{ fontSize: 14.5, lineHeight: 1.6, color: '#6E6A61', margin: 0 }}>
+              Log workouts, coding blocks, or meditation sessions. Each check-in awards attribute XP,
+              maintains your streak multiplier, and charges your raid power.
+            </p>
+          </div>
+
+          {/* Step 03 */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 20,
+              border: '1px solid #EAE6DD',
+              padding: '36px 30px',
+              boxShadow: '0 12px 30px rgba(35, 32, 25, 0.05)',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <div
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: '50%',
+                background: '#5B57F0',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                fontSize: 16,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 24,
+              }}
+            >
+              03
+            </div>
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: '#232019', margin: '0 0 12px 0' }}>
+              Level up your real life
+            </h3>
+            <p style={{ fontSize: 14.5, lineHeight: 1.6, color: '#6E6A61', margin: 0 }}>
+              Unlock skill tree perks, defeat weekly raid bosses with your guild, and receive tactical
+              weekly summaries from your personal AI Dungeon Master.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────
+          5. STATS ROW
+          10,000+ / 85% / 3.4x / 500K+
+      ───────────────────────────────────────────────────────── */}
+      <section
+        style={{
+          padding: '80px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
+          borderTop: '1px solid #EAE6DD',
+          borderBottom: '1px solid #EAE6DD',
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 32,
+            textAlign: 'center',
+          }}
+          className="stats-grid"
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 48,
+                fontWeight: 700,
+                color: '#232019',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                marginBottom: 10,
+              }}
+            >
+              10,000+
+            </div>
+            <div style={{ fontSize: 14, color: '#6E6A61', fontWeight: 500 }}>
+              Active Adventurers
             </div>
           </div>
 
-          {/* Review 2 */}
-          <div
-            style={{
-              background: '#101124',
-              borderRadius: 18,
-              border: '1px solid #23233E',
-              padding: '28px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div>
-              <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
-              <p style={{ fontSize: 15, lineHeight: 1.6, color: '#E5E7EB', margin: '0 0 20px 0' }}>
-                &ldquo;UPSC preparation me daily answer writing aur newspaper analysis track karne ke liye best OS hai. 6-attribute balance dekhkar pata chalta hai mental health kaisi chal rahi hai.&rdquo;
-              </p>
+          <div>
+            <div
+              style={{
+                fontSize: 48,
+                fontWeight: 700,
+                color: '#232019',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                marginBottom: 10,
+              }}
+            >
+              85%
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #1F2038', paddingTop: 16 }}>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 14.5, color: '#FFFFFF' }}>Priya Sundaram</div>
-                <div style={{ fontSize: 12, color: '#9CA3AF' }}>UPSC Aspirant @ New Delhi</div>
-              </div>
-              <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#F59E0B', fontSize: 11.5, fontWeight: 700, padding: '3px 10px', borderRadius: 999 }}>
-                Lvl 34 Scholar
-              </span>
+            <div style={{ fontSize: 14, color: '#6E6A61', fontWeight: 500 }}>
+              30-Day Retention Rate
             </div>
           </div>
 
-          {/* Review 3 */}
-          <div
-            style={{
-              background: '#101124',
-              borderRadius: 18,
-              border: '1px solid #23233E',
-              padding: '28px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div>
-              <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} fill="#F59E0B" color="#F59E0B" />
-                ))}
-              </div>
-              <p style={{ fontSize: 15, lineHeight: 1.6, color: '#E5E7EB', margin: '0 0 20px 0' }}>
-                &ldquo;Couple Mode is insanely good! Me and my wife track our daily workouts, cooking, and reading goals together. It actually makes couple accountability fun.&rdquo;
-              </p>
+          <div>
+            <div
+              style={{
+                fontSize: 48,
+                fontWeight: 700,
+                color: '#232019',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                marginBottom: 10,
+              }}
+            >
+              3.4x
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #1F2038', paddingTop: 16 }}>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 14.5, color: '#FFFFFF' }}>Rohan & Ananya</div>
-                <div style={{ fontSize: 12, color: '#9CA3AF' }}>Tech Couple @ Mumbai</div>
-              </div>
-              <span style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#10B981', fontSize: 11.5, fontWeight: 700, padding: '3px 10px', borderRadius: 999 }}>
-                Co-op Duo
-              </span>
+            <div style={{ fontSize: 14, color: '#6E6A61', fontWeight: 500 }}>
+              Habit Consistency Multiplier
+            </div>
+          </div>
+
+          <div>
+            <div
+              style={{
+                fontSize: 48,
+                fontWeight: 700,
+                color: '#232019',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                marginBottom: 10,
+              }}
+            >
+              500K+
+            </div>
+            <div style={{ fontSize: 14, color: '#6E6A61', fontWeight: 500 }}>
+              Quests Completed
             </div>
           </div>
         </div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-          6. PRICING SECTION (Indian Rupee ₹ INR)
+          6. PRICING SECTION
+          3 Cards with Hero Tier promoted structurally in --accent-soft
       ───────────────────────────────────────────────────────── */}
       <section
         id="pricing"
         style={{
-          background: '#0D0E1C',
-          borderTop: '1px solid #23233E',
-          borderBottom: '1px solid #23233E',
-          padding: '90px 24px',
+          padding: '110px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
         }}
       >
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 650, margin: '0 auto 60px' }}>
-            <div style={{ color: '#F59E0B', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
-              Simple Transparent Pricing
-            </div>
-            <h2 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 38, fontWeight: 800, color: '#FFFFFF', margin: '0 0 16px 0' }}>
-              Invest In Your Self-Improvement
-            </h2>
-            <p style={{ fontSize: 16, color: '#9CA3AF', margin: 0 }}>
-              Start 100% Free Forever. Upgrade with instant UPI / Netbanking whenever you want AI coaching.
-            </p>
-          </div>
-
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 60px' }}>
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 28,
-              alignItems: 'center',
+              color: '#5B57F0',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+              marginBottom: 12,
             }}
-            className="pricing-grid"
           >
-            {/* Tier 1: Free Adventurer */}
-            <div
+            Transparent pricing
+          </div>
+          <h2
+            style={{
+              fontSize: 38,
+              lineHeight: 1.15,
+              letterSpacing: '-0.015em',
+              fontWeight: 700,
+              color: '#232019',
+              margin: '0 0 16px 0',
+            }}
+          >
+            Invest in your personal{' '}
+            <span
               style={{
-                background: '#131427',
-                borderRadius: 20,
-                border: '1px solid #23233E',
-                padding: '36px 30px',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontStyle: 'italic',
+                fontWeight: 600,
+                color: '#5B57F0',
               }}
             >
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 20, fontWeight: 700, color: '#FFFFFF' }}>
-                  Adventurer
-                </div>
-                <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 4 }}>
-                  For individual students & beginners starting their routine.
-                </div>
-              </div>
+              journey.
+            </span>
+          </h2>
+          <p style={{ fontSize: 16, color: '#6E6A61', margin: 0, lineHeight: 1.6 }}>
+            Start for free forever. Upgrade anytime when you are ready to unlock AI coaching and guild raids.
+          </p>
+        </div>
 
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 24 }}>
-                <span style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 44, fontWeight: 800, color: '#FFFFFF' }}>
-                  ₹0
-                </span>
-                <span style={{ fontSize: 14, color: '#9CA3AF' }}>/ forever free</span>
+        {/* 3 Pricing Cards */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 28,
+            alignItems: 'center',
+          }}
+          className="pricing-grid"
+        >
+          {/* Tier 1: Adventurer (Free) */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 22,
+              border: '1px solid #EAE6DD',
+              padding: '36px 32px',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+            }}
+          >
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#232019' }}>Adventurer</div>
+              <div style={{ fontSize: 13.5, color: '#6E6A61', marginTop: 4 }}>
+                For individuals starting their self-improvement journey.
               </div>
+            </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, marginBottom: 28 }}>
-                {[
-                  'Unlimited daily quests & habits',
-                  'Full 6-attribute character sheet',
-                  'Streak tracker & freeze shields',
-                  'Level up progression up to Lvl 20',
-                  'Mobile & Desktop PWA access',
-                ].map((feat, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: '#D1D5DB' }}>
-                    <Check size={16} color="#10B981" strokeWidth={2.5} />
-                    <span>{feat}</span>
-                  </div>
-                ))}
-              </div>
-
-              <Link
-                href="/login"
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 28 }}>
+              <span
                 style={{
-                  background: '#1B1C33',
-                  color: '#FFFFFF',
-                  border: '1px solid #2E3056',
-                  textAlign: 'center',
-                  textDecoration: 'none',
-                  fontSize: 14,
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 40,
                   fontWeight: 600,
-                  padding: '12px 20px',
-                  borderRadius: 999,
-                  transition: 'all 0.15s ease',
+                  color: '#232019',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#7C3AED')}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#2E3056')}
               >
-                Start Free Forever
-              </Link>
+                $0
+              </span>
+              <span style={{ fontSize: 14, color: '#6E6A61' }}>/ month</span>
             </div>
 
-            {/* Tier 2: Champion (Hero Plan) */}
-            <div
-              style={{
-                background: 'linear-gradient(145deg, #181534, #121029)',
-                borderRadius: 22,
-                border: '2px solid #7C3AED',
-                padding: '40px 32px',
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: '0 0 40px rgba(124, 58, 237, 0.3)',
-                position: 'relative',
-                transform: 'scale(1.03)',
-              }}
-            >
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 22, fontWeight: 800, color: '#FFFFFF' }}>
-                    Champion Hero
-                  </div>
-                  <span
-                    style={{
-                      background: '#F59E0B',
-                      color: '#070710',
-                      fontFamily: "'Oxanium', sans-serif",
-                      fontSize: 11,
-                      fontWeight: 800,
-                      padding: '3px 10px',
-                      borderRadius: 999,
-                    }}
-                  >
-                    MOST POPULAR
-                  </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flex: 1, marginBottom: 32 }}>
+              {[
+                'Unlimited daily habits & quests',
+                'Core 6-attribute stat matrix',
+                'Basic streak freeze mechanic',
+                'Level progression up to Lvl 20',
+                'Web & Mobile PWA access',
+              ].map((feat, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#232019' }}>
+                  <Check size={16} color="#2FA36B" strokeWidth={2.5} />
+                  <span>{feat}</span>
                 </div>
-                <div style={{ fontSize: 13, color: '#C4B5FD', marginTop: 4 }}>
-                  Full RPG depth + AI Chanakya Dungeon Master.
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 24 }}>
-                <span style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 48, fontWeight: 800, color: '#F59E0B' }}>
-                  ₹299
-                </span>
-                <span style={{ fontSize: 14, color: '#9CA3AF' }}>/ month (Billed yearly)</span>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, marginBottom: 32 }}>
-                {[
-                  'Everything in Adventurer tier',
-                  'Uncapped Level 100+ & Prestige tiers',
-                  'Full Skill Tree with custom talent perks',
-                  'AI Tactical Chanakya daily briefings',
-                  'Weekly Boss battles & legendary loot',
-                  'Couple Mode co-op sync',
-                  'Instant UPI / Card billing',
-                ].map((feat, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: '#FFFFFF' }}>
-                    <Check size={16} color="#F59E0B" strokeWidth={2.5} />
-                    <span style={{ fontWeight: 500 }}>{feat}</span>
-                  </div>
-                ))}
-              </div>
-
-              <Link
-                href="/login"
-                style={{
-                  background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
-                  color: '#FFFFFF',
-                  textAlign: 'center',
-                  textDecoration: 'none',
-                  fontSize: 15,
-                  fontWeight: 700,
-                  padding: '14px 24px',
-                  borderRadius: 999,
-                  boxShadow: '0 0 20px rgba(124, 58, 237, 0.5)',
-                  transition: 'all 0.15s ease',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 0 30px rgba(124, 58, 237, 0.8)')}
-                onMouseLeave={(e) => (e.currentTarget.style.boxShadow = '0 0 20px rgba(124, 58, 237, 0.5)')}
-              >
-                Start 7-Day Free Trial
-              </Link>
+              ))}
             </div>
 
-            {/* Tier 3: Guild Master */}
-            <div
+            <Link
+              href="/login"
               style={{
-                background: '#131427',
-                borderRadius: 20,
-                border: '1px solid #23233E',
-                padding: '36px 30px',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
+                background: '#FFFFFF',
+                color: '#232019',
+                border: '1.5px solid #EAE6DD',
+                textAlign: 'center',
+                textDecoration: 'none',
+                fontSize: 14.5,
+                fontWeight: 600,
+                padding: '12px 20px',
+                borderRadius: 999,
+                transition: 'all 0.15s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#232019'
+                e.currentTarget.style.background = '#FBFAF7'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#EAE6DD'
+                e.currentTarget.style.background = '#FFFFFF'
               }}
             >
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 20, fontWeight: 700, color: '#FFFFFF' }}>
-                  Guild Squad
-                </div>
-                <div style={{ fontSize: 13, color: '#9CA3AF', marginTop: 4 }}>
-                  For study groups, flatmates, and engineering squads.
-                </div>
-              </div>
+              Start free
+            </Link>
+          </div>
 
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 24 }}>
-                <span style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 44, fontWeight: 800, color: '#FFFFFF' }}>
-                  ₹799
+          {/* Tier 2: Champion (Hero Tier - Highlighted in --accent-soft) */}
+          <div
+            style={{
+              background: '#EDECFD',
+              borderRadius: 24,
+              border: '2px solid #5B57F0',
+              padding: '44px 34px',
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 24px 60px rgba(91, 87, 240, 0.12)',
+              position: 'relative',
+              transform: 'scale(1.02)',
+            }}
+          >
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: 20, fontWeight: 700, color: '#232019' }}>Champion</div>
+                <span
+                  style={{
+                    background: '#5B57F0',
+                    color: '#FFFFFF',
+                    fontSize: 11.5,
+                    fontWeight: 700,
+                    padding: '4px 12px',
+                    borderRadius: 999,
+                  }}
+                >
+                  Recommended
                 </span>
-                <span style={{ fontSize: 14, color: '#9CA3AF' }}>/ month (Up to 6 heroes)</span>
               </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1, marginBottom: 28 }}>
-                {[
-                  'Everything in Champion Hero',
-                  'Up to 6 party members included',
-                  'Shared weekly World Boss raids',
-                  'Squad damage leaderboard & DPS charts',
-                  'Priority discord role & roadmap voting',
-                ].map((feat, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: '#D1D5DB' }}>
-                    <Check size={16} color="#10B981" strokeWidth={2.5} />
-                    <span>{feat}</span>
-                  </div>
-                ))}
+              <div style={{ fontSize: 13.5, color: '#6E6A61', marginTop: 6 }}>
+                Full RPG depth with AI Dungeon Master & skill tree passives.
               </div>
+            </div>
 
-              <Link
-                href="/login"
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 28 }}>
+              <span
                 style={{
-                  background: '#1B1C33',
-                  color: '#FFFFFF',
-                  border: '1px solid #2E3056',
-                  textAlign: 'center',
-                  textDecoration: 'none',
-                  fontSize: 14,
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 44,
                   fontWeight: 600,
-                  padding: '12px 20px',
-                  borderRadius: 999,
-                  transition: 'all 0.15s ease',
+                  color: '#232019',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#7C3AED')}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#2E3056')}
               >
-                Create Guild Party
-              </Link>
+                $9
+              </span>
+              <span style={{ fontSize: 14, color: '#6E6A61' }}>/ month, billed annually</span>
             </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flex: 1, marginBottom: 36 }}>
+              {[
+                'Everything in Adventurer',
+                'Uncapped level & prestige tiers',
+                'Full skill tree with custom passives',
+                'AI Tactical Dungeon Master coaching',
+                'Weekly World Boss raids & loot drops',
+                'Couple Mode co-op progression',
+              ].map((feat, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#232019' }}>
+                  <Check size={16} color="#5B57F0" strokeWidth={2.5} />
+                  <span style={{ fontWeight: 500 }}>{feat}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/login"
+              style={{
+                background: '#5B57F0',
+                color: '#FFFFFF',
+                textAlign: 'center',
+                textDecoration: 'none',
+                fontSize: 15,
+                fontWeight: 600,
+                padding: '14px 24px',
+                borderRadius: 999,
+                boxShadow: '0 4px 16px rgba(91, 87, 240, 0.3)',
+                transition: 'all 0.15s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#4A46E0'
+                e.currentTarget.style.transform = 'translateY(-2px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#5B57F0'
+                e.currentTarget.style.transform = 'translateY(0)'
+              }}
+            >
+              Start 7-day trial
+            </Link>
+          </div>
+
+          {/* Tier 3: Guild Master */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 22,
+              border: '1px solid #EAE6DD',
+              padding: '36px 32px',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+            }}
+          >
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#232019' }}>Guild Master</div>
+              <div style={{ fontSize: 13.5, color: '#6E6A61', marginTop: 4 }}>
+                For teams, couples, and high-performance accountability pods.
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 28 }}>
+              <span
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 40,
+                  fontWeight: 600,
+                  color: '#232019',
+                }}
+              >
+                $24
+              </span>
+              <span style={{ fontSize: 14, color: '#6E6A61' }}>/ month (up to 6 seats)</span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flex: 1, marginBottom: 32 }}>
+              {[
+                'Everything in Champion tier',
+                'Up to 6 party members included',
+                'Custom guild raids & private leaderboards',
+                'Group damage telemetry & analytics',
+                'Priority server sync & roadmap voting',
+              ].map((feat, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#232019' }}>
+                  <Check size={16} color="#2FA36B" strokeWidth={2.5} />
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href="/login"
+              style={{
+                background: '#FFFFFF',
+                color: '#232019',
+                border: '1.5px solid #EAE6DD',
+                textAlign: 'center',
+                textDecoration: 'none',
+                fontSize: 14.5,
+                fontWeight: 600,
+                padding: '12px 20px',
+                borderRadius: 999,
+                transition: 'all 0.15s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#232019'
+                e.currentTarget.style.background = '#FBFAF7'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#EAE6DD'
+                e.currentTarget.style.background = '#FFFFFF'
+              }}
+            >
+              Start team trial
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────
           7. FAQ SECTION
+          Plain questions with chevrons and hairline dividers
       ───────────────────────────────────────────────────────── */}
       <section
         id="faq"
         style={{
-          padding: '90px 24px',
-          maxWidth: 850,
+          padding: '96px 24px',
+          maxWidth: 800,
           margin: '0 auto',
         }}
       >
         <div style={{ textAlign: 'center', margin: '0 auto 50px' }}>
-          <div style={{ color: '#F59E0B', fontSize: 13, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
-            Frequently Asked
+          <div
+            style={{
+              color: '#5B57F0',
+              fontSize: 13,
+              fontWeight: 600,
+              letterSpacing: '-0.01em',
+              marginBottom: 12,
+            }}
+          >
+            Got questions?
           </div>
-          <h2 style={{ fontFamily: "'Oxanium', sans-serif", fontSize: 36, fontWeight: 800, color: '#FFFFFF', margin: '0 0 14px 0' }}>
-            Got Questions? We Have Answers.
+          <h2
+            style={{
+              fontSize: 38,
+              lineHeight: 1.15,
+              letterSpacing: '-0.015em',
+              fontWeight: 700,
+              color: '#232019',
+              margin: '0 0 14px 0',
+            }}
+          >
+            Frequently asked{' '}
+            <span
+              style={{
+                fontFamily: "'Fraunces', Georgia, serif",
+                fontStyle: 'italic',
+                fontWeight: 600,
+                color: '#5B57F0',
+              }}
+            >
+              questions.
+            </span>
           </h2>
+          <p style={{ fontSize: 16, color: '#6E6A61', margin: 0 }}>
+            Everything you need to know about the product, billing, and mechanics.
+          </p>
         </div>
 
-        <div style={{ borderTop: '1px solid #23233E' }}>
+        {/* Accordion list with hairline dividers */}
+        <div style={{ borderTop: '1px solid #EAE6DD' }}>
           {FAQS.map((faq, index) => {
             const isOpen = openFaq === index
             return (
               <div
                 key={index}
                 style={{
-                  borderBottom: '1px solid #23233E',
-                  padding: '20px 0',
+                  borderBottom: '1px solid #EAE6DD',
+                  padding: '22px 0',
                 }}
               >
                 <button
@@ -1314,10 +1762,9 @@ export default function MarketingPage() {
                 >
                   <span
                     style={{
-                      fontFamily: "'Oxanium', sans-serif",
                       fontSize: 17,
-                      fontWeight: 700,
-                      color: isOpen ? '#A78BFA' : '#FFFFFF',
+                      fontWeight: 600,
+                      color: isOpen ? '#5B57F0' : '#232019',
                       transition: 'color 0.15s ease',
                     }}
                   >
@@ -1327,7 +1774,7 @@ export default function MarketingPage() {
                     style={{
                       transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                       transition: 'transform 0.2s ease',
-                      color: '#9CA3AF',
+                      color: '#6E6A61',
                     }}
                   >
                     <ChevronDown size={20} />
@@ -1343,7 +1790,14 @@ export default function MarketingPage() {
                       transition={{ duration: 0.2 }}
                       style={{ overflow: 'hidden' }}
                     >
-                      <p style={{ fontSize: 14.5, lineHeight: 1.6, color: '#9CA3AF', margin: '12px 0 0 0' }}>
+                      <p
+                        style={{
+                          fontSize: 15,
+                          lineHeight: 1.6,
+                          color: '#6E6A61',
+                          margin: '14px 0 0 0',
+                        }}
+                      >
                         {faq.a}
                       </p>
                     </motion.div>
@@ -1356,60 +1810,107 @@ export default function MarketingPage() {
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-          8. FINAL CALL TO ACTION
+          8. FINAL CTA
+          Centered on --accent-soft panel with Fraunces italic signature
       ───────────────────────────────────────────────────────── */}
       <section
         style={{
-          padding: '80px 24px 100px',
-          maxWidth: 1200,
+          padding: '80px 24px 110px',
+          maxWidth: 1140,
           margin: '0 auto',
         }}
       >
         <div
           style={{
-            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(245, 158, 11, 0.15))',
-            border: '1px solid rgba(124, 58, 237, 0.4)',
-            borderRadius: 24,
-            padding: '64px 32px',
+            background: '#EDECFD',
+            borderRadius: 28,
+            padding: '72px 40px',
             textAlign: 'center',
-            boxShadow: '0 0 50px rgba(124, 58, 237, 0.2)',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px rgba(91, 87, 240, 0.08)',
           }}
         >
-          <div style={{ maxWidth: 640, margin: '0 auto' }}>
-            <h2
+          <div style={{ maxWidth: 640, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+            <div
               style={{
-                fontFamily: "'Oxanium', sans-serif",
-                fontSize: 40,
-                fontWeight: 800,
-                color: '#FFFFFF',
-                margin: '0 0 16px 0',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                background: '#FFFFFF',
+                color: '#5B57F0',
+                padding: '6px 14px',
+                borderRadius: 999,
+                fontSize: 13,
+                fontWeight: 600,
+                marginBottom: 20,
               }}
             >
-              Apni Life Ka Next Level Unlock Karo 🇮🇳
+              <span>✦</span> Start your campaign today
+            </div>
+
+            <h2
+              style={{
+                fontSize: 42,
+                lineHeight: 1.15,
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
+                color: '#232019',
+                margin: '0 0 18px 0',
+              }}
+            >
+              Ready to turn your everyday routines into an{' '}
+              <span
+                style={{
+                  fontFamily: "'Fraunces', Georgia, serif",
+                  fontStyle: 'italic',
+                  fontWeight: 600,
+                  color: '#5B57F0',
+                }}
+              >
+                adventure?
+              </span>
             </h2>
-            <p style={{ fontSize: 16, color: '#D1D5DB', margin: '0 0 32px 0', lineHeight: 1.6 }}>
-              Join 50,000+ Indian achievers building permanent discipline and conquering their life goals. Free forever.
+
+            <p
+              style={{
+                fontSize: 16.5,
+                lineHeight: 1.6,
+                color: '#6E6A61',
+                margin: '0 0 36px 0',
+              }}
+            >
+              Join over 10,000 adventurers building real discipline, physical endurance, and deep work habits.
+              Free forever, no credit card required.
             </p>
+
             <Link
               href="/login"
               style={{
-                background: 'linear-gradient(135deg, #7C3AED, #6D28D9)',
+                background: '#232019',
                 color: '#FFFFFF',
                 textDecoration: 'none',
-                fontSize: 16,
-                fontWeight: 700,
+                fontSize: 15.5,
+                fontWeight: 600,
                 padding: '16px 36px',
                 borderRadius: 999,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: 10,
-                boxShadow: '0 0 30px rgba(124, 58, 237, 0.6)',
-                border: '1px solid rgba(167, 139, 250, 0.5)',
+                gap: 8,
+                boxShadow: '0 6px 20px rgba(35, 32, 25, 0.15)',
+                transition: 'all 0.18s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#38342C'
+                e.currentTarget.style.transform = 'translateY(-2px)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#232019'
+                e.currentTarget.style.transform = 'translateY(0)'
               }}
             >
-              <Zap size={18} className="text-amber-400" />
-              <span>Create Your Character (Free)</span>
-              <ArrowRight size={18} />
+              <span>Create your character</span>
+              <ArrowRight size={17} />
             </Link>
           </div>
         </div>
@@ -1417,21 +1918,22 @@ export default function MarketingPage() {
 
       {/* ─────────────────────────────────────────────────────────
           9. FOOTER
+          Clean light footer in --bg / --panel with subtle meta links
       ───────────────────────────────────────────────────────── */}
       <footer
         style={{
-          borderTop: '1px solid #23233E',
-          background: '#070710',
-          padding: '50px 24px 30px',
+          borderTop: '1px solid #EAE6DD',
+          background: '#FBFAF7',
+          padding: '60px 24px 40px',
         }}
       >
         <div
           style={{
-            maxWidth: 1200,
+            maxWidth: 1140,
             margin: '0 auto',
             display: 'flex',
             flexDirection: 'column',
-            gap: 30,
+            gap: 40,
           }}
         >
           <div
@@ -1440,43 +1942,45 @@ export default function MarketingPage() {
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: 20,
+              gap: 24,
             }}
           >
+            {/* Logo */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div
                 style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  background: 'linear-gradient(135deg, #7C3AED, #F59E0B)',
+                  width: 28,
+                  height: 28,
+                  borderRadius: 7,
+                  background: 'linear-gradient(135deg, #5B57F0, #8A86FF)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <Swords size={16} color="#FFFFFF" />
+                <Swords size={14} color="#ffffff" strokeWidth={2} />
               </div>
-              <span style={{ fontFamily: "'Oxanium', sans-serif", fontWeight: 800, fontSize: 17, color: '#FFFFFF' }}>
-                LIFE RPG OS INDIA
+              <span style={{ fontWeight: 700, fontSize: 16, color: '#232019' }}>
+                Life RPG OS
               </span>
             </div>
 
-            <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
-              <a href="#features" style={{ color: '#9CA3AF', textDecoration: 'none', fontSize: 14 }}>
+            {/* Links */}
+            <div style={{ display: 'flex', gap: 28, alignItems: 'center', flexWrap: 'wrap' }}>
+              <a href="#features" style={{ color: '#6E6A61', textDecoration: 'none', fontSize: 14 }}>
                 Features
               </a>
-              <a href="#how-it-works" style={{ color: '#9CA3AF', textDecoration: 'none', fontSize: 14 }}>
-                How It Works
+              <a href="#how-it-works" style={{ color: '#6E6A61', textDecoration: 'none', fontSize: 14 }}>
+                How it works
               </a>
-              <a href="#pricing" style={{ color: '#9CA3AF', textDecoration: 'none', fontSize: 14 }}>
-                Pricing (₹)
+              <a href="#pricing" style={{ color: '#6E6A61', textDecoration: 'none', fontSize: 14 }}>
+                Pricing
               </a>
-              <a href="#faq" style={{ color: '#9CA3AF', textDecoration: 'none', fontSize: 14 }}>
+              <a href="#faq" style={{ color: '#6E6A61', textDecoration: 'none', fontSize: 14 }}>
                 FAQ
               </a>
-              <Link href="/login" style={{ color: '#A78BFA', textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>
-                Login Portal
+              <Link href="/login" style={{ color: '#6E6A61', textDecoration: 'none', fontSize: 14 }}>
+                Sign In
               </Link>
             </div>
           </div>
@@ -1486,18 +1990,22 @@ export default function MarketingPage() {
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              borderTop: '1px solid #1F2038',
-              paddingTop: 20,
+              borderTop: '1px solid #EAE6DD',
+              paddingTop: 24,
               fontSize: 13,
-              color: '#6B7280',
+              color: '#A19C90',
               flexWrap: 'wrap',
-              gap: 12,
+              gap: 16,
             }}
           >
-            <div>© {new Date().getFullYear()} Life RPG OS India. Crafted with ❤️ for Indian Achievers.</div>
-            <div style={{ display: 'flex', gap: 16 }}>
-              <Link href="/privacy" style={{ color: '#6B7280', textDecoration: 'none' }}>Privacy</Link>
-              <Link href="/terms" style={{ color: '#6B7280', textDecoration: 'none' }}>Terms</Link>
+            <div>© {new Date().getFullYear()} Life RPG OS. All rights reserved.</div>
+            <div style={{ display: 'flex', gap: 20 }}>
+              <a href="#" style={{ color: '#A19C90', textDecoration: 'none' }}>
+                Privacy Policy
+              </a>
+              <a href="#" style={{ color: '#A19C90', textDecoration: 'none' }}>
+                Terms of Service
+              </a>
             </div>
           </div>
         </div>
@@ -1510,8 +2018,14 @@ export default function MarketingPage() {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
           }
-          .testimonials-grid, .steps-grid, .pricing-grid, .stats-grid, .features-grid {
+          .testimonials-grid, .steps-grid, .pricing-grid, .stats-grid {
             grid-template-columns: 1fr !important;
+          }
+          .features-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .featured-testimonial {
+            grid-column: span 1 !important;
           }
         }
       `}</style>
