@@ -1,73 +1,75 @@
-import { headers } from 'next/headers'
+/**
+ * In-Memory Sliding Window Rate Limiter
+ * Protects public API endpoints from spam and automated brute-force attacks.
+ */
 
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
-
-interface RateLimitConfig {
-  maxRequests: number
-  windowSeconds: number
+interface RateLimitRecord {
+  count: number
+  resetTime: number
 }
 
-const DEFAULT_CONFIG: RateLimitConfig = {
-  maxRequests: 60,
-  windowSeconds: 60,
+const tracker = new Map<string, RateLimitRecord>()
+
+// Clean up stale entries every 5 minutes
+if (typeof setInterval !== 'undefined') {
+  setInterval(() => {
+    const now = Date.now()
+    for (const [key, value] of tracker.entries()) {
+      if (now > value.resetTime) {
+        tracker.delete(key)
+      }
+    }
+  }, 5 * 60 * 1000)
 }
 
-export function checkRateLimit(
+export interface RateLimitResult {
+  success: boolean
+  limit: number
+  remaining: number
+  reset: number
+}
+
+/**
+ * Checks if an identifier (IP address, user ID, or token) has exceeded limit.
+ * @param identifier Unique string identifier (e.g. client IP)
+ * @param limit Maximum allowed requests within windowMs
+ * @param windowMs Window duration in milliseconds (default: 60,000ms = 1 minute)
+ */
+export function rateLimit(
   identifier: string,
-  config: RateLimitConfig = DEFAULT_CONFIG
-): { allowed: boolean; remaining: number; resetTime: number } {
+  limit = 30,
+  windowMs = 60 * 1000
+): RateLimitResult {
   const now = Date.now()
-  const key = `rate_limit:${identifier}`
+  const record = tracker.get(identifier)
 
-  let record = rateLimitStore.get(key)
-
-  if (!record || now >= record.resetTime) {
-    // Create new rate limit window
-    record = {
+  if (!record || now > record.resetTime) {
+    tracker.set(identifier, {
       count: 1,
-      resetTime: now + config.windowSeconds * 1000,
+      resetTime: now + windowMs,
+    })
+    return {
+      success: true,
+      limit,
+      remaining: limit - 1,
+      reset: now + windowMs,
     }
-    rateLimitStore.set(key, record)
-    return { allowed: true, remaining: config.maxRequests - 1, resetTime: record.resetTime }
   }
 
-  if (record.count >= config.maxRequests) {
-    return { allowed: false, remaining: 0, resetTime: record.resetTime }
+  if (record.count >= limit) {
+    return {
+      success: false,
+      limit,
+      remaining: 0,
+      reset: record.resetTime,
+    }
   }
 
-  record.count++
-  return { allowed: true, remaining: config.maxRequests - record.count, resetTime: record.resetTime }
-}
-
-export async function getClientIdentifier(): Promise<string> {
-  const headersList = await headers()
-  const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
-  return ip
-}
-
-export async function enforceRateLimit(
-  identifier?: string,
-  config?: RateLimitConfig
-): Promise<{ allowed: boolean; headers: Record<string, string> }> {
-  const id = identifier || (await getClientIdentifier())
-  const result = checkRateLimit(id, config)
-
+  record.count += 1
   return {
-    allowed: result.allowed,
-    headers: {
-      'X-RateLimit-Limit': String(config?.maxRequests || DEFAULT_CONFIG.maxRequests),
-      'X-RateLimit-Remaining': String(result.remaining),
-      'X-RateLimit-Reset': String(Math.ceil(result.resetTime / 1000)),
-    },
+    success: true,
+    limit,
+    remaining: limit - record.count,
+    reset: record.resetTime,
   }
 }
-
-// Cleanup old entries periodically
-setInterval(() => {
-  const now = Date.now()
-  for (const [key, value] of rateLimitStore.entries()) {
-    if (now >= value.resetTime) {
-      rateLimitStore.delete(key)
-    }
-  }
-}, 60000) // Cleanup every minute

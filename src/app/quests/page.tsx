@@ -81,7 +81,7 @@ function DeleteDialog({ isOpen, habitName, onCancel, onConfirm }: DeleteDialogPr
               Abandon this Quest?
             </h3>
             <p className="text-sm mb-1" style={{ color: '#9B99B8' }}>
-              "{habitName}"
+              &ldquo;{habitName}&rdquo;
             </p>
             <p className="text-sm mb-6" style={{ color: '#5C5A7A' }}>
               Your streak and completion history will be lost.

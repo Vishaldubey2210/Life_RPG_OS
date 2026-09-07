@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Bell,
@@ -76,6 +76,17 @@ export default function NotificationBell() {
 
   const unreadCount = notifications.filter(n => !n.is_read).length
 
+  const fetchNotifications = useCallback(async (uid: string) => {
+    const { data } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', uid)
+      .order('created_at', { ascending: false })
+      .limit(10)
+
+    if (data) setNotifications(data)
+  }, [supabase])
+
   useEffect(() => {
     async function init() {
       const { data: { user } } = await supabase.auth.getUser()
@@ -84,7 +95,7 @@ export default function NotificationBell() {
       await fetchNotifications(user.id)
     }
     init()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetchNotifications, supabase])
 
   useEffect(() => {
     if (!userId) return
@@ -118,17 +129,6 @@ export default function NotificationBell() {
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
-
-  async function fetchNotifications(uid: string) {
-    const { data } = await supabase
-      .from('notifications')
-      .select('*')
-      .eq('user_id', uid)
-      .order('created_at', { ascending: false })
-      .limit(10)
-
-    if (data) setNotifications(data)
-  }
 
   async function markAllRead() {
     await fetch('/api/notifications/read', { method: 'PATCH' })

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "tsc --noEmit",
+    "test": "node --test scripts/test.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
