@@ -35,7 +35,7 @@
     "next-pwa": "^5.6.0",
     "nodemailer": "^10.0.1",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react-dom": "19.2.8",
     "recharts": "^3.9.0",
     "resend": "^6.20.0",
     "sharp": "^0.35.3",
