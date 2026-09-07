@@ -2,12 +2,12 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { Eye, EyeOff, Loader2, Swords, AlertTriangle, Sparkles, ArrowLeft } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Swords, AlertTriangle, Sparkles, ArrowLeft, Mail, RefreshCw, CheckCircle2 } from 'lucide-react'
 
 type Mode = 'login' | 'signup'
 
@@ -15,9 +15,12 @@ function friendlyAuthError(error: unknown) {
   const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.'
   const normalized = message.toLowerCase()
   if (normalized.includes('invalid login credentials')) return 'Email or password is incorrect.'
-  if (normalized.includes('email not confirmed')) return 'Please confirm your email first, then sign in.'
+  if (normalized.includes('email not confirmed')) return 'Please confirm your email first, or resend the activation link below.'
   if (normalized.includes('already registered')) return 'An account with this email already exists. Try signing in instead.'
   if (normalized.includes('password should be')) return 'Password must be at least 6 characters long.'
+  if (normalized.includes('rate limit') || normalized.includes('over_email_send_rate_limit')) {
+    return 'Email rate limit reached. Please wait a minute before requesting another link.'
+  }
   if (normalized.includes('failed to fetch') || normalized.includes('networkerror')) {
     return 'Cannot reach Supabase. Check NEXT_PUBLIC_SUPABASE_URL in .env.local and confirm the Supabase project is active.'
   }
@@ -40,6 +43,48 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
 
+  // Resend confirmation link state & cooldown
+  const [unconfirmedEmail, setUnconfirmedEmail] = useState<string | null>(null)
+  const [resendCooldown, setResendCooldown] = useState(0)
+  const [resendLoading, setResendLoading] = useState(false)
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return
+    const timer = setInterval(() => {
+      setResendCooldown((prev) => Math.max(0, prev - 1))
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [resendCooldown])
+
+  const handleResendConfirmation = useCallback(async (targetEmail?: string) => {
+    const emailToUse = (targetEmail || unconfirmedEmail || email).trim()
+    if (!emailToUse) {
+      setError('Please enter your email address to resend confirmation.')
+      return
+    }
+
+    setResendLoading(true)
+    setError(null)
+    try {
+      const appOrigin = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, '')
+      const { error: resendErr } = await supabase.auth.resend({
+        type: 'signup',
+        email: emailToUse,
+        options: {
+          emailRedirectTo: `${appOrigin}/auth/callback`,
+        },
+      })
+      if (resendErr) throw resendErr
+
+      setResendCooldown(60)
+      setNotice(`A fresh activation link was sent to ${emailToUse}. Please check your Inbox and Spam folder.`)
+    } catch (err) {
+      setError(friendlyAuthError(err))
+    } finally {
+      setResendLoading(false)
+    }
+  }, [email, supabase.auth, unconfirmedEmail])
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
@@ -51,7 +96,12 @@ export default function LoginPage() {
 
       if (mode === 'login') {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
-        if (error) throw error
+        if (error) {
+          if (error.message.toLowerCase().includes('email not confirmed')) {
+            setUnconfirmedEmail(email.trim())
+          }
+          throw error
+        }
         router.replace('/dashboard')
         router.refresh()
       } else {
@@ -62,23 +112,19 @@ export default function LoginPage() {
           email: email.trim(),
           password,
           options: {
-            data: { display_name: displayName },
+            data: { display_name: displayName.trim() || 'Adventurer' },
             emailRedirectTo: `${appOrigin}/auth/callback`,
           },
         })
         if (error) throw error
 
-        if (!data.session) {
-          setNotice('Account created. Check your inbox to confirm your email, then sign in.')
-          return
-        }
-
-        if (data.user) {
+        // If session was returned immediately (Confirm email is OFF in Supabase)
+        if (data.session) {
           const { data: profile } = await supabase
             .from('profiles')
             .select('onboarding_completed')
-            .eq('id', data.user.id)
-            .single()
+            .eq('id', data.user!.id)
+            .maybeSingle()
 
           if (profile?.onboarding_completed) {
             router.replace('/dashboard')
@@ -86,7 +132,24 @@ export default function LoginPage() {
             router.replace('/onboarding')
           }
           router.refresh()
+          return
         }
+
+        // Attempt instant sign in (handles auto-confirm setups)
+        const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        })
+
+        if (!signInErr && signInData?.session) {
+          router.replace('/onboarding')
+          router.refresh()
+          return
+        }
+
+        // Email confirmation is required by Supabase
+        setUnconfirmedEmail(email.trim())
+        setNotice(`Account registered! An activation link was sent to ${email.trim()}. Please check your Inbox & Spam folder.`)
       }
     } catch (err: unknown) {
       setError(friendlyAuthError(err))
@@ -464,6 +527,7 @@ export default function LoginPage() {
             </AnimatePresence>
 
             {/* Error message */}
+            {/* Error message */}
             <AnimatePresence>
               {error && (
                 <motion.div
@@ -471,24 +535,60 @@ export default function LoginPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   style={{
-                    padding: '10px 14px',
-                    borderRadius: 10,
+                    padding: '12px 14px',
+                    borderRadius: 12,
                     background: '#FEF2F2',
                     border: '1px solid #F87171',
                     color: '#DC2626',
                     fontSize: 13,
                     display: 'flex',
-                    alignItems: 'center',
+                    flexDirection: 'column',
                     gap: 8,
                   }}
                 >
-                  <AlertTriangle size={15} style={{ flexShrink: 0 }} />
-                  <span>{error}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <AlertTriangle size={16} style={{ flexShrink: 0 }} />
+                    <span style={{ fontWeight: 500 }}>{error}</span>
+                  </div>
+                  {unconfirmedEmail && (
+                    <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                      <button
+                        type="button"
+                        onClick={() => handleResendConfirmation(unconfirmedEmail)}
+                        disabled={resendLoading || resendCooldown > 0}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          padding: '6px 12px',
+                          borderRadius: 999,
+                          background: '#DC2626',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          fontSize: 12,
+                          fontWeight: 600,
+                          cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
+                          opacity: resendCooldown > 0 ? 0.7 : 1,
+                        }}
+                      >
+                        {resendLoading ? (
+                          <Loader2 size={12} className="animate-spin" />
+                        ) : (
+                          <RefreshCw size={12} />
+                        )}
+                        <span>
+                          {resendCooldown > 0
+                            ? `Resend Link in ${resendCooldown}s`
+                            : 'Resend Confirmation Email'}
+                        </span>
+                      </button>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Notice message */}
+            {/* Notice / Activation message */}
             <AnimatePresence>
               {notice && (
                 <motion.div
@@ -496,15 +596,88 @@ export default function LoginPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   style={{
-                    padding: '10px 14px',
-                    borderRadius: 10,
-                    background: '#ECFDF5',
-                    border: '1px solid #34D399',
-                    color: '#059669',
+                    padding: '14px 16px',
+                    borderRadius: 14,
+                    background: '#F0FDF4',
+                    border: '1px solid #86EFAC',
+                    color: '#166534',
                     fontSize: 13,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 10,
                   }}
                 >
-                  {notice}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                    <Mail size={17} style={{ flexShrink: 0, marginTop: 2, color: '#16A34A' }} />
+                    <div style={{ lineHeight: 1.45 }}>{notice}</div>
+                  </div>
+
+                  <div
+                    style={{
+                      background: '#DCFCE7',
+                      padding: '8px 12px',
+                      borderRadius: 8,
+                      fontSize: 12,
+                      color: '#15803D',
+                    }}
+                  >
+                    💡 <strong>Tip:</strong> If it hasn&apos;t arrived in 1-2 minutes, check your <strong>Spam / Junk</strong> folder or click below.
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <button
+                      type="button"
+                      onClick={() => handleResendConfirmation(unconfirmedEmail || email)}
+                      disabled={resendLoading || resendCooldown > 0}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        padding: '7px 14px',
+                        borderRadius: 999,
+                        background: '#16A34A',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        fontSize: 12.5,
+                        fontWeight: 600,
+                        cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
+                        opacity: resendCooldown > 0 ? 0.75 : 1,
+                      }}
+                    >
+                      {resendLoading ? (
+                        <Loader2 size={13} className="animate-spin" />
+                      ) : (
+                        <RefreshCw size={13} />
+                      )}
+                      <span>
+                        {resendCooldown > 0
+                          ? `Resend in ${resendCooldown}s`
+                          : 'Resend Verification Link'}
+                      </span>
+                    </button>
+
+                    {mode === 'signup' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode('login')
+                          setError(null)
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#166534',
+                          fontSize: 12.5,
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          padding: 0,
+                        }}
+                      >
+                        Already confirmed? Sign in
+                      </button>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
