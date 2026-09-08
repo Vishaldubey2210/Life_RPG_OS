@@ -1,27 +1,74 @@
+/**
+ * Automated Lifecycle Email Sequences
+ * Light Creative Design System
+ */
+
 export const day3NudgeEmail = (name: string) => `
 <!DOCTYPE html>
 <html lang="en">
-<body style="background:#08080F;color:#F1F0FF;font-family:'Segoe UI',sans-serif;padding:32px;max-width:520px;margin:0 auto;">
-  <div style="text-align:center;margin-bottom:24px;">
-    <div style="display:inline-block;padding:8px 16px;border-radius:20px;background:#EF444422;border:1px solid #EF444455;color:#EF4444;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">QUEST ALERT</div>
-    <h1 style="color:#F59E0B;font-size:20px;font-weight:800;margin:0;letter-spacing:1px;">LIFE RPG OS</h1>
-  </div>
-  <h2 style="color:#F1F0FF;font-size:19px;margin-bottom:12px;">${name}, your streak hasn't started yet.</h2>
-  <p style="color:#9B99B8;line-height:1.7;margin-bottom:16px;">
-    Most players who don't complete their first quest within 3 days never return.
-    Your character is still at Level 1, stats untouched, potential untapped.
-  </p>
-  <div style="background:#1A0A0A;border:1px solid #EF444455;border-left:3px solid #EF4444;border-radius:12px;padding:18px;margin:20px 0;">
-    <p style="color:#EF4444;font-weight:700;font-size:13px;margin:0 0 6px;">DON'T BE MOST PEOPLE</p>
-    <p style="color:#9B99B8;margin:0;font-size:14px;line-height:1.6;">Your character is waiting. One completed quest changes everything. Start there.</p>
-  </div>
-  <div style="text-align:center;margin:28px 0;">
-    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/quests"
-       style="background:#EF4444;color:white;padding:13px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;display:inline-block;">
-      Complete Your First Quest →
-    </a>
-  </div>
-  <p style="color:#5C5A7A;font-size:11px;text-align:center;">Life RPG OS · <a href="#" style="color:#5C5A7A;">Unsubscribe</a></p>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Streak Alert — Life RPG OS</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F6F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #2B2823;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F6F4EE; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 540px; background-color: #FFFFFF; border-radius: 20px; border: 1px solid #E6E2D8; box-shadow: 0 8px 30px rgba(43, 40, 35, 0.06); overflow: hidden;">
+          
+          <tr>
+            <td style="padding: 32px 36px 20px; text-align: center; background-color: #FAF8F5; border-bottom: 1px solid #EFECE6;">
+              <span style="display: inline-block; padding: 6px 14px; border-radius: 999px; background-color: #FEECEB; color: #DC2626; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                ⚔️ Quest Alert
+              </span>
+              <h1 style="margin: 12px 0 0; font-size: 22px; font-weight: 800; color: #2B2823;">
+                ${name}, your streak is waiting.
+              </h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 32px 36px;">
+              <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #5C574E;">
+                Most players who don&apos;t complete their first quest within 3 days never build the habit. Your character is still at <strong>Level 1</strong> with untouched stats.
+              </p>
+
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 20px 0; background-color: #FEECEB; border-left: 4px solid #DC2626; border-radius: 10px;">
+                <tr>
+                  <td style="padding: 14px 18px;">
+                    <p style="margin: 0 0 4px; font-size: 12px; font-weight: 700; color: #DC2626; text-transform: uppercase;">
+                      Don&apos;t Break the Momentum
+                    </p>
+                    <p style="margin: 0; font-size: 13.5px; color: #2B2823;">
+                      One completed habit today earns your first XP drop and prevents HP loss.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 28px 0;">
+                <tr>
+                  <td align="center">
+                    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/quests" target="_blank" style="display: inline-block; padding: 15px 36px; background-color: #5B57F0; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 4px 14px rgba(91, 87, 240, 0.35);">
+                      Complete Your First Quest &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 20px; background-color: #FAF8F5; text-align: center; border-top: 1px solid #EFECE6;">
+              <p style="margin: 0; font-size: 11px; color: #8A857A;">Life RPG OS &bull; Level up your real life</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 `
@@ -34,34 +81,76 @@ export const day7ReportEmail = (name: string, stats: {
 }) => `
 <!DOCTYPE html>
 <html lang="en">
-<body style="background:#08080F;color:#F1F0FF;font-family:'Segoe UI',sans-serif;padding:32px;max-width:520px;margin:0 auto;">
-  <h1 style="color:#F59E0B;font-size:20px;font-weight:800;text-align:center;margin-bottom:4px;">WEEK 1 RPG REPORT</h1>
-  <p style="color:#9B99B8;text-align:center;font-size:13px;margin-bottom:24px;">Here's how ${name} performed this week</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
-    <div style="background:#13131F;border:1px solid #7C3AED44;border-radius:12px;padding:16px;text-align:center;">
-      <div style="font-size:28px;font-weight:800;color:#F59E0B;">${stats.questsCompleted}</div>
-      <div style="color:#9B99B8;font-size:11px;margin-top:4px;">Quests Completed</div>
-    </div>
-    <div style="background:#13131F;border:1px solid #7C3AED44;border-radius:12px;padding:16px;text-align:center;">
-      <div style="font-size:28px;font-weight:800;color:#7C3AED;">${stats.xpEarned}</div>
-      <div style="color:#9B99B8;font-size:11px;margin-top:4px;">XP Earned</div>
-    </div>
-    <div style="background:#13131F;border:1px solid #7C3AED44;border-radius:12px;padding:16px;text-align:center;">
-      <div style="font-size:28px;font-weight:800;color:#22C55E;">Lv. ${stats.level}</div>
-      <div style="color:#9B99B8;font-size:11px;margin-top:4px;">Current Level</div>
-    </div>
-    <div style="background:#13131F;border:1px solid #7C3AED44;border-radius:12px;padding:16px;text-align:center;">
-      <div style="font-size:28px;font-weight:800;color:#F59E0B;">${stats.streak}</div>
-      <div style="color:#9B99B8;font-size:11px;margin-top:4px;">Day Streak</div>
-    </div>
-  </div>
-  <div style="text-align:center;margin:24px 0;">
-    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard"
-       style="background:linear-gradient(135deg,#7C3AED,#9F67FF);color:white;padding:13px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;display:inline-block;">
-      View Full Dashboard →
-    </a>
-  </div>
-  <p style="color:#5C5A7A;font-size:11px;text-align:center;">Life RPG OS · <a href="#" style="color:#5C5A7A;">Unsubscribe</a></p>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly RPG Battle Report</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F6F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #2B2823;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F6F4EE; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 540px; background-color: #FFFFFF; border-radius: 20px; border: 1px solid #E6E2D8; box-shadow: 0 8px 30px rgba(43, 40, 35, 0.06); overflow: hidden;">
+          
+          <tr>
+            <td style="padding: 32px 36px 20px; text-align: center; background-color: #FAF8F5; border-bottom: 1px solid #EFECE6;">
+              <span style="display: inline-block; padding: 6px 14px; border-radius: 999px; background-color: #EDECFD; color: #5B57F0; font-size: 12px; font-weight: 700; text-transform: uppercase;">
+                📊 Weekly Report
+              </span>
+              <h1 style="margin: 12px 0 4px; font-size: 22px; font-weight: 800; color: #2B2823;">
+                Week 1 Battle Summary
+              </h1>
+              <p style="margin: 0; font-size: 13px; color: #787368;">Here is how ${name} performed this week</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 32px 36px;">
+              <table role="presentation" width="100%" border="0" cellspacing="8" cellpadding="0" style="margin-bottom: 24px;">
+                <tr>
+                  <td width="50%" style="background-color: #FAF8F5; border: 1px solid #EAE6DD; border-radius: 14px; padding: 18px; text-align: center;">
+                    <div style="font-size: 28px; font-weight: 800; color: #5B57F0;">${stats.questsCompleted}</div>
+                    <div style="font-size: 12px; font-weight: 600; color: #6E6A61; margin-top: 4px;">Quests Finished</div>
+                  </td>
+                  <td width="50%" style="background-color: #FAF8F5; border: 1px solid #EAE6DD; border-radius: 14px; padding: 18px; text-align: center;">
+                    <div style="font-size: 28px; font-weight: 800; color: #D97706;">+${stats.xpEarned}</div>
+                    <div style="font-size: 12px; font-weight: 600; color: #6E6A61; margin-top: 4px;">Total XP</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="50%" style="background-color: #FAF8F5; border: 1px solid #EAE6DD; border-radius: 14px; padding: 18px; text-align: center;">
+                    <div style="font-size: 28px; font-weight: 800; color: #059669;">Lv. ${stats.level}</div>
+                    <div style="font-size: 12px; font-weight: 600; color: #6E6A61; margin-top: 4px;">Current Level</div>
+                  </td>
+                  <td width="50%" style="background-color: #FAF8F5; border: 1px solid #EAE6DD; border-radius: 14px; padding: 18px; text-align: center;">
+                    <div style="font-size: 28px; font-weight: 800; color: #DC2626;">${stats.streak} Days</div>
+                    <div style="font-size: 12px; font-weight: 600; color: #6E6A61; margin-top: 4px;">Active Streak</div>
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 28px 0 10px;">
+                <tr>
+                  <td align="center">
+                    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard" target="_blank" style="display: inline-block; padding: 15px 36px; background-color: #5B57F0; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 4px 14px rgba(91, 87, 240, 0.35);">
+                      Open Character Sheet &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 20px; background-color: #FAF8F5; text-align: center; border-top: 1px solid #EFECE6;">
+              <p style="margin: 0; font-size: 11px; color: #8A857A;">Life RPG OS &bull; Level up your real life</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 `
@@ -69,26 +158,69 @@ export const day7ReportEmail = (name: string, stats: {
 export const day30ComebackEmail = (name: string, level: number, xp: number) => `
 <!DOCTYPE html>
 <html lang="en">
-<body style="background:#08080F;color:#F1F0FF;font-family:'Segoe UI',sans-serif;padding:32px;max-width:520px;margin:0 auto;">
-  <div style="text-align:center;margin-bottom:24px;">
-    <div style="display:inline-block;padding:8px 16px;border-radius:20px;background:#F59E0B22;border:1px solid #F59E0B55;color:#F59E0B;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:8px;">WELCOME BACK</div>
-  </div>
-  <h2 style="color:#F1F0FF;font-size:19px;text-align:center;margin-bottom:12px;">${name}, your character is still here.</h2>
-  <p style="color:#9B99B8;line-height:1.7;text-align:center;margin-bottom:20px;">
-    Level <strong style="color:#F59E0B;">${level}</strong> · <strong style="color:#7C3AED;">${xp} XP</strong> already earned.
-    <br/>All your progress. Intact. Waiting.
-  </p>
-  <div style="background:#13131F;border:1px solid #F59E0B33;border-radius:12px;padding:18px;margin:20px 0;text-align:center;">
-    <p style="color:#F59E0B;font-weight:700;margin:0 0 8px;">Your party misses you. Your streak wants to restart.</p>
-    <p style="color:#9B99B8;font-size:14px;margin:0;">Come back. Level up. The quest continues.</p>
-  </div>
-  <div style="text-align:center;margin:24px 0;">
-    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard"
-       style="background:linear-gradient(135deg,#F59E0B,#D97706);color:#000;padding:13px 32px;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;display:inline-block;">
-      Resume Your Journey →
-    </a>
-  </div>
-  <p style="color:#5C5A7A;font-size:11px;text-align:center;">Life RPG OS · <a href="#" style="color:#5C5A7A;">Unsubscribe</a></p>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Character Awaits — Life RPG OS</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F6F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #2B2823;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F6F4EE; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 540px; background-color: #FFFFFF; border-radius: 20px; border: 1px solid #E6E2D8; box-shadow: 0 8px 30px rgba(43, 40, 35, 0.06); overflow: hidden;">
+          
+          <tr>
+            <td style="padding: 32px 36px 20px; text-align: center; background-color: #FAF8F5; border-bottom: 1px solid #EFECE6;">
+              <span style="display: inline-block; padding: 6px 14px; border-radius: 999px; background-color: #FEF3C7; color: #D97706; font-size: 12px; font-weight: 700; text-transform: uppercase;">
+                👑 Return to Realm
+              </span>
+              <h1 style="margin: 12px 0 0; font-size: 22px; font-weight: 800; color: #2B2823;">
+                ${name}, your hero is waiting.
+              </h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 32px 36px;">
+              <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: #5C574E;">
+                You are currently at <strong>Level ${level}</strong> with <strong>${xp} XP</strong> banked. Your past progress is safe and waiting for your return.
+              </p>
+
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 20px 0; background-color: #EDECFD; border-left: 4px solid #5B57F0; border-radius: 10px;">
+                <tr>
+                  <td style="padding: 14px 18px;">
+                    <p style="margin: 0 0 4px; font-size: 12px; font-weight: 700; color: #5B57F0; text-transform: uppercase;">
+                      Resume Your Habit Quests
+                    </p>
+                    <p style="margin: 0; font-size: 13.5px; color: #2B2823;">
+                      Pick up right where you left off. Start a new streak today.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 28px 0;">
+                <tr>
+                  <td align="center">
+                    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard" target="_blank" style="display: inline-block; padding: 15px 36px; background-color: #5B57F0; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 4px 14px rgba(91, 87, 240, 0.35);">
+                      Resume Journey &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 20px; background-color: #FAF8F5; text-align: center; border-top: 1px solid #EFECE6;">
+              <p style="margin: 0; font-size: 11px; color: #8A857A;">Life RPG OS &bull; Level up your real life</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 `

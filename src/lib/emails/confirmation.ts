@@ -1,15 +1,21 @@
 /**
- * Premium Welcome Email Template for Life RPG OS
- * Light Creative Design System
+ * Premium Responsive Email Confirmation Template for Life RPG OS
+ * Compatible with Gmail, Apple Mail, Outlook, and mobile clients.
  */
 
-export const welcomeEmail = (name: string) => `
+export const confirmationEmail = ({
+  name = 'Adventurer',
+  confirmationUrl = '{{ .ConfirmationURL }}',
+}: {
+  name?: string
+  confirmationUrl?: string
+}) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Life RPG OS</title>
+  <title>Activate Your Life RPG OS Account</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #F6F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #2B2823;">
   <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F6F4EE; padding: 32px 16px;">
@@ -32,7 +38,7 @@ export const welcomeEmail = (name: string) => `
                 Life RPG OS
               </h1>
               <p style="margin: 0; font-size: 13px; color: #787368; font-weight: 500;">
-                Your Character Sheet is Live
+                Turn your daily habits into an epic adventure
               </p>
             </td>
           </tr>
@@ -41,21 +47,21 @@ export const welcomeEmail = (name: string) => `
           <tr>
             <td style="padding: 36px 36px 28px 36px;">
               <h2 style="margin: 0 0 14px 0; font-size: 20px; font-weight: 700; color: #2B2823; line-height: 1.3;">
-                Welcome, ${name}! Your adventure begins now.
+                Welcome, ${name}! Activate your hero account.
               </h2>
               <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #5C574E;">
-                Your character has been created at <strong>Level 1</strong>. Your streak starts today. Every workout, study session, and completed habit will award XP, increase your stats, and level up your real life.
+                Your character sheet is ready to be initialized. Please confirm your email address to enter the realm and start tracking quests, earning XP, and building your real-life stats.
               </p>
 
-              <!-- Quest Highlight Box -->
+              <!-- Quest Objective Box -->
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 24px 0; background-color: #EDECFD; border: 1px solid #D6D3FA; border-left: 4px solid #5B57F0; border-radius: 12px;">
                 <tr>
                   <td style="padding: 16px 20px;">
                     <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5B57F0;">
-                      First Starter Quest:
+                      Active Objective:
                     </p>
                     <p style="margin: 0; font-size: 14px; font-weight: 600; color: #2B2823; line-height: 1.4;">
-                      Add 3 daily habits on your dashboard and check off your first completion today.
+                      Confirm Email Address &amp; Unlock Level 1 Character Sheet
                     </p>
                   </td>
                 </tr>
@@ -65,9 +71,29 @@ export const welcomeEmail = (name: string) => `
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 32px 0 24px 0;">
                 <tr>
                   <td align="center">
-                    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard" target="_blank" style="display: inline-block; padding: 16px 38px; background-color: #5B57F0; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 6px 20px rgba(91, 87, 240, 0.35); text-align: center; letter-spacing: -0.01em;">
-                      Enter the Realm &rarr;
+                    <a href="${confirmationUrl}" target="_blank" style="display: inline-block; padding: 16px 38px; background-color: #5B57F0; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 6px 20px rgba(91, 87, 240, 0.35); text-align: center; letter-spacing: -0.01em;">
+                      Verify &amp; Activate Account &rarr;
                     </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin: 0 0 16px 0; font-size: 13px; color: #8A857A; text-align: center;">
+                This activation link is valid for 24 hours.
+              </p>
+
+              <!-- Fallback Plain URL -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #EFECE6;">
+                <tr>
+                  <td>
+                    <p style="margin: 0 0 6px 0; font-size: 12px; color: #8A857A;">
+                      Button not working? Copy and paste this URL into your browser:
+                    </p>
+                    <p style="margin: 0; font-size: 12px; word-break: break-all;">
+                      <a href="${confirmationUrl}" style="color: #5B57F0; text-decoration: underline;">
+                        ${confirmationUrl}
+                      </a>
+                    </p>
                   </td>
                 </tr>
               </table>
@@ -78,10 +104,10 @@ export const welcomeEmail = (name: string) => `
           <tr>
             <td style="padding: 24px 36px; background-color: #FAF8F5; border-top: 1px solid #EFECE6; text-align: center;">
               <p style="margin: 0 0 6px 0; font-size: 12px; color: #8A857A;">
-                Life RPG OS &bull; Level up your real life
+                Life RPG OS &bull; Gamify your daily progress
               </p>
               <p style="margin: 0; font-size: 11px; color: #A8A399;">
-                Need help? Reply directly to this email.
+                If you did not request this account, you can safely ignore this email.
               </p>
             </td>
           </tr>
