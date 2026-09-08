@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { Eye, EyeOff, Loader2, Swords, AlertTriangle, Sparkles, ArrowLeft, Mail, RefreshCw, CheckCircle2 } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Swords, AlertTriangle, Sparkles, ArrowLeft, Mail, RefreshCw, KeyRound, CheckCircle2 } from 'lucide-react'
 
-type Mode = 'login' | 'signup'
+type Mode = 'login' | 'signup' | 'forgot'
 
 function friendlyAuthError(error: unknown) {
   const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.'
@@ -85,8 +85,39 @@ export default function LoginPage() {
     }
   }, [email, supabase.auth, unconfirmedEmail])
 
+  async function handleForgotPassword(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    setNotice(null)
+
+    if (!email.trim()) {
+      setError('Please enter your registered adventurer email.')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const appOrigin = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, '')
+      const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: `${appOrigin}/auth/callback?type=recovery&next=/reset-password`,
+      })
+      if (resetErr) throw resetErr
+
+      setResendCooldown(60)
+      setNotice(`Password reset scroll dispatched to ${email.trim()}! Check your Inbox & Spam folder.`)
+    } catch (err: unknown) {
+      setError(friendlyAuthError(err))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (mode === 'forgot') {
+      return handleForgotPassword(e)
+    }
+
     setError(null)
     setNotice(null)
     setLoading(true)
@@ -289,46 +320,67 @@ export default function LoginPage() {
               Life RPG OS
             </h1>
             <p style={{ fontSize: 14, color: '#6E6A61', margin: 0 }}>
-              {mode === 'login' ? 'Your adventure continues here' : 'Create your adventurer character'}
+              {mode === 'login'
+                ? 'Your adventure continues here'
+                : mode === 'signup'
+                ? 'Create your adventurer character'
+                : 'Enter your email to receive recovery instructions'}
             </p>
           </div>
 
-
-          {/* Underline Tabs for Sign In / Create Account */}
-          <div
-            style={{
-              display: 'flex',
-              borderBottom: '1px solid #EAE6DD',
-              marginBottom: 22,
-            }}
-          >
-            {(['login', 'signup'] as Mode[]).map((m) => {
-              const isActive = mode === m
-              return (
-                <button
-                  key={m}
-                  onClick={() => {
-                    setMode(m)
-                    setError(null)
-                  }}
-                  style={{
-                    flex: 1,
-                    padding: '10px 0',
-                    background: 'none',
-                    border: 'none',
-                    borderBottom: isActive ? '2px solid #5B57F0' : '2px solid transparent',
-                    color: isActive ? '#5B57F0' : '#6E6A61',
-                    fontSize: 14,
-                    fontWeight: isActive ? 600 : 500,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  {m === 'login' ? 'Sign In' : 'Create Account'}
-                </button>
-              )
-            })}
-          </div>
+          {/* Underline Tabs for Sign In / Create Account (Hidden in forgot mode) */}
+          {mode !== 'forgot' ? (
+            <div
+              style={{
+                display: 'flex',
+                borderBottom: '1px solid #EAE6DD',
+                marginBottom: 22,
+              }}
+            >
+              {(['login', 'signup'] as Mode[]).map((m) => {
+                const isActive = mode === m
+                return (
+                  <button
+                    key={m}
+                    onClick={() => {
+                      setMode(m)
+                      setError(null)
+                      setNotice(null)
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '10px 0',
+                      background: 'none',
+                      border: 'none',
+                      borderBottom: isActive ? '2px solid #5B57F0' : '2px solid transparent',
+                      color: isActive ? '#5B57F0' : '#6E6A61',
+                      fontSize: 14,
+                      fontWeight: isActive ? 600 : 500,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    {m === 'login' ? 'Sign In' : 'Create Account'}
+                  </button>
+                )
+              })}
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                marginBottom: 20,
+                color: '#5B57F0',
+                fontSize: 13.5,
+                fontWeight: 600,
+              }}
+            >
+              <KeyRound size={16} />
+              <span>Password Recovery</span>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -410,58 +462,84 @@ export default function LoginPage() {
               />
             </div>
 
-            <div>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: '#232019',
-                  marginBottom: 6,
-                }}
-              >
-                Password
-              </label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
+            {mode !== 'forgot' && (
+              <div>
+                <label
                   style={{
-                    width: '100%',
-                    padding: '11px 40px 11px 14px',
-                    borderRadius: 12,
-                    border: '1px solid #EAE6DD',
-                    background: '#FFFFFF',
+                    display: 'block',
+                    fontSize: 13,
+                    fontWeight: 500,
                     color: '#232019',
-                    fontSize: 14,
-                    outline: 'none',
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = '#5B57F0')}
-                  onBlur={(e) => (e.target.style.borderColor = '#EAE6DD')}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: 'absolute',
-                    right: 12,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    color: '#A19C90',
-                    cursor: 'pointer',
-                    padding: 0,
+                    marginBottom: 6,
                   }}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+                  Password
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    style={{
+                      width: '100%',
+                      padding: '11px 40px 11px 14px',
+                      borderRadius: 12,
+                      border: '1px solid #EAE6DD',
+                      background: '#FFFFFF',
+                      color: '#232019',
+                      fontSize: 14,
+                      outline: 'none',
+                    }}
+                    onFocus={(e) => (e.target.style.borderColor = '#5B57F0')}
+                    onBlur={(e) => (e.target.style.borderColor = '#EAE6DD')}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: 12,
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      color: '#A19C90',
+                      cursor: 'pointer',
+                      padding: 0,
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+
+                {mode === 'login' && (
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6 }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('forgot')
+                        setError(null)
+                        setNotice(null)
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#5B57F0',
+                        fontSize: 12.5,
+                        fontWeight: 500,
+                        cursor: 'pointer',
+                        padding: 0,
+                      }}
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
 
             <AnimatePresence mode="wait">
               {mode === 'signup' && (
@@ -715,20 +793,55 @@ export default function LoginPage() {
               {loading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  <span>{mode === 'login' ? 'Signing in...' : 'Creating account...'}</span>
+                  <span>
+                    {mode === 'login'
+                      ? 'Signing in...'
+                      : mode === 'signup'
+                      ? 'Creating account...'
+                      : 'Dispatching reset link...'}
+                  </span>
                 </>
               ) : mode === 'login' ? (
                 <>
                   <Swords size={16} />
                   <span>Enter the Realm</span>
                 </>
-              ) : (
+              ) : mode === 'signup' ? (
                 <>
                   <Sparkles size={16} />
                   <span>Begin Adventure</span>
                 </>
+              ) : (
+                <>
+                  <KeyRound size={16} />
+                  <span>Dispatch Reset Link</span>
+                </>
               )}
             </button>
+
+            {mode === 'forgot' && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('login')
+                  setError(null)
+                  setNotice(null)
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#6E6A61',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  marginTop: 4,
+                  textDecoration: 'underline',
+                }}
+              >
+                &larr; Back to Sign In
+              </button>
+            )}
           </form>
 
           {/* Divider */}
