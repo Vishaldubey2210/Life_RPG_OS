@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Flame, Heart, Zap, CheckCircle2, Frown, Meh, Smile, Laugh } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -80,19 +80,22 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
     const moodColor = MOOD_OPTIONS.find((m) => m.score === todaysCheckin.mood_score)?.color ?? '#3B82F6'
     return (
       <div
-        className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-slate-800 bg-[#13131F] mb-4"
-        style={{ maxWidth: 400 }}
+        className="flex items-center justify-between px-4 py-3 rounded-2xl border bg-white shadow-sm"
+        style={{
+          borderColor: '#EAE6DD',
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        }}
       >
         <div className="flex items-center gap-2 text-xs">
-          <CheckCircle2 size={14} className="text-green-400" />
-          <span className="text-slate-400">Today&apos;s status logged</span>
+          <CheckCircle2 size={16} className="text-emerald-600" />
+          <span className="text-[#6E6A61] font-medium">Daily status logged</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 text-xs font-bold" style={{ color: moodColor }}>
+          <span className="flex items-center gap-1.5 text-xs font-bold px-2 py-0.5 rounded-md" style={{ color: moodColor, backgroundColor: `${moodColor}15` }}>
             <MoodIcon size={14} /> {todaysCheckin.mood_score}/5
           </span>
-          <span className="flex items-center gap-1 text-xs font-bold text-amber-400">
-            <Flame size={11} /> {todaysCheckin.energy_score}/10
+          <span className="flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-md text-[#D97706] bg-[#FEF3C7]">
+            <Flame size={12} /> {todaysCheckin.energy_score}/10
           </span>
         </div>
       </div>
@@ -101,22 +104,26 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -8 }}
+      initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-4 rounded-2xl border border-purple-500/30 bg-[#13131F] mb-6 shadow-lg shadow-purple-950/30"
+      className="p-5 rounded-2xl border bg-white shadow-sm"
+      style={{
+        borderColor: '#EAE6DD',
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+      }}
     >
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-7 h-7 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center">
+      <div className="flex items-center gap-2 mb-3.5">
+        <div className="w-7 h-7 rounded-lg bg-[#EDECFD] text-[#5B57F0] flex items-center justify-center">
           <Zap size={15} />
         </div>
-        <p className="text-xs font-bold text-white font-display tracking-wide">Quick Check-in</p>
+        <p className="text-xs font-bold text-[#232019] tracking-wide">Quick Daily Status</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Mood */}
         <div>
-          <p className="text-[11px] font-semibold text-slate-400 mb-2 flex items-center gap-1">
-            <Heart size={11} className="text-pink-400" /> Mood
+          <p className="text-[11px] font-semibold text-[#6E6A61] mb-2 flex items-center gap-1">
+            <Heart size={11} className="text-pink-500" /> Mood
           </p>
           <div className="flex gap-1.5">
             {MOOD_OPTIONS.map((m) => {
@@ -127,10 +134,10 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
                   type="button"
                   onClick={() => setSelectedMood(m.score)}
                   title={m.label}
-                  className={`flex-1 py-2 rounded-lg flex items-center justify-center transition-all ${
+                  className={`flex-1 py-2 rounded-xl flex items-center justify-center transition-all ${
                     selectedMood === m.score
-                      ? 'bg-purple-500/25 border-2 border-purple-500 scale-105'
-                      : 'bg-slate-900 border border-slate-800 opacity-60 hover:opacity-100'
+                      ? 'bg-[#EDECFD] border-2 border-[#5B57F0] scale-105 shadow-sm'
+                      : 'bg-[#FAF8F5] border border-[#EAE6DD] opacity-70 hover:opacity-100'
                   }`}
                   style={{ color: m.color }}
                 >
@@ -144,10 +151,10 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
         {/* Energy */}
         <div>
           <div className="flex items-center justify-between text-[11px] mb-2">
-            <span className="font-semibold text-slate-400 flex items-center gap-1">
-              <Flame size={11} className="text-amber-400" /> Energy
+            <span className="font-semibold text-[#6E6A61] flex items-center gap-1">
+              <Flame size={11} className="text-amber-500" /> Energy Level
             </span>
-            <span className="font-bold text-amber-400 font-display">{energyLevel}/10</span>
+            <span className="font-bold text-[#D97706]">{energyLevel}/10</span>
           </div>
           <input
             type="range"
@@ -155,7 +162,7 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
             max={10}
             value={energyLevel}
             onChange={(e) => setEnergyLevel(Number(e.target.value))}
-            className="w-full accent-amber-500 cursor-pointer mt-1"
+            className="w-full accent-[#5B57F0] cursor-pointer mt-1"
           />
         </div>
       </div>
@@ -163,10 +170,10 @@ export function DailyCheckinCard({ userId }: DailyCheckinCardProps) {
       <button
         onClick={handleLog}
         disabled={saving}
-        className="w-full mt-3 py-2 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 transition-colors font-display flex items-center justify-center gap-1.5"
+        className="w-full mt-4 py-2.5 rounded-xl text-xs font-bold text-white bg-[#5B57F0] hover:bg-[#4F46E5] transition-colors flex items-center justify-center gap-1.5 shadow-sm"
       >
         <Zap size={13} />
-        <span>{saving ? 'Logging...' : 'Log Status'}</span>
+        <span>{saving ? 'Saving...' : 'Save Daily Status'}</span>
       </button>
     </motion.div>
   )

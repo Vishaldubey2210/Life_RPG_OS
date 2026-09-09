@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Target, Sparkles, CheckCircle2, Zap } from 'lucide-react'
+import { Target, CheckCircle2, Zap } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 export interface WeeklyChallenge {
@@ -40,7 +40,6 @@ export function WeeklyChallengeCard({ userId }: { userId: string }) {
         if (data) {
           setChallenge(data as WeeklyChallenge)
         } else {
-          // Create default weekly challenge if none exists for this week
           const now = new Date()
           const startOfWeek = new Date(now)
           startOfWeek.setDate(now.getDate() - now.getDay())
@@ -82,13 +81,12 @@ export function WeeklyChallengeCard({ userId }: { userId: string }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-2xl border p-5 mb-6 shadow-xl"
+      className="relative overflow-hidden rounded-2xl border p-5 mb-6 bg-white shadow-sm"
       style={{
-        background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(19, 19, 31, 0.95) 100%)',
-        borderColor: '#F59E0B66',
-        boxShadow: '0 0 25px rgba(245, 158, 11, 0.15)',
+        borderColor: '#EAE6DD',
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       }}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -96,9 +94,9 @@ export function WeeklyChallengeCard({ userId }: { userId: string }) {
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #F59E0B, #D97706)',
-              boxShadow: '0 0 15px rgba(245, 158, 11, 0.4)',
-              color: '#000',
+              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+              color: '#FFFFFF',
+              boxShadow: '0 4px 12px rgba(245, 158, 11, 0.25)',
             }}
           >
             <Target size={20} className="stroke-[2.5]" />
@@ -107,50 +105,48 @@ export function WeeklyChallengeCard({ userId }: { userId: string }) {
           <div>
             <div className="flex items-center gap-2">
               <span
-                className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full"
                 style={{
-                  background: '#F59E0B22',
-                  color: '#F59E0B',
-                  border: '1px solid #F59E0B44',
-                  fontFamily: 'Oxanium, sans-serif',
+                  backgroundColor: '#FEF3C7',
+                  color: '#B45309',
+                  border: '1px solid #FDE68A',
                 }}
               >
                 AI Weekly Focus Challenge
               </span>
               {challenge.completed && (
-                <span className="flex items-center gap-1 text-xs font-bold text-green-400">
+                <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
                   <CheckCircle2 size={13} /> Completed
                 </span>
               )}
             </div>
-            <p className="text-sm font-semibold text-white mt-1 leading-snug">
+            <p className="text-[13.5px] font-bold text-[#232019] mt-1.5 leading-snug">
               {challenge.challenge_text}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-center px-3 py-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-400 flex-shrink-0">
-          <Zap size={14} />
-          <span className="text-xs font-bold font-display tracking-wide">+{challenge.bonus_xp} Bonus XP</span>
+        <div className="flex items-center gap-1.5 self-start sm:self-center px-3 py-1.5 rounded-xl border border-[#FDE68A] bg-[#FEF3C7] text-[#B45309] flex-shrink-0">
+          <Zap size={14} className="fill-current text-[#D97706]" />
+          <span className="text-xs font-bold">+{challenge.bonus_xp} Bonus XP</span>
         </div>
       </div>
 
-      <div className="mt-4 pt-3 border-t border-amber-500/20">
+      <div className="mt-4 pt-3 border-t" style={{ borderColor: '#EAE6DD' }}>
         <div className="flex items-center justify-between text-xs mb-1.5">
-          <span className="text-slate-400 font-medium">Challenge Progress</span>
-          <span className="text-amber-400 font-bold font-display">
+          <span className="text-[#6E6A61] font-medium">Challenge Progress</span>
+          <span className="text-[#D97706] font-bold">
             {challenge.current_completions} / {challenge.target_completions} ({progressPct}%)
           </span>
         </div>
 
-        <div className="h-2 rounded-full overflow-hidden bg-slate-800/80 border border-slate-700/50">
+        <div className="h-2 rounded-full overflow-hidden bg-[#EAE6DD]">
           <motion.div
             className="h-full rounded-full"
             style={{
               background: challenge.completed
-                ? 'linear-gradient(90deg, #22C55E, #10B981)'
-                : 'linear-gradient(90deg, #F59E0B, #EF4444)',
-              boxShadow: '0 0 10px rgba(245, 158, 11, 0.5)',
+                ? 'linear-gradient(90deg, #10B981, #059669)'
+                : 'linear-gradient(90deg, #5B57F0, #8A86FF)',
             }}
             initial={{ width: 0 }}
             animate={{ width: `${progressPct}%` }}

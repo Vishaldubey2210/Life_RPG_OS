@@ -12,42 +12,37 @@ function getStreakTier(streak: number) {
   if (streak >= 30) return {
     isCrown: true,
     label: 'Legendary Streak!',
-    color: '#F59E0B',
-    glowClass: 'streak-gold',
-    bgColor: '#F59E0B15',
-    borderColor: '#F59E0B44',
+    color: '#D97706',
+    bgColor: '#FEF3C7',
+    borderColor: '#FDE68A',
   }
   if (streak >= 14) return {
     isCrown: false,
     label: 'Unstoppable!',
-    color: '#9F67FF',
-    glowClass: 'streak-purple',
-    bgColor: '#7C3AED15',
-    borderColor: '#7C3AED44',
+    color: '#5B57F0',
+    bgColor: '#EDECFD',
+    borderColor: '#D6D3FA',
   }
   if (streak >= 7) return {
     isCrown: false,
     label: 'On Fire!',
-    color: '#EF4444',
-    glowClass: 'streak-orange',
-    bgColor: '#EF444415',
-    borderColor: '#EF444444',
+    color: '#DC2626',
+    bgColor: '#FEE2E2',
+    borderColor: '#FECACA',
   }
   if (streak >= 3) return {
     isCrown: false,
     label: 'Heating up!',
-    color: '#F97316',
-    glowClass: 'streak-orange',
-    bgColor: '#F9731615',
-    borderColor: '#F9731644',
+    color: '#EA580C',
+    bgColor: '#FFEDD5',
+    borderColor: '#FED7AA',
   }
   return {
     isCrown: false,
     label: streak > 0 ? 'Keep going!' : 'No streak yet',
-    color: '#5C5A7A',
-    glowClass: '',
-    bgColor: '#1E1E3515',
-    borderColor: '#1E1E35',
+    color: '#8A857A',
+    bgColor: '#FAF8F5',
+    borderColor: '#EAE6DD',
   }
 }
 
@@ -58,37 +53,38 @@ export default function StreakDisplay({ streak, showLabel = true, size = 'md' }:
   const iconSizes = {
     sm: 16,
     md: 20,
-    lg: 26,
+    lg: 24,
   }
   const textSizes = {
-    sm: { number: 'text-base', label: 'text-xs' },
-    md: { number: 'text-xl', label: 'text-xs' },
-    lg: { number: 'text-2xl', label: 'text-sm' },
+    sm: { number: 'text-sm font-bold', label: 'text-[10px]' },
+    md: { number: 'text-base font-bold', label: 'text-[11px]' },
+    lg: { number: 'text-xl font-extrabold', label: 'text-xs' },
   }
 
   return (
     <div
-      className="flex items-center gap-2.5 px-3 py-2 rounded-xl border transition-all duration-300"
+      className="flex items-center gap-2.5 px-3 py-2 rounded-xl border transition-all duration-200"
       style={{
-        background: tier.bgColor,
+        backgroundColor: tier.bgColor,
         borderColor: tier.borderColor,
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       }}
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={streak}
-          className={`flex items-center justify-center ${tier.glowClass} ${isPulsing ? 'fire-pulse' : ''}`}
-          initial={{ scale: 0.5, opacity: 0 }}
+          className={`flex items-center justify-center ${isPulsing ? 'animate-pulse' : ''}`}
+          initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 400, damping: 15 }}
           style={{ color: tier.color }}
         >
           {streak === 0 ? (
-            <Moon size={iconSizes[size]} style={{ color: '#5C5A7A' }} />
+            <Moon size={iconSizes[size]} style={{ color: '#8A857A' }} />
           ) : tier.isCrown ? (
             <div className="relative flex items-center justify-center">
-              <Crown size={iconSizes[size] - 2} className="absolute -top-2" style={{ color: '#F59E0B' }} />
-              <Flame size={iconSizes[size]} style={{ color: '#F59E0B' }} />
+              <Crown size={iconSizes[size] - 4} className="absolute -top-2" style={{ color: '#D97706' }} />
+              <Flame size={iconSizes[size]} style={{ color: '#D97706' }} />
             </div>
           ) : (
             <Flame size={iconSizes[size]} style={{ color: tier.color }} />
@@ -99,16 +95,16 @@ export default function StreakDisplay({ streak, showLabel = true, size = 'md' }:
       <div className="flex flex-col">
         <motion.span
           key={streak}
-          className={`font-bold leading-tight ${textSizes[size].number}`}
-          style={{ fontFamily: 'Oxanium, sans-serif', color: tier.color }}
-          initial={{ y: -10, opacity: 0 }}
+          className={`leading-tight ${textSizes[size].number}`}
+          style={{ color: tier.color }}
+          initial={{ y: -6, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 300 }}
         >
           {streak}d
         </motion.span>
         {showLabel && (
-          <span className={textSizes[size].label} style={{ color: tier.color, opacity: 0.8 }}>
+          <span className={`${textSizes[size].label} font-semibold`} style={{ color: tier.color, opacity: 0.9 }}>
             {tier.label}
           </span>
         )}

@@ -2,7 +2,6 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Check, Zap, Dumbbell, Brain, Wind, Heart, Coins, Mic2, Sparkles, LucideIcon, Clock, Timer, Layers } from 'lucide-react'
 import DifficultyBadge from './DifficultyBadge'
-
 import DynamicIcon from './DynamicIcon'
 
 export interface Habit {
@@ -33,53 +32,53 @@ const STAT_ICON_MAP: Record<string, { icon: LucideIcon; color: string }> = {
   str:  { icon: Dumbbell, color: '#EF4444' },
   int:  { icon: Brain,    color: '#3B82F6' },
   wis:  { icon: Wind,     color: '#8B5CF6' },
-  vit:  { icon: Heart,    color: '#22C55E' },
-  gold: { icon: Coins,    color: '#F59E0B' },
+  vit:  { icon: Heart,    color: '#10B981' },
+  gold: { icon: Coins,    color: '#D97706' },
   cha:  { icon: Mic2,     color: '#EC4899' },
 }
 
 export default function QuestCard({ habit, isCompleted, onComplete }: QuestCardProps) {
   const statInfo = STAT_ICON_MAP[habit.stat_category]
   const IconComp = statInfo?.icon ?? Sparkles
-  const statColor = statInfo?.color ?? '#9B99B8'
+  const statColor = statInfo?.color ?? '#5B57F0'
 
-  // Card border dynamic state (Phase 2B)
-  let borderColor = '#1E1E35'
+  let borderColor = '#EAE6DD'
   let glowClass = ''
 
   if (isCompleted) {
-    borderColor = '#22C55E44'
+    borderColor = '#A7F3D0'
   } else if (habit.is_overdue) {
-    borderColor = '#EF444488'
-    glowClass = 'shadow-md shadow-red-900/30'
+    borderColor = '#FCA5A5'
+    glowClass = 'shadow-md shadow-red-500/10'
   } else if (habit.is_due_soon) {
-    borderColor = '#F59E0B88'
-    glowClass = 'shadow-md shadow-amber-900/30'
+    borderColor = '#FDE68A'
+    glowClass = 'shadow-md shadow-amber-500/10'
   } else if (habit.is_stack_ready) {
-    borderColor = '#9F67FF'
-    glowClass = 'shadow-md shadow-purple-900/40 animate-pulse'
+    borderColor = '#C4B5FD'
+    glowClass = 'shadow-md shadow-purple-500/15 animate-pulse'
   }
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: isCompleted ? 0.6 : 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`p-4 rounded-xl flex items-center gap-4 transition-all duration-300 ${glowClass} ${
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: isCompleted ? 0.75 : 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+      className={`p-3.5 rounded-2xl flex items-center gap-3.5 transition-all duration-200 ${glowClass} ${
         isCompleted ? 'quest-complete' : ''
       }`}
       style={{
-        background: isCompleted ? '#0F1A0F' : '#13131F',
+        backgroundColor: isCompleted ? '#ECFDF5' : '#FAF8F5',
         border: `1px solid ${borderColor}`,
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       }}
     >
       {/* Icon / Category Badge */}
       <div
         className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
         style={{
-          background: `${statColor}18`,
-          border: `1px solid ${statColor}33`,
+          backgroundColor: `${statColor}15`,
+          border: `1px solid ${statColor}30`,
           color: statColor,
         }}
       >
@@ -90,97 +89,81 @@ export default function QuestCard({ habit, isCompleted, onComplete }: QuestCardP
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <div
-            className="font-medium text-sm truncate"
+            className="font-semibold text-sm truncate"
             style={{
-              color: isCompleted ? '#22C55E' : '#F1F0FF',
+              color: isCompleted ? '#059669' : '#232019',
               textDecoration: isCompleted ? 'line-through' : 'none',
             }}
           >
             {habit.name}
           </div>
-
-          {/* Overdue / Due soon tags */}
-          {!isCompleted && habit.is_overdue && (
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">
-              Overdue
+          {habit.is_stack_ready && (
+            <span
+              className="px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1"
+              style={{ backgroundColor: '#EDECFD', color: '#5B57F0', border: '1px solid #D6D3FA' }}
+            >
+              <Layers size={10} />
+              <span>STACK READY</span>
             </span>
           )}
-          {!isCompleted && habit.is_due_soon && (
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-              Due Soon
+          {habit.is_due_soon && (
+            <span
+              className="px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1"
+              style={{ backgroundColor: '#FEF3C7', color: '#B45309', border: '1px solid #FDE68A' }}
+            >
+              <Clock size={10} />
+              <span>DUE SOON</span>
             </span>
           )}
-          {!isCompleted && habit.is_stack_ready && (
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center gap-1">
-              <Zap size={10} className="text-amber-400" />
-              <span>Ready to Stack</span>
+          {habit.is_overdue && (
+            <span
+              className="px-2 py-0.5 rounded-md text-[10px] font-bold flex items-center gap-1"
+              style={{ backgroundColor: '#FEE2E2', color: '#DC2626', border: '1px solid #FECACA' }}
+            >
+              <Clock size={10} />
+              <span>OVERDUE</span>
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+        {/* Sub-meta details */}
+        <div className="flex items-center gap-2 mt-1">
           <DifficultyBadge difficulty={habit.difficulty} />
-
-          <span className="text-xs flex items-center gap-1 font-bold text-purple-400 font-display">
-            <Zap size={11} /> +{habit.xp_reward} XP
+          <span
+            className="text-[11px] font-bold flex items-center gap-0.5 px-2 py-0.5 rounded-md"
+            style={{ backgroundColor: '#EDECFD', color: '#5B57F0' }}
+          >
+            <Zap size={11} className="fill-current" />
+            <span>+{habit.xp_reward} XP</span>
           </span>
-
-          <span className="text-xs flex items-center gap-1 text-slate-400 font-display">
-            <IconComp size={11} style={{ color: statColor }} /> {habit.stat_category.toUpperCase()}
-          </span>
-
-          {/* Scheduled time */}
-          {habit.scheduled_time && (
-            <span className="text-xs flex items-center gap-1 text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md font-display">
-              <Clock size={11} /> {habit.scheduled_time}
-            </span>
-          )}
-
-          {/* Duration */}
-          {Boolean(habit.duration_minutes) && habit.duration_minutes! > 0 && (
-            <span className="text-xs flex items-center gap-1 text-slate-400">
-              <Timer size={11} /> ~{habit.duration_minutes}m
-            </span>
-          )}
-
-          {/* Habit Stacking */}
-          {habit.trigger_habit_name && (
-            <span className="text-xs flex items-center gap-1 text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded-md">
-              <Layers size={11} /> After {habit.trigger_habit_name}
+          {habit.duration_minutes && (
+            <span
+              className="text-[11px] font-medium flex items-center gap-1 px-1.5 py-0.5 rounded"
+              style={{ backgroundColor: '#F0ECE1', color: '#6E6A61' }}
+            >
+              <Timer size={11} />
+              <span>{habit.duration_minutes}m</span>
             </span>
           )}
         </div>
-
-        {/* Implementation intention summary */}
-        {habit.implementation_intention && !isCompleted && (
-          <p className="text-[11px] text-slate-500 italic mt-1 truncate">
-            &ldquo;{habit.implementation_intention}&rdquo;
-          </p>
-        )}
       </div>
 
-      {/* Checkbox */}
+      {/* Checkbox / Action Button */}
       <button
-        onClick={() => !isCompleted && onComplete(habit.id)}
+        onClick={() => onComplete(habit.id)}
         disabled={isCompleted}
-        className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+        className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
+          isCompleted ? 'cursor-default' : 'cursor-pointer hover:scale-105 active:scale-95'
+        }`}
         style={{
-          background: isCompleted ? '#22C55E' : '#1A1A2E',
-          border: isCompleted ? '2px solid #22C55E' : '2px solid #2E2E50',
-          cursor: isCompleted ? 'default' : 'pointer',
+          backgroundColor: isCompleted ? '#10B981' : '#FFFFFF',
+          border: isCompleted ? '1px solid #10B981' : '1.5px solid #D6D3FA',
+          color: isCompleted ? '#FFFFFF' : '#5B57F0',
+          boxShadow: isCompleted ? '0 2px 8px rgba(16, 185, 129, 0.3)' : '0 1px 4px rgba(91, 87, 240, 0.08)',
         }}
-        onMouseEnter={(e) => {
-          if (!isCompleted) e.currentTarget.style.borderColor = '#7C3AED'
-        }}
-        onMouseLeave={(e) => {
-          if (!isCompleted) e.currentTarget.style.borderColor = '#2E2E50'
-        }}
+        aria-label={isCompleted ? 'Completed' : `Complete ${habit.name}`}
       >
-        {isCompleted ? (
-          <Check size={16} color="#fff" />
-        ) : (
-          <div className="w-3 h-3 rounded-sm" style={{ background: 'transparent' }} />
-        )}
+        {isCompleted ? <Check size={18} strokeWidth={3} /> : <Check size={18} strokeWidth={2.5} />}
       </button>
     </motion.div>
   )

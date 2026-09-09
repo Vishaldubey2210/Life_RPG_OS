@@ -13,11 +13,11 @@ interface HPBarProps {
 
 function getHPTier(hp: number, hpMax: number) {
   const pct = hpMax > 0 ? (hp / hpMax) * 100 : 100
-  if (pct > 75) return { color: '#22C55E', label: 'Full Health', flash: false }
-  if (pct > 50) return { color: '#EAB308', label: 'Healthy', flash: false }
+  if (pct > 75) return { color: '#10B981', label: 'Full Health', flash: false }
+  if (pct > 50) return { color: '#F59E0B', label: 'Healthy', flash: false }
   if (pct > 25) return { color: '#F97316', label: 'Taking Damage', flash: false }
   if (pct > 0)  return { color: '#EF4444', label: 'Critical!', flash: true }
-  return { color: '#6B7280', label: 'Defeated', flash: false }
+  return { color: '#9CA3AF', label: 'Defeated', flash: false }
 }
 
 export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPBarProps) {
@@ -38,7 +38,7 @@ export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPB
       setFloatTexts(prev => [...prev, {
         id,
         text: isHeal ? `+${diff} HP` : `${diff} HP`,
-        color: isHeal ? '#22C55E' : '#EF4444',
+        color: isHeal ? '#10B981' : '#EF4444',
       }])
       setTimeout(() => setFloatTexts(prev => prev.filter(f => f.id !== id)), 900)
       if (!isHeal) setTimeout(() => setShake(false), 400)
@@ -54,7 +54,7 @@ export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPB
           <motion.div
             key={f.id}
             className="absolute right-0 text-xs font-bold pointer-events-none z-10"
-            style={{ color: f.color, fontFamily: 'Oxanium, sans-serif', top: -20 }}
+            style={{ color: f.color, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", top: -20 }}
             initial={{ y: 0, opacity: 1 }}
             animate={{ y: -50, opacity: 0 }}
             exit={{ opacity: 0 }}
@@ -65,22 +65,22 @@ export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPB
         ))}
       </AnimatePresence>
 
-      <div className="flex justify-between text-xs mb-1">
-        <span className="flex items-center gap-1" style={{ color: '#9B99B8' }}>
-          <Heart size={12} className="text-red-400 fill-red-400/20" /> HP
+      <div className="flex justify-between text-xs mb-1.5 font-medium">
+        <span className="flex items-center gap-1.5" style={{ color: '#6E6A61' }}>
+          <Heart size={13} className="text-red-500 fill-red-500/20" /> HP
         </span>
-        <span style={{ color: tier.color, fontFamily: 'Oxanium, sans-serif' }}>
+        <span style={{ color: tier.color, fontWeight: 600 }}>
           {hp}/{hpMax} — {tier.label}
         </span>
       </div>
 
       <div
         className={`h-2.5 rounded-full overflow-hidden ${shake ? 'hp-shake' : ''}`}
-        style={{ background: '#1E1E35' }}
+        style={{ background: '#EAE6DD' }}
       >
         <motion.div
           className={`h-full rounded-full transition-colors duration-500 ${tier.flash ? 'critical-flash' : ''}`}
-          style={{ background: `linear-gradient(90deg, ${tier.color}, ${tier.color}cc)` }}
+          style={{ background: `linear-gradient(90deg, ${tier.color}, ${tier.color}dd)` }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         />
@@ -88,8 +88,8 @@ export default function HPBar({ hp, hpMax, showFloatUp = false, className }: HPB
 
       {hp <= 0 && (
         <div
-          className="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center"
-          style={{ fontSize: 10, color: '#5C5A7A' }}
+          className="absolute inset-0 bg-red-900/40 rounded-full flex items-center justify-center font-bold"
+          style={{ fontSize: 10, color: '#FFFFFF' }}
         >
           DEFEATED
         </div>

@@ -13,19 +13,19 @@ export default function XPBar({ currentXP, maxXP, level }: XPBarProps) {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-xs" style={{ color: '#9B99B8' }}>
-          Level <span style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>{level}</span>
+      <div className="flex justify-between items-center mb-1.5">
+        <span className="text-xs font-medium" style={{ color: '#6E6A61' }}>
+          Level <span style={{ color: '#5B57F0', fontWeight: 700 }}>{level}</span>
         </span>
-        <span className="text-xs" style={{ color: '#9B99B8', fontFamily: 'Oxanium, sans-serif' }}>
+        <span className="text-xs font-semibold" style={{ color: '#232019' }}>
           {currentXP} / {maxXP} XP
         </span>
       </div>
-      <div className="h-3 rounded-full overflow-hidden relative" style={{ background: '#1E1E35' }}>
+      <div className="h-2.5 rounded-full overflow-hidden relative" style={{ background: '#EAE6DD' }}>
         <motion.div
-          className="h-full rounded-full xp-bar-fill"
+          className="h-full rounded-full"
           style={{
-            background: 'linear-gradient(90deg, #7C3AED, #9F67FF)',
+            background: 'linear-gradient(90deg, #5B57F0 0%, #8A86FF 100%)',
             width: `${pct}%`,
           }}
           initial={{ width: 0 }}
@@ -36,9 +36,9 @@ export default function XPBar({ currentXP, maxXP, level }: XPBarProps) {
         <div
           className="absolute inset-0 opacity-30"
           style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
             backgroundSize: '200% 100%',
-            animation: 'shimmer 2s infinite',
+            animation: 'shimmer 2.5s infinite',
           }}
         />
       </div>

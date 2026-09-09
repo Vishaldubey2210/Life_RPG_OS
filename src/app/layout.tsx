@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-full flex flex-col antialiased" style={{ background: '#08080F', color: '#F1F0FF' }}>
+      <body className="min-h-full flex flex-col antialiased" style={{ background: '#FBFAF7', color: '#232019' }}>
         <AnnouncementBanner />
         <AppShell>{children}</AppShell>
       </body>

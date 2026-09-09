@@ -24,7 +24,7 @@ import { createClient } from '@/lib/supabase/client'
 
 interface NavItem {
   href: string
-  icon: React.ComponentType<{ size?: number }>
+  icon: React.ComponentType<{ size?: number; className?: string }>
   label: string
 }
 
@@ -44,7 +44,6 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/achievements',   icon: Trophy,          label: 'Achievements' },
   { href: '/settings',       icon: Settings,        label: 'Settings' },
 ]
-
 
 interface SidebarProps {
   userAvatar?: string
@@ -68,35 +67,50 @@ export default function Sidebar({
     router.push('/login')
   }
 
+  const isEmoji = (str?: string) => {
+    if (!str) return false
+    return /\p{Extended_Pictographic}/u.test(str)
+  }
+
   return (
     <aside
       className="fixed top-0 left-0 h-full flex flex-col z-40"
       style={{
         width: 240,
-        background: '#0F0F1A',
-        borderRight: '1px solid #1E1E35',
+        backgroundColor: '#FFFFFF',
+        borderRight: '1px solid #EAE6DD',
+        boxShadow: '2px 0 16px rgba(35, 32, 25, 0.02)',
+        fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
       }}
     >
-      {/* Logo */}
-      <div className="px-6 py-6 border-b" style={{ borderColor: '#1E1E35' }}>
-        <div className="flex items-center gap-3">
+      {/* Brand Logo Header */}
+      <div className="px-5 py-5 border-b" style={{ borderColor: '#EAE6DD' }}>
+        <Link href="/dashboard" className="flex items-center gap-3 no-underline">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #F59E0B)', boxShadow: '0 0 12px #7C3AED55' }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, #5B57F0 0%, #4338CA 100%)',
+              boxShadow: '0 4px 12px rgba(91, 87, 240, 0.28)',
+            }}
           >
-            <Swords size={16} color="#fff" />
+            <Swords size={18} color="#FFFFFF" />
           </div>
-          <span
-            className="text-lg font-bold"
-            style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}
-          >
-            Life RPG OS
-          </span>
-        </div>
+          <div>
+            <span
+              className="text-base font-extrabold tracking-tight block"
+              style={{ color: '#232019' }}
+            >
+              Life RPG OS
+            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider block" style={{ color: '#8A857A' }}>
+              Level Up Reality
+            </span>
+          </div>
+        </Link>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      {/* Navigation List */}
+      <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
           const active = pathname === href || pathname.startsWith(href + '/')
           const isDashboard = href === '/dashboard'
@@ -106,46 +120,47 @@ export default function Sidebar({
             <Link
               key={href}
               href={href}
-              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 relative"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13.5px] transition-all duration-150 relative font-medium no-underline"
               style={{
-                background: active ? '#7C3AED22' : 'transparent',
-                color: active ? '#9F67FF' : '#9B99B8',
-                borderLeft: active ? '3px solid #7C3AED' : '3px solid transparent',
+                backgroundColor: active ? '#EDECFD' : 'transparent',
+                color: active ? '#5B57F0' : '#6E6A61',
+                fontWeight: active ? 700 : 500,
               }}
               onMouseEnter={(e) => {
                 if (!active) {
-                  e.currentTarget.style.background = '#1A1A2E'
-                  e.currentTarget.style.color = '#F1F0FF'
+                  e.currentTarget.style.backgroundColor = '#FAF8F5'
+                  e.currentTarget.style.color = '#232019'
                 }
               }}
               onMouseLeave={(e) => {
                 if (!active) {
-                  e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.color = '#9B99B8'
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                  e.currentTarget.style.color = '#6E6A61'
                 }
               }}
             >
-              <Icon size={18} />
-              <span className="flex-1">{label}</span>
+              <Icon size={17} className={active ? 'text-[#5B57F0]' : 'text-[#8A857A]'} />
+              <span className="flex-1 truncate">{label}</span>
+
               {/* Completion badge on Dashboard */}
               {showBadge && (
                 <span
-                  className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                  className="px-1.5 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0"
                   style={{
-                    background: '#22C55E',
-                    color: '#0F0F1A',
-                    fontFamily: 'Oxanium, sans-serif',
-                    fontSize: 10,
+                    backgroundColor: '#ECFDF5',
+                    color: '#059669',
+                    border: '1px solid #A7F3D0',
                   }}
                 >
                   {completedToday}
                 </span>
               )}
-              {/* AI Coach purple glow dot */}
+
+              {/* AI Coach indicator dot */}
               {href === '/coach' && !active && (
                 <span
                   className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ background: '#7C3AED', boxShadow: '0 0 6px #7C3AED' }}
+                  style={{ backgroundColor: '#5B57F0', boxShadow: '0 0 6px rgba(91, 87, 240, 0.4)' }}
                 />
               )}
             </Link>
@@ -153,54 +168,56 @@ export default function Sidebar({
         })}
       </nav>
 
-      {/* User section */}
-      <div className="px-4 py-4 border-t" style={{ borderColor: '#1E1E35' }}>
-        <div className="flex items-center gap-3 mb-3">
+      {/* User Profile Footer */}
+      <div className="p-3 border-t" style={{ borderColor: '#EAE6DD', backgroundColor: '#FAF8F5' }}>
+        <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-[#EAE6DD] mb-2 shadow-sm">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+            className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: '#EDECFD', border: '1px solid #D6D3FA' }}
           >
-            {userAvatar ? (
-              <span className="text-xl leading-none">{userAvatar}</span>
+            {userAvatar && isEmoji(userAvatar) ? (
+              <span className="text-lg leading-none">{userAvatar}</span>
             ) : (
-              <UserCircle2 size={20} color="#9F67FF" />
+              <Swords size={18} color="#5B57F0" />
             )}
           </div>
           <div className="flex-1 min-w-0">
             <div
-              className="text-sm font-semibold truncate"
-              style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
+              className="text-[13px] font-bold truncate leading-snug"
+              style={{ color: '#232019' }}
             >
               {userName}
             </div>
-            <div className="text-xs" style={{ color: '#F59E0B' }}>
+            <div className="text-[11px] font-semibold" style={{ color: '#D97706' }}>
               Level {userLevel}
             </div>
           </div>
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0"
-            style={{ background: '#F59E0B22', color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}
+            className="px-2 py-0.5 rounded-md text-[11px] font-bold flex-shrink-0"
+            style={{ backgroundColor: '#FEF3C7', color: '#B45309', border: '1px solid #FDE68A' }}
           >
-            {userLevel}
+            Lv.{userLevel}
           </div>
         </div>
 
         <button
           id="logout-btn"
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all duration-200"
-          style={{ color: '#5C5A7A' }}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 border border-transparent"
+          style={{ color: '#8A857A', backgroundColor: 'transparent' }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#EF444422'
-            e.currentTarget.style.color = '#EF4444'
+            e.currentTarget.style.backgroundColor = '#FEF2F2'
+            e.currentTarget.style.color = '#DC2626'
+            e.currentTarget.style.borderColor = '#FEE2E2'
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.color = '#5C5A7A'
+            e.currentTarget.style.backgroundColor = 'transparent'
+            e.currentTarget.style.color = '#8A857A'
+            e.currentTarget.style.borderColor = 'transparent'
           }}
         >
-          <LogOut size={15} />
-          Sign Out
+          <LogOut size={14} />
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

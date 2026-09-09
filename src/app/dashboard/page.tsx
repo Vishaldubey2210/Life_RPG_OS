@@ -23,7 +23,6 @@ import {
   ClipboardList,
   Map,
   Bot,
-  HandHeart,
   Swords,
 } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
@@ -43,18 +42,18 @@ import { createClient } from '@/lib/supabase/client'
 
 const STAT_CONFIG = [
   { key: 'str',  label: 'STR',  icon: Dumbbell,  color: '#EF4444' },
-  { key: 'int',  label: 'INT',  icon: Brain,      color: '#3B82F6' },
-  { key: 'wis',  label: 'WIS',  icon: Wind,       color: '#22C55E' },
-  { key: 'vit',  label: 'VIT',  icon: Heart,      color: '#EF4444' },
-  { key: 'gold', label: 'GOLD', icon: Coins,      color: '#F59E0B' },
-  { key: 'cha',  label: 'CHA',  icon: Mic2,       color: '#9F67FF' },
+  { key: 'int',  label: 'INT',  icon: Brain,     color: '#3B82F6' },
+  { key: 'wis',  label: 'WIS',  icon: Wind,      color: '#8B5CF6' },
+  { key: 'vit',  label: 'VIT',  icon: Heart,     color: '#10B981' },
+  { key: 'gold', label: 'GOLD', icon: Coins,     color: '#D97706' },
+  { key: 'cha',  label: 'CHA',  icon: Mic2,      color: '#EC4899' },
 ]
 
 const CATEGORY_ICON_COMPONENTS: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
   str: Dumbbell, int: Brain, wis: Wind, vit: Heart, gold: Coins, cha: Mic2,
 }
 const CATEGORY_ICON_COLORS: Record<string, string> = {
-  str: '#EF4444', int: '#3B82F6', wis: '#22C55E', vit: '#EF4444', gold: '#F59E0B', cha: '#9F67FF',
+  str: '#EF4444', int: '#3B82F6', wis: '#8B5CF6', vit: '#10B981', gold: '#D97706', cha: '#EC4899',
 }
 
 function timeAgo(dateStr: string): string {
@@ -72,36 +71,37 @@ function WeekHeatmap({ completionPct }: { completionPct: number }) {
   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
   const today = new Date().getDay()
   const adjustedToday = today === 0 ? 6 : today - 1
-  const opacities = [0.15, 0.35, 0.2, 0.45, 0.3, 0.5, 0.25]
+  const opacities = [0.25, 0.45, 0.35, 0.6, 0.4, 0.7, 0.3]
 
   return (
     <div>
-      <div className="text-xs mb-2 font-medium" style={{ color: '#9B99B8' }}>7-Day Activity</div>
+      <div className="text-xs mb-2.5 font-bold" style={{ color: '#232019' }}>7-Day Activity</div>
       <div className="flex gap-2 mb-3">
         {days.map((d, i) => {
           const isPast = i <= adjustedToday
           const isToday = i === adjustedToday
           return (
-            <div key={i} className="flex flex-col items-center gap-1 flex-1">
+            <div key={i} className="flex flex-col items-center gap-1.5 flex-1">
               <div
-                className="w-full aspect-square rounded-md transition-all duration-200"
+                className="w-full aspect-square rounded-lg transition-all duration-200"
                 style={{
                   background: isToday
-                    ? '#7C3AED'
+                    ? '#5B57F0'
                     : isPast
-                    ? `rgba(124,58,237,${opacities[i % opacities.length]})`
-                    : '#1E1E35',
-                  border: isToday ? '1px solid #9F67FF' : '1px solid transparent',
+                    ? `rgba(91, 87, 240, ${opacities[i % opacities.length]})`
+                    : '#F0EDE6',
+                  border: isToday ? '1px solid #4338CA' : '1px solid transparent',
+                  boxShadow: isToday ? '0 2px 8px rgba(91, 87, 240, 0.25)' : 'none',
                 }}
               />
-              <span className="text-xs" style={{ color: '#5C5A7A' }}>{d}</span>
+              <span className="text-[11px] font-semibold" style={{ color: isToday ? '#5B57F0' : '#8A857A' }}>{d}</span>
             </div>
           )
         })}
       </div>
-      <div className="flex items-center justify-between text-xs">
-        <span style={{ color: '#5C5A7A' }}>This week</span>
-        <span style={{ color: '#22C55E', fontFamily: 'Oxanium, sans-serif' }}>
+      <div className="flex items-center justify-between text-xs pt-1 border-t" style={{ borderColor: '#EAE6DD' }}>
+        <span style={{ color: '#8A857A' }}>Weekly Goal</span>
+        <span style={{ color: '#059669', fontWeight: 700 }}>
           {Math.round(completionPct)}% complete
         </span>
       </div>
@@ -239,60 +239,75 @@ export default function DashboardPage() {
   }
 
   const completionPct = habits.length > 0 ? (allCompleted.length / habits.length) * 100 : 0
-
-  // Best streak (just use profile streak for now, could be computed per-habit if DB supports it)
   const bestStreak = profile?.streak ?? 0
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
+      <div className="flex items-center justify-center min-h-screen" style={{ background: '#FBFAF7' }}>
         <div className="text-center">
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #F59E0B)', boxShadow: '0 0 20px #7C3AED44' }}
+            style={{ background: 'linear-gradient(135deg, #5B57F0, #4338CA)', boxShadow: '0 8px 24px rgba(91, 87, 240, 0.3)' }}
           >
-            <Swords size={28} color="#fff" />
+            <Swords size={28} color="#FFFFFF" />
           </div>
-          <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
-            Loading your realm...
+          <div className="text-sm font-semibold" style={{ color: '#6E6A61', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+            Loading your adventurer realm...
           </div>
         </div>
       </div>
     )
   }
 
-  const dateStr = new Date().toLocaleDateString('en-IN', {
+  const dateStr = new Date().toLocaleDateString('en-US', {
     weekday: 'long', day: 'numeric', month: 'long',
   })
 
   return (
     <>
-      <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+      <div
+        className="flex min-h-screen"
+        style={{
+          backgroundColor: '#FBFAF7',
+          color: '#232019',
+          fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+        }}
+      >
         <Sidebar
-          userAvatar={profile?.avatar_emoji ?? 'swords'}
+          userAvatar={profile?.avatar_emoji ?? '⚔️'}
           userName={profile?.display_name ?? 'Adventurer'}
           userLevel={profile?.level ?? 1}
           completedToday={allCompleted.length}
         />
 
-        {/* Main content */}
+        {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto" style={{ marginLeft: 240 }}>
           <div className="p-6 xl:p-8 max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-8">
-              <h1
-                className="text-2xl font-bold mb-1"
-                style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-              >
-                Welcome back, {profile?.display_name ?? 'Adventurer'}
-                <span className="inline-block ml-2">
-                  <HandHeart size={24} style={{ display: 'inline', verticalAlign: 'middle', color: '#9F67FF' }} />
-                </span>
-              </h1>
-              <p style={{ color: '#5C5A7A' }}>{dateStr}</p>
+            
+            {/* Top Greeting Header */}
+            <div className="mb-7 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[#232019] flex items-center gap-2.5">
+                  <span>Welcome back, {profile?.display_name ?? 'Adventurer'}</span>
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-[#EDECFD] text-[#5B57F0] text-base shadow-sm">
+                    ⚔️
+                  </span>
+                </h1>
+                <p className="text-sm font-medium text-[#8A857A] mt-1">{dateStr}</p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/quests"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-[#5B57F0] hover:bg-[#4F46E5] transition-all shadow-sm no-underline"
+                >
+                  <Zap size={14} />
+                  <span>New Daily Quest</span>
+                </Link>
+              </div>
             </div>
 
-            {/* Daily Check-in + Weekly Challenge */}
+            {/* Daily Check-in + Weekly Challenge Cards */}
             {profile?.id && (
               <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <DailyCheckinCard userId={profile.id} />
@@ -300,38 +315,34 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* Quick Stats row */}
+            {/* 4 Top Quick Stats Row */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7"
             >
               {[
-                { Icon: Zap,           label: 'XP Today',    value: xpToday,                              color: '#7C3AED' },
-                { Icon: CheckCircle2,  label: 'Quests Done', value: `${allCompleted.length} / ${habits.length}`, color: '#22C55E' },
-                { Icon: Flame,         label: 'Best Streak', value: `${bestStreak}d`,                     color: '#F59E0B' },
-                { Icon: CalendarDays,  label: 'Day Streak',  value: `${profile?.streak ?? 0}d`,           color: '#EC4899' },
+                { Icon: Zap,           label: 'XP Today',    value: `+${xpToday}`,                       bg: '#EDECFD', color: '#5B57F0' },
+                { Icon: CheckCircle2,  label: 'Quests Done', value: `${allCompleted.length} / ${habits.length}`, bg: '#ECFDF5', color: '#059669' },
+                { Icon: Flame,         label: 'Best Streak', value: `${bestStreak}d`,                     bg: '#FEF3C7', color: '#D97706' },
+                { Icon: CalendarDays,  label: 'Day Streak',  value: `${profile?.streak ?? 0}d`,           bg: '#FFEDD5', color: '#EA580C' },
               ].map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-2xl p-4 flex items-center gap-4"
-                  style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+                  className="rounded-2xl p-4 flex items-center gap-3.5 bg-white border border-[#EAE6DD] shadow-sm"
                 >
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${stat.color}15` }}
+                    className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: stat.bg, color: stat.color }}
                   >
-                    <stat.Icon size={18} style={{ color: stat.color }} />
+                    <stat.Icon size={20} />
                   </div>
                   <div>
-                    <div
-                      className="text-xl font-bold leading-tight"
-                      style={{ fontFamily: 'Oxanium, sans-serif', color: stat.color }}
-                    >
+                    <div className="text-xl font-black leading-tight text-[#232019]">
                       {stat.value}
                     </div>
-                    <div className="text-xs" style={{ color: '#5C5A7A' }}>
+                    <div className="text-xs font-semibold text-[#8A857A] mt-0.5">
                       {stat.label}
                     </div>
                   </div>
@@ -339,104 +350,94 @@ export default function DashboardPage() {
               ))}
             </motion.div>
 
-            {/* 3-column grid */}
+            {/* Main 3-Column Content Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* ── LEFT COLUMN: Character Card ── */}
+              
+              {/* ── LEFT COLUMN: Hero Character Sheet ── */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4 }}
-                className="rounded-2xl p-6"
-                style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+                transition={{ duration: 0.35 }}
+                className="rounded-2xl p-6 bg-white border border-[#EAE6DD] shadow-sm flex flex-col justify-between"
               >
-                {/* Avatar */}
-                <div className="text-center mb-4">
-                  <div
-                    className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-2 text-5xl"
-                    style={{
-                      background: profile?.avatar_emoji ? 'transparent' : 'linear-gradient(135deg, #7C3AED22, #F59E0B22)',
-                      border: '2px solid #7C3AED33',
-                    }}
-                  >
-                    {profile?.avatar_emoji ?? <Swords size={40} style={{ color: '#7C3AED' }} />}
+                <div>
+                  {/* Hero Character Profile Header */}
+                  <div className="text-center mb-5">
+                    <div
+                      className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-3 text-4xl shadow-sm bg-[#EDECFD] border border-[#D6D3FA]"
+                    >
+                      {profile?.avatar_emoji ? (
+                        <span>{profile.avatar_emoji}</span>
+                      ) : (
+                        <Swords size={36} className="text-[#5B57F0]" />
+                      )}
+                    </div>
+                    <h2 className="text-xl font-bold text-[#232019]">
+                      {profile?.display_name ?? 'Adventurer'}
+                    </h2>
+                    <span className="inline-block mt-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]">
+                      Level {profile?.level ?? 1}
+                    </span>
                   </div>
-                  <h2
-                    className="text-xl font-bold"
-                    style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-                  >
-                    {profile?.display_name ?? 'Adventurer'}
-                  </h2>
-                  <span
-                    className="inline-block mt-1 px-3 py-0.5 rounded-full text-sm font-semibold"
-                    style={{ background: '#F59E0B22', color: '#F59E0B' }}
-                  >
-                    Level {profile?.level ?? 1}
-                  </span>
-                </div>
 
-                {/* HP Bar */}
-                <div className="mb-4">
-                  <HPBar
-                    hp={profile?.hp ?? 100}
-                    hpMax={profile?.hp_max ?? 100}
-                    showFloatUp
-                  />
-                </div>
-
-                {/* XP Bar */}
-                <div className="mb-5">
-                  <XPBar
-                    currentXP={profile?.xp ?? 0}
-                    maxXP={profile?.xp_to_next ?? 100}
-                    level={profile?.level ?? 1}
-                  />
-                </div>
-
-                {/* Stats */}
-                <div className="space-y-2.5">
-                  {STAT_CONFIG.map((s) => (
-                    <StatBar
-                      key={s.key}
-                      icon={<s.icon size={14} />}
-                      label={s.label}
-                      value={stats ? (stats as unknown as Record<string, number>)[s.key] ?? 0 : 0}
-                      maxValue={100}
-                      color={s.color}
+                  {/* HP Bar */}
+                  <div className="mb-4">
+                    <HPBar
+                      hp={profile?.hp ?? 100}
+                      hpMax={profile?.hp_max ?? 100}
+                      showFloatUp
                     />
-                  ))}
+                  </div>
+
+                  {/* XP Bar */}
+                  <div className="mb-5">
+                    <XPBar
+                      currentXP={profile?.xp ?? 0}
+                      maxXP={profile?.xp_to_next ?? 100}
+                      level={profile?.level ?? 1}
+                    />
+                  </div>
+
+                  {/* Stat Attribute Bars */}
+                  <div className="space-y-2.5 pt-2 border-t border-[#EAE6DD]">
+                    <div className="text-xs font-bold text-[#8A857A] uppercase tracking-wider mb-2">Attribute Matrix</div>
+                    {STAT_CONFIG.map((s) => (
+                      <StatBar
+                        key={s.key}
+                        icon={<s.icon size={14} color={s.color} />}
+                        label={s.label}
+                        value={stats ? (stats as unknown as Record<string, number>)[s.key] ?? 0 : 0}
+                        maxValue={100}
+                        color={s.color}
+                      />
+                    ))}
+                  </div>
                 </div>
 
-                {/* Streak */}
-                <div className="mt-5">
+                {/* Streak Box */}
+                <div className="mt-6 pt-4 border-t border-[#EAE6DD]">
                   <StreakDisplay streak={profile?.streak ?? 0} />
                 </div>
               </motion.div>
 
               {/* ── CENTER COLUMN: Today's Quests ── */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
-                className="rounded-2xl p-6"
-                style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+                transition={{ duration: 0.35, delay: 0.05 }}
+                className="rounded-2xl p-6 bg-white border border-[#EAE6DD] shadow-sm flex flex-col"
               >
                 <div className="flex items-center justify-between mb-5">
-                  <h2
-                    className="text-lg font-bold"
-                    style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-                  >
+                  <h2 className="text-lg font-bold text-[#232019]">
                     Today&apos;s Quests
                   </h2>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs px-2 py-1 rounded-full" style={{ background: '#7C3AED22', color: '#9F67FF' }}>
+                    <span className="text-xs px-2.5 py-1 rounded-full font-bold bg-[#EDECFD] text-[#5B57F0]">
                       {allCompleted.length}/{habits.length} done
                     </span>
                     <Link
                       href="/quests"
-                      className="flex items-center gap-1 text-xs font-medium transition-colors"
-                      style={{ color: '#7C3AED' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#9F67FF')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = '#7C3AED')}
+                      className="flex items-center gap-1 text-xs font-bold text-[#5B57F0] hover:text-[#4338CA] transition-colors no-underline"
                     >
                       View All <ArrowRight size={12} />
                     </Link>
@@ -444,24 +445,20 @@ export default function DashboardPage() {
                 </div>
 
                 {habits.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3"
-                      style={{ background: '#1E1E35' }}
-                    >
-                      <Map size={24} style={{ color: '#5C5A7A' }} />
+                  <div className="text-center py-12 flex-1 flex flex-col items-center justify-center">
+                    <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 bg-[#FAF8F5] border border-[#EAE6DD] text-[#8A857A]">
+                      <Map size={24} />
                     </div>
-                    <p className="text-sm" style={{ color: '#5C5A7A' }}>No quests yet!</p>
+                    <p className="text-sm font-semibold text-[#6E6A61]">No quests initialized yet!</p>
                     <Link
                       href="/quests"
-                      className="inline-block mt-3 text-xs px-3 py-1.5 rounded-lg"
-                      style={{ background: '#7C3AED22', color: '#9F67FF' }}
+                      className="inline-block mt-3 text-xs font-bold px-4 py-2 rounded-xl bg-[#5B57F0] text-white hover:bg-[#4F46E5] transition-colors shadow-sm no-underline"
                     >
                       Add your first quest →
                     </Link>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2.5 flex-1">
                     {habits.slice(0, 5).map((habit) => (
                       <QuestCard
                         key={habit.id}
@@ -473,10 +470,7 @@ export default function DashboardPage() {
                     {habits.length > 5 && (
                       <Link
                         href="/quests"
-                        className="block text-center text-xs py-2 rounded-lg transition-colors"
-                        style={{ color: '#5C5A7A', border: '1px dashed #1E1E35' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#9F67FF')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#5C5A7A')}
+                        className="block text-center text-xs font-bold py-2.5 rounded-xl transition-colors text-[#6E6A61] bg-[#FAF8F5] border border-[#EAE6DD] hover:text-[#5B57F0] no-underline"
                       >
                         +{habits.length - 5} more quests →
                       </Link>
@@ -484,17 +478,17 @@ export default function DashboardPage() {
                   </div>
                 )}
 
-                {/* Progress */}
+                {/* Daily Progress Fill */}
                 {habits.length > 0 && (
-                  <div className="mt-5">
-                    <div className="flex justify-between text-xs mb-1">
-                      <span style={{ color: '#5C5A7A' }}>Daily progress</span>
-                      <span style={{ color: '#22C55E' }}>{Math.round(completionPct)}%</span>
+                  <div className="mt-5 pt-4 border-t border-[#EAE6DD]">
+                    <div className="flex justify-between text-xs mb-1.5 font-semibold">
+                      <span className="text-[#8A857A]">Daily Quest Completion</span>
+                      <span className="text-[#059669] font-bold">{Math.round(completionPct)}%</span>
                     </div>
-                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
+                    <div className="h-2 rounded-full overflow-hidden bg-[#EAE6DD]">
                       <motion.div
                         className="h-full rounded-full"
-                        style={{ background: 'linear-gradient(90deg, #22C55E, #4ADE80)' }}
+                        style={{ background: 'linear-gradient(90deg, #10B981 0%, #059669 100%)' }}
                         initial={{ width: 0 }}
                         animate={{ width: `${completionPct}%` }}
                         transition={{ duration: 0.5 }}
@@ -505,212 +499,163 @@ export default function DashboardPage() {
 
                 {/* Recent Activity Feed */}
                 {recentActivity.length > 0 && (
-                  <div className="mt-6 pt-5 border-t" style={{ borderColor: '#1E1E35' }}>
-                    <h3
-                      className="text-sm font-bold mb-3"
-                      style={{ fontFamily: 'Oxanium, sans-serif', color: '#9B99B8' }}
-                    >
+                  <div className="mt-5 pt-4 border-t border-[#EAE6DD]">
+                    <h3 className="text-xs font-bold text-[#8A857A] uppercase tracking-wider mb-3">
                       Recent Activity
                     </h3>
                     <div className="space-y-2">
-                      {recentActivity.map((entry) => {
-                        return (
+                      {recentActivity.map((entry) => (
+                        <div
+                          key={entry.id}
+                          className="flex items-center gap-2.5 py-1.5 px-2 rounded-lg bg-[#FAF8F5] border border-[#EAE6DD]"
+                        >
                           <div
-                            key={entry.id}
-                            className="flex items-center gap-2.5 py-1.5"
+                            className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0 text-xs"
+                            style={{
+                              backgroundColor: (CATEGORY_ICON_COLORS[entry.habit?.stat_category ?? ''] ?? '#5B57F0') + '20',
+                              color: CATEGORY_ICON_COLORS[entry.habit?.stat_category ?? ''] ?? '#5B57F0',
+                            }}
                           >
-                            <div
-                              className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
-                              style={{
-                                background: (CATEGORY_ICON_COLORS[entry.habit?.stat_category ?? ''] ?? '#5C5A7A') + '20',
-                                color: CATEGORY_ICON_COLORS[entry.habit?.stat_category ?? ''] ?? '#5C5A7A',
-                              }}
-                            >
-                              {entry.habit?.emoji ? (
-                                <span className="text-sm leading-none">{entry.habit.emoji}</span>
-                              ) : (
-                                (() => {
-                                  const IconComp = CATEGORY_ICON_COMPONENTS[entry.habit?.stat_category ?? ''] ?? ClipboardList
-                                  return <IconComp size={12} />
-                                })()
-                              )}
-                            </div>
-                            <span
-                              className="text-xs flex-1 truncate"
-                              style={{ color: '#C4C2D8' }}
-                            >
-                              {entry.habit?.name ?? 'Quest'}
-                            </span>
-                            <span
-                              className="text-xs font-bold flex-shrink-0"
-                              style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}
-                            >
-                              +{entry.xp_earned ?? entry.habit?.xp_reward ?? 0} XP
-                            </span>
-                            <span className="text-xs flex-shrink-0" style={{ color: '#5C5A7A' }}>
-                              {timeAgo(entry.completed_at)}
-                            </span>
+                            {entry.habit?.emoji ? (
+                              <span>{entry.habit.emoji}</span>
+                            ) : (
+                              (() => {
+                                const IconComp = CATEGORY_ICON_COMPONENTS[entry.habit?.stat_category ?? ''] ?? ClipboardList
+                                return <IconComp size={12} />
+                              })()
+                            )}
                           </div>
-                        )
-                      })}
+                          <span className="text-xs font-semibold flex-1 truncate text-[#232019]">
+                            {entry.habit?.name ?? 'Quest'}
+                          </span>
+                          <span className="text-xs font-bold flex-shrink-0 text-[#5B57F0]">
+                            +{entry.xp_earned ?? entry.habit?.xp_reward ?? 0} XP
+                          </span>
+                          <span className="text-[11px] font-medium flex-shrink-0 text-[#8A857A]">
+                            {timeAgo(entry.completed_at)}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
               </motion.div>
 
-              {/* ── RIGHT COLUMN: Stats Panel ── */}
+              {/* ── RIGHT COLUMN: Activity, Badges & AI Coach ── */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 16 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
+                transition={{ duration: 0.35, delay: 0.1 }}
                 className="space-y-5"
               >
-                {/* Recent Achievements widget */}
+                {/* Recent Achievements Widget */}
                 {recentBadges.length > 0 && (
-                  <div
-                    className="rounded-2xl p-5"
-                    style={{ background: '#13131F', border: '1px solid #F59E0B22' }}
-                  >
+                  <div className="rounded-2xl p-5 bg-white border border-[#EAE6DD] shadow-sm">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <Trophy size={14} style={{ color: '#F59E0B' }} />
-                        <span className="text-sm font-bold font-display" style={{ color: '#F1F0FF' }}>Recent Badges</span>
+                        <Trophy size={16} className="text-[#D97706]" />
+                        <span className="text-sm font-bold text-[#232019]">Recent Badges</span>
                       </div>
-                      <Link href="/achievements" className="text-xs transition-colors" style={{ color: '#7C3AED' }}
-                        onMouseEnter={e => (e.currentTarget.style.color = '#9F67FF')}
-                        onMouseLeave={e => (e.currentTarget.style.color = '#7C3AED')}
+                      <Link
+                        href="/achievements"
+                        className="text-xs font-bold text-[#5B57F0] hover:underline no-underline"
                       >
                         See All →
                       </Link>
                     </div>
                     <div className="space-y-2">
-                      {recentBadges.map(badge => (
-                        <div key={badge.key} className="flex items-center gap-2.5 py-1">
+                      {recentBadges.map((badge) => (
+                        <div key={badge.key} className="flex items-center gap-2.5 p-2 rounded-xl bg-[#FAF8F5] border border-[#EAE6DD]">
                           <span className="text-xl">{badge.emoji}</span>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-semibold truncate" style={{ color: '#F1F0FF' }}>{badge.name}</div>
-                            <div className="text-xs" style={{ color: '#5C5A7A' }}>{new Date(badge.earned_at).toLocaleDateString()}</div>
+                            <div className="text-xs font-bold truncate text-[#232019]">{badge.name}</div>
+                            <div className="text-[11px] text-[#8A857A]">{new Date(badge.earned_at).toLocaleDateString()}</div>
                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-                {/* Weekly heatmap */}
-                <div
-                  className="rounded-2xl p-5"
-                  style={{ background: '#13131F', border: '1px solid #1E1E35' }}
-                >
+
+                {/* 7-Day Activity Heatmap */}
+                <div className="rounded-2xl p-5 bg-white border border-[#EAE6DD] shadow-sm">
                   <WeekHeatmap completionPct={completionPct} />
                 </div>
 
-                {/* Active buffs */}
+                {/* Active Streak Buff */}
                 {(profile?.streak ?? 0) >= 3 && (
                   <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
+                    initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="rounded-2xl p-5"
-                    style={{
-                      background: '#13131F',
-                      border: '1px solid #F59E0B44',
-                      boxShadow: '0 0 20px #F59E0B11',
-                    }}
+                    className="rounded-2xl p-5 bg-[#FEF3C7] border border-[#FDE68A] shadow-sm"
                   >
-                    <div className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}>
-                      <Flame size={14} style={{ color: '#F59E0B' }} />
-                      Active Buff
+                    <div className="text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1.5 text-[#B45309]">
+                      <Flame size={14} />
+                      Active Streak Buff
                     </div>
                     <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center fire-pulse"
-                        style={{ background: '#F59E0B18', border: '1px solid #F59E0B44' }}
-                      >
-                        <Flame size={20} style={{ color: '#F59E0B' }} />
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white border border-[#FDE68A] text-[#D97706] shadow-sm">
+                        <Flame size={20} />
                       </div>
                       <div>
-                        <div className="text-sm font-medium" style={{ color: '#F1F0FF' }}>1.25× XP Multiplier</div>
-                        <div className="text-xs" style={{ color: '#5C5A7A' }}>
-                          {profile?.streak ?? 0}-day streak active
+                        <div className="text-sm font-extrabold text-[#92400E]">1.25× XP Multiplier</div>
+                        <div className="text-xs font-medium text-[#B45309]">
+                          {profile?.streak ?? 0}-day momentum active
                         </div>
                       </div>
                     </div>
                   </motion.div>
                 )}
 
-                {/* Quick stats */}
-                <div
-                  className="rounded-2xl p-5"
-                  style={{ background: '#13131F', border: '1px solid #1E1E35' }}
-                >
-                  <div className="text-sm font-semibold mb-4" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}>
-                    Quick Stats
+                {/* Quick Stats Grid */}
+                <div className="rounded-2xl p-5 bg-white border border-[#EAE6DD] shadow-sm">
+                  <div className="text-xs font-bold text-[#8A857A] uppercase tracking-wider mb-3">
+                    Overview Stats
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2.5">
                     {[
-                      { label: 'Level',    value: profile?.level ?? 1,     Icon: Star,          color: '#F59E0B' },
-                      { label: 'Streak',   value: `${profile?.streak ?? 0}d`, Icon: Flame,     color: '#F59E0B' },
-                      { label: 'Total XP', value: profile?.xp ?? 0,        Icon: Zap,          color: '#7C3AED' },
-                      { label: 'Quests',   value: habits.length,             Icon: ClipboardList, color: '#3B82F6' },
+                      { label: 'Level',    value: profile?.level ?? 1,     Icon: Star,          bg: '#FEF3C7', color: '#D97706' },
+                      { label: 'Streak',   value: `${profile?.streak ?? 0}d`, Icon: Flame,     bg: '#FFEDD5', color: '#EA580C' },
+                      { label: 'Total XP', value: profile?.xp ?? 0,        Icon: Zap,          bg: '#EDECFD', color: '#5B57F0' },
+                      { label: 'Quests',   value: habits.length,             Icon: ClipboardList, bg: '#ECFDF5', color: '#059669' },
                     ].map((stat) => (
                       <div
                         key={stat.label}
-                        className="p-3 rounded-xl text-center"
-                        style={{ background: '#0F0F1A', border: '1px solid #1E1E35' }}
+                        className="p-3 rounded-xl text-center bg-[#FAF8F5] border border-[#EAE6DD]"
                       >
                         <div
-                          className="w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-1"
-                          style={{ background: `${stat.color}15` }}
+                          className="w-7 h-7 rounded-lg flex items-center justify-center mx-auto mb-1.5"
+                          style={{ backgroundColor: stat.bg, color: stat.color }}
                         >
-                          <stat.Icon size={15} style={{ color: stat.color }} />
+                          <stat.Icon size={14} />
                         </div>
-                        <div
-                          className="text-lg font-bold"
-                          style={{ fontFamily: 'Oxanium, sans-serif', color: stat.color }}
-                        >
+                        <div className="text-base font-extrabold text-[#232019]">
                           {stat.value}
                         </div>
-                        <div className="text-xs" style={{ color: '#5C5A7A' }}>{stat.label}</div>
+                        <div className="text-[11px] font-semibold text-[#8A857A]">{stat.label}</div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Go to AI Coach CTA */}
+                {/* AI Tactical Coach Banner */}
                 <Link
                   href="/coach"
-                  className="block rounded-2xl p-5 transition-all duration-200 group"
-                  style={{
-                    background: 'linear-gradient(135deg, #7C3AED11, #EC489911)',
-                    border: '1px solid #7C3AED44',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#7C3AED88'
-                    e.currentTarget.style.boxShadow = '0 0 20px #7C3AED22'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#7C3AED44'
-                    e.currentTarget.style.boxShadow = 'none'
-                  }}
+                  className="block rounded-2xl p-5 transition-all duration-200 bg-[#EDECFD] border border-[#D6D3FA] hover:border-[#5B57F0] shadow-sm no-underline group"
                 >
                   <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
-                    >
-                      <Bot size={20} style={{ color: '#9F67FF' }} />
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-white border border-[#D6D3FA] text-[#5B57F0] shadow-sm">
+                      <Bot size={20} />
                     </div>
                     <div className="flex-1">
-                      <div
-                        className="font-bold text-sm"
-                        style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-                      >
-                        AI Coach
+                      <div className="font-extrabold text-sm text-[#232019] group-hover:text-[#5B57F0] transition-colors">
+                        AI Tactical Coach
                       </div>
-                      <div className="text-xs" style={{ color: '#9B99B8' }}>
-                        Get personalized advice
+                      <div className="text-xs font-medium text-[#6E6A61]">
+                        Get personalized briefings &amp; insights
                       </div>
                     </div>
-                    <ArrowRight size={16} style={{ color: '#7C3AED' }} />
+                    <ArrowRight size={16} className="text-[#5B57F0] group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
               </motion.div>
