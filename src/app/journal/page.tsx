@@ -203,15 +203,6 @@ ${recentEntries.join('\n\n')}`,
 
           <div className="flex items-center gap-3">
             <button
-              onClick={handleGenerateAISummary}
-              disabled={generatingAI}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold text-[#B45309] bg-[#FEF3C7] border border-[#FDE68A] hover:bg-[#FDE68A] flex items-center gap-2 transition-colors disabled:opacity-60 shadow-sm"
-            >
-              <Sparkles size={14} />
-              <span>{generatingAI ? 'Analyzing...' : 'AI Weekly Review'}</span>
-            </button>
-
-            <button
               onClick={() => setShowNewEntry(true)}
               className="px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-[#5B57F0] hover:bg-[#4F46E5] flex items-center gap-2 transition-colors shadow-sm"
             >
@@ -350,7 +341,7 @@ ${recentEntries.join('\n\n')}`,
               No entries logged yet
             </h3>
             <p className="text-xs text-[#8A857A] max-w-sm mx-auto mb-4">
-              Reflect on completed quests or write your thoughts to fuel your AI Coach with personal insights.
+              Reflect on completed quests or write down your daily chronicles and thoughts.
             </p>
             <button
               onClick={() => setShowNewEntry(true)}

@@ -22,7 +22,6 @@ import {
   Star,
   ClipboardList,
   Map,
-  Bot,
   Swords,
 } from 'lucide-react'
 import Sidebar from '@/components/layout/Sidebar'
@@ -637,27 +636,6 @@ export default function DashboardPage() {
                     ))}
                   </div>
                 </div>
-
-                {/* AI Tactical Coach Banner */}
-                <Link
-                  href="/coach"
-                  className="block rounded-2xl p-5 transition-all duration-200 bg-[#EDECFD] border border-[#D6D3FA] hover:border-[#5B57F0] shadow-sm no-underline group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-white border border-[#D6D3FA] text-[#5B57F0] shadow-sm">
-                      <Bot size={20} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-extrabold text-sm text-[#232019] group-hover:text-[#5B57F0] transition-colors">
-                        AI Tactical Coach
-                      </div>
-                      <div className="text-xs font-medium text-[#6E6A61]">
-                        Get personalized briefings &amp; insights
-                      </div>
-                    </div>
-                    <ArrowRight size={16} className="text-[#5B57F0] group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
               </motion.div>
             </div>
           </div>

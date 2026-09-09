@@ -9,11 +9,9 @@ import {
   Users,
   BarChart2,
   Trophy,
-  Bot,
   LogOut,
   Settings,
   Leaf,
-  UserCircle2,
   BookOpen,
   Timer,
   LayoutGrid,
@@ -34,7 +32,6 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/journal',        icon: BookOpen,        label: 'Journal' },
   { href: '/focus',          icon: Timer,           label: 'Focus Mode' },
   { href: '/skills',         icon: TreePine,        label: 'Skill Tree' },
-  { href: '/coach',          icon: Bot,             label: 'AI Coach' },
   { href: '/party',          icon: Users,           label: 'Party' },
   { href: '/party/boss',     icon: Skull,           label: 'Boss Battle' },
   { href: '/shadow',         icon: Copy,            label: 'Shadow Clone' },
@@ -154,14 +151,6 @@ export default function Sidebar({
                 >
                   {completedToday}
                 </span>
-              )}
-
-              {/* AI Coach indicator dot */}
-              {href === '/coach' && !active && (
-                <span
-                  className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: '#5B57F0', boxShadow: '0 0 6px rgba(91, 87, 240, 0.4)' }}
-                />
               )}
             </Link>
           )

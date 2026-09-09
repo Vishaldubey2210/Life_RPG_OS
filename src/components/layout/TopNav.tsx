@@ -11,7 +11,6 @@ import {
   Users,
   BarChart2,
   Trophy,
-  Bot,
   LogOut,
   User,
   Settings,
@@ -28,14 +27,12 @@ const NAV_ITEMS = [
   { href: '/quests',       icon: Zap,             label: 'Quests' },
   { href: '/party',        icon: Users,           label: 'Party' },
   { href: '/leaderboard',  icon: Trophy,          label: 'Leaderboard' },
-  { href: '/coach',        icon: Bot,             label: 'Coach' },
 ]
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard':   'Dashboard',
   '/quests':      'Quest Manager',
   '/skills':      'Skill Tree',
-  '/coach':       'AI Coach',
   '/party':       'Party',
   '/leaderboard': 'Leaderboard',
   '/analytics':   'Analytics',
