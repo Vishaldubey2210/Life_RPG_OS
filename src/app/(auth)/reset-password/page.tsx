@@ -43,7 +43,35 @@ export default function ResetPasswordPage() {
 
     async function checkAuthSession() {
       try {
-        // 1. Check if token was provided in URL hash (Supabase implicit recovery flow)
+        // 1. Check if error or code was provided in URL query searchParams
+        if (typeof window !== 'undefined' && window.location.search) {
+          const urlParams = new URLSearchParams(window.location.search)
+          const urlError = urlParams.get('error_description') || urlParams.get('error')
+          const codeParam = urlParams.get('code')
+
+          if (urlError) {
+            if (isMounted) {
+              const cleaned = decodeURIComponent(urlError.replace(/\+/g, ' '))
+              setError(cleaned.includes('expired') ? 'This password reset link has expired. Please request a new one.' : cleaned)
+              setHasValidSession(false)
+              setVerifyingSession(false)
+            }
+            return
+          }
+
+          if (codeParam) {
+            const { data: codeData, error: codeErr } = await supabase.auth.exchangeCodeForSession(codeParam)
+            if (!codeErr && codeData?.session) {
+              if (isMounted) {
+                setHasValidSession(true)
+                setVerifyingSession(false)
+              }
+              return
+            }
+          }
+        }
+
+        // 2. Check if token was provided in URL hash (Supabase implicit recovery flow)
         if (typeof window !== 'undefined' && window.location.hash) {
           const hashParams = new URLSearchParams(window.location.hash.substring(1))
           const accessToken = hashParams.get('access_token')
@@ -52,7 +80,8 @@ export default function ResetPasswordPage() {
 
           if (hashError) {
             if (isMounted) {
-              setError(decodeURIComponent(hashError.replace(/\+/g, ' ')))
+              const cleaned = decodeURIComponent(hashError.replace(/\+/g, ' '))
+              setError(cleaned.includes('expired') ? 'This password reset link has expired. Please request a new one.' : cleaned)
               setHasValidSession(false)
               setVerifyingSession(false)
             }
@@ -64,7 +93,7 @@ export default function ResetPasswordPage() {
               access_token: accessToken,
               refresh_token: refreshToken,
             })
-            if (!setSessionErr && data.session) {
+            if (!setSessionErr && data?.session) {
               if (isMounted) {
                 setHasValidSession(true)
                 setVerifyingSession(false)
