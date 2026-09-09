@@ -53,44 +53,41 @@ function NodeTooltip({ node, color, unlocked }: NodeTooltipProps) {
       initial={{ opacity: 0, y: 5, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 5, scale: 0.95 }}
-      className="absolute left-1/2 bottom-full mb-3 z-20 w-56 rounded-xl p-3 pointer-events-none"
+      className="absolute left-1/2 bottom-full mb-3 z-20 w-56 rounded-2xl p-3.5 pointer-events-none bg-white border border-[#EAE6DD] shadow-xl"
       style={{
-        background: '#1A1A2E',
-        border: `1px solid ${color}44`,
         transform: 'translateX(-50%)',
-        boxShadow: `0 0 20px ${color}22`,
       }}
     >
       <div className="flex items-center gap-2 mb-1.5">
         <span className="text-lg">{node.icon}</span>
         <span
           className="font-bold text-sm"
-          style={{ fontFamily: 'Oxanium, sans-serif', color: unlocked ? color : '#9B99B8' }}
+          style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: unlocked ? color : '#232019' }}
         >
           {node.name}
         </span>
       </div>
-      <p className="text-xs mb-2" style={{ color: '#9B99B8' }}>
+      <p className="text-xs mb-2 text-[#6E6A61]">
         {node.desc}
       </p>
       <div className="flex items-center justify-between text-xs">
-        <span style={{ color: '#5C5A7A' }}>Unlocks at</span>
-        <span style={{ color: unlocked ? color : '#EF4444', fontFamily: 'Oxanium, sans-serif' }}>
+        <span className="text-[#8A857A]">Unlocks at</span>
+        <span style={{ color: unlocked ? color : '#EF4444', fontWeight: 600 }}>
           {node.req_stat === 0 ? 'Always' : `${node.req_stat} stat pts`}
         </span>
       </div>
       {node.xp_bonus > 0 && (
         <div className="flex items-center justify-between text-xs mt-1">
-          <span style={{ color: '#5C5A7A' }}>XP Bonus</span>
-          <span style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
+          <span className="text-[#8A857A]">XP Bonus</span>
+          <span className="font-bold text-[#5B57F0]">
             +{node.xp_bonus} XP
           </span>
         </div>
       )}
       {/* tooltip arrow */}
       <div
-        className="absolute left-1/2 bottom-[-5px] w-2.5 h-2.5 rotate-45"
-        style={{ background: '#1A1A2E', border: `0 0 1px 1px ${color}44`, transform: 'translateX(-50%) rotate(45deg)' }}
+        className="absolute left-1/2 bottom-[-5px] w-2.5 h-2.5 rotate-45 bg-white border-r border-b border-[#EAE6DD]"
+        style={{ transform: 'translateX(-50%) rotate(45deg)' }}
       />
     </motion.div>
   )
@@ -114,13 +111,13 @@ function SkillNodeCircle({ node, color, statVal, isCurrent }: SkillNodeCirclePro
       </AnimatePresence>
 
       <motion.div
-        className="relative flex items-center justify-center rounded-full cursor-pointer select-none"
+        className="relative flex items-center justify-center rounded-full cursor-pointer select-none transition-shadow duration-200"
         style={{
           width: NODE_SIZE,
           height: NODE_SIZE,
-          background: unlocked ? `${color}20` : '#0F0F1A',
-          border: `2px solid ${unlocked ? color : '#2E2E50'}`,
-          boxShadow: unlocked ? `0 0 20px ${color}44, inset 0 0 10px ${color}11` : 'none',
+          background: unlocked ? `${color}18` : '#FAF8F5',
+          border: `2px solid ${unlocked ? color : '#EAE6DD'}`,
+          boxShadow: unlocked ? `0 4px 14px ${color}33` : '0 2px 6px rgba(0,0,0,0.03)',
         }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
@@ -128,26 +125,25 @@ function SkillNodeCircle({ node, color, statVal, isCurrent }: SkillNodeCirclePro
         onHoverEnd={() => setHovered(false)}
         animate={
           isCurrent
-            ? { boxShadow: [`0 0 0 0 ${color}88`, `0 0 0 12px ${color}00`] }
+            ? { boxShadow: [`0 0 0 0 ${color}66`, `0 0 0 10px ${color}00`] }
             : {}
         }
         transition={isCurrent ? { duration: 1.5, repeat: Infinity } : {}}
       >
-        <div className="flex items-center justify-center" style={{ filter: unlocked ? 'none' : 'grayscale(1) opacity(0.3)', color: unlocked ? color : '#5C5A7A' }}>
+        <div className="flex items-center justify-center" style={{ filter: unlocked ? 'none' : 'grayscale(1) opacity(0.4)', color: unlocked ? color : '#8A857A' }}>
           <DynamicIcon name={node.icon} size={28} />
         </div>
         {!unlocked && (
           <div
-            className="absolute bottom-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs text-slate-400"
-            style={{ background: '#13131F', border: '1px solid #2E2E50' }}
+            className="absolute bottom-1 right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs text-[#8A857A] bg-white border border-[#EAE6DD] shadow-sm"
           >
             <Lock size={10} />
           </div>
         )}
         {unlocked && node.xp_bonus > 0 && (
           <div
-            className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded-full text-xs font-bold"
-            style={{ background: '#7C3AED', color: '#F1F0FF', fontFamily: 'Oxanium, sans-serif', fontSize: 9 }}
+            className="absolute -top-1 -right-1 px-1.5 py-0.5 rounded-full text-xs font-bold bg-[#5B57F0] text-white shadow-sm"
+            style={{ fontSize: 9 }}
           >
             +{node.xp_bonus}
           </div>
@@ -157,15 +153,11 @@ function SkillNodeCircle({ node, color, statVal, isCurrent }: SkillNodeCirclePro
       {/* Label */}
       <div className="mt-2 text-center w-full px-1">
         <div
-          className="text-xs font-semibold leading-tight"
-          style={{
-            fontFamily: 'Oxanium, sans-serif',
-            color: unlocked ? '#F1F0FF' : '#5C5A7A',
-          }}
+          className={`text-xs font-bold leading-tight ${unlocked ? 'text-[#232019]' : 'text-[#8A857A]'}`}
         >
           {node.name}
         </div>
-        <div className="text-xs mt-0.5" style={{ color: '#5C5A7A' }}>
+        <div className="text-xs mt-0.5 text-[#8A857A]">
           Tier {node.tier}
         </div>
       </div>
@@ -184,7 +176,6 @@ function TreeBranchView({ branchKey, statVal }: TreeBranchViewProps) {
 
   const { nodes, color } = branch
   const unlockedCount = nodes.filter((n) => isNodeUnlocked(n, statVal)).length
-  // Find the "current" node — the first locked node after the last unlocked one
   const currentNodeIdx = nodes.findIndex((n) => !isNodeUnlocked(n, statVal))
   const totalHeight = nodes.length * (NODE_SIZE + NODE_GAP) - NODE_GAP / 2
 
@@ -210,7 +201,7 @@ function TreeBranchView({ branchKey, statVal }: TreeBranchViewProps) {
                 x2="2"
                 y2={y2}
                 strokeWidth={3}
-                stroke={segmentUnlocked ? color : '#2E2E50'}
+                stroke={segmentUnlocked ? color : '#EAE6DD'}
                 strokeDasharray={segmentUnlocked ? 'none' : '6,4'}
                 strokeLinecap="round"
               />
@@ -235,11 +226,11 @@ function TreeBranchView({ branchKey, statVal }: TreeBranchViewProps) {
 
       {/* Progress label */}
       <div className="mt-6 text-center">
-        <div className="text-sm font-bold" style={{ fontFamily: 'Oxanium, sans-serif', color }}>
+        <div className="text-sm font-bold" style={{ color }}>
           {unlockedCount} / {nodes.length} unlocked
         </div>
         {currentNodeIdx !== -1 && (
-          <div className="text-xs mt-1" style={{ color: '#5C5A7A' }}>
+          <div className="text-xs mt-1 text-[#8A857A]">
             Next: {nodes[currentNodeIdx].req_stat} {branch.label} pts needed
           </div>
         )}
@@ -256,18 +247,14 @@ export default function SkillsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
+      <div className="flex items-center justify-center min-h-screen bg-[#FBFAF7]">
         <div className="text-center">
           <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse"
-            style={{ background: '#22C55E22', border: '1px solid #22C55E44' }}
+            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse bg-emerald-50 border border-emerald-200"
           >
-            <TreePine size={28} style={{ color: '#22C55E' }} />
+            <TreePine size={28} className="text-emerald-600" />
           </div>
-          <div
-            className="text-sm"
-            style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}
-          >
+          <div className="text-sm font-semibold text-[#8A857A]">
             Loading Skill Tree...
           </div>
         </div>
@@ -295,7 +282,7 @@ export default function SkillsPage() {
   })()
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
       <Sidebar
         userAvatar={profile?.avatar_emoji}
         userName={profile?.display_name ?? 'Adventurer'}
@@ -306,14 +293,11 @@ export default function SkillsPage() {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1
-              className="text-3xl font-bold mb-1 flex items-center gap-2.5"
-              style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-            >
+            <h1 className="text-3xl font-bold mb-1 flex items-center gap-2.5 text-[#232019]">
               <span>Skill Tree</span>
-              <TreePine size={26} style={{ color: '#22C55E' }} />
+              <TreePine size={26} className="text-emerald-600" />
             </h1>
-            <p style={{ color: '#9B99B8' }}>Unlock your potential — complete quests to raise stats</p>
+            <p className="text-sm text-[#6E6A61]">Unlock your potential — complete quests to raise stats</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -329,12 +313,11 @@ export default function SkillsPage() {
                     <button
                       key={key}
                       onClick={() => setSelectedBranch(key)}
-                      className="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2"
+                      className="px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2 cursor-pointer shadow-sm"
                       style={{
-                        background: active ? `${b.color}22` : '#13131F',
-                        color: active ? b.color : '#9B99B8',
-                        border: `1px solid ${active ? b.color : '#1E1E35'}`,
-                        boxShadow: active ? `0 0 12px ${b.color}33` : 'none',
+                        background: active ? `${b.color}15` : '#FFFFFF',
+                        color: active ? b.color : '#6E6A61',
+                        border: `1.5px solid ${active ? b.color : '#EAE6DD'}`,
                       }}
                     >
                       <IconComp size={16} />
@@ -352,20 +335,18 @@ export default function SkillsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.25 }}
-                  className="rounded-2xl p-8 flex flex-col items-center"
+                  className="rounded-2xl p-8 flex flex-col items-center bg-white border border-[#EAE6DD] shadow-sm"
                   style={{
-                    background: '#13131F',
-                    border: `1px solid ${branch?.color ?? '#1E1E35'}22`,
                     minHeight: 600,
                   }}
                 >
                   {/* Branch header */}
                   <div className="text-center mb-8">
                     <div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3"
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm"
                       style={{
-                        background: `${branch?.color}20`,
-                        border: `1px solid ${branch?.color}44`,
+                        background: `${branch?.color}15`,
+                        border: `1.5px solid ${branch?.color}33`,
                         color: branch?.color,
                       }}
                     >
@@ -376,13 +357,13 @@ export default function SkillsPage() {
                     </div>
                     <h2
                       className="text-2xl font-bold"
-                      style={{ fontFamily: 'Oxanium, sans-serif', color: branch?.color }}
+                      style={{ color: branch?.color }}
                     >
                       {branch?.label} Path
                     </h2>
-                    <p className="text-sm mt-1" style={{ color: '#5C5A7A' }}>
+                    <p className="text-sm mt-1 text-[#6E6A61]">
                       Current value:{' '}
-                      <span style={{ color: branch?.color, fontFamily: 'Oxanium, sans-serif' }}>
+                      <span className="font-bold" style={{ color: branch?.color }}>
                         {getStatValue(stats, branch?.statKey ?? '')}
                       </span>
                     </p>
@@ -401,30 +382,20 @@ export default function SkillsPage() {
             {/* Right sidebar */}
             <div className="space-y-5">
               {/* Overall progress */}
-              <div
-                className="rounded-2xl p-5"
-                style={{ background: '#13131F', border: '1px solid #1E1E35' }}
-              >
-                <h3
-                  className="font-bold text-sm mb-4 uppercase tracking-wider"
-                  style={{ fontFamily: 'Oxanium, sans-serif', color: '#9B99B8' }}
-                >
+              <div className="rounded-2xl p-5 bg-white border border-[#EAE6DD] shadow-sm">
+                <h3 className="font-bold text-xs mb-4 uppercase tracking-wider text-[#8A857A]">
                   Progress
                 </h3>
                 <div className="text-center mb-4">
-                  <div
-                    className="text-4xl font-bold"
-                    style={{ fontFamily: 'Oxanium, sans-serif', color: '#7C3AED' }}
-                  >
+                  <div className="text-4xl font-extrabold text-[#5B57F0]">
                     {totalUnlocked}
                   </div>
-                  <div className="text-xs" style={{ color: '#5C5A7A' }}>
+                  <div className="text-xs text-[#8A857A] mt-1">
                     of {totalNodes} nodes unlocked
                   </div>
-                  <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
+                  <div className="mt-3 h-2 rounded-full overflow-hidden bg-[#FAF8F5] border border-[#EAE6DD]">
                     <motion.div
-                      className="h-full rounded-full"
-                      style={{ background: 'linear-gradient(90deg, #7C3AED, #EC4899)' }}
+                      className="h-full rounded-full bg-gradient-to-r from-[#5B57F0] to-[#8B5CF6]"
                       initial={{ width: 0 }}
                       animate={{ width: `${(totalUnlocked / totalNodes) * 100}%` }}
                       transition={{ duration: 1, delay: 0.3 }}
@@ -434,14 +405,8 @@ export default function SkillsPage() {
               </div>
 
               {/* All stats */}
-              <div
-                className="rounded-2xl p-5"
-                style={{ background: '#13131F', border: '1px solid #1E1E35' }}
-              >
-                <h3
-                  className="font-bold text-sm mb-4 uppercase tracking-wider"
-                  style={{ fontFamily: 'Oxanium, sans-serif', color: '#9B99B8' }}
-                >
+              <div className="rounded-2xl p-5 bg-white border border-[#EAE6DD] shadow-sm">
+                <h3 className="font-bold text-xs mb-4 uppercase tracking-wider text-[#8A857A]">
                   Your Stats
                 </h3>
                 <div className="space-y-3">
@@ -453,17 +418,17 @@ export default function SkillsPage() {
                     return (
                       <div key={key} className="flex items-center gap-3">
                         <div
-                          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                          className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 shadow-xs"
                           style={{ background: `${b.color}15`, color: b.color }}
                         >
-                          <IconComp size={14} />
+                          <IconComp size={15} />
                         </div>
                         <div className="flex-1">
-                          <div className="flex justify-between text-xs mb-1">
-                            <span style={{ color: '#9B99B8' }}>{b.label}</span>
-                            <span style={{ color: b.color, fontFamily: 'Oxanium, sans-serif' }}>{sv}</span>
+                          <div className="flex justify-between text-xs font-semibold mb-1">
+                            <span className="text-[#6E6A61]">{b.label}</span>
+                            <span style={{ color: b.color }}>{sv}</span>
                           </div>
-                          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
+                          <div className="h-2 rounded-full overflow-hidden bg-[#FAF8F5] border border-[#EAE6DD]">
                             <motion.div
                               className="h-full rounded-full"
                               style={{ background: b.color }}
@@ -473,7 +438,7 @@ export default function SkillsPage() {
                             />
                           </div>
                         </div>
-                        <span className="text-xs w-8 text-right" style={{ color: '#5C5A7A' }}>
+                        <span className="text-xs font-medium w-8 text-right text-[#8A857A]">
                           {unlocked}/{b.nodes.length}
                         </span>
                       </div>
@@ -487,9 +452,9 @@ export default function SkillsPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-2xl p-5"
+                  className="rounded-2xl p-5 shadow-sm"
                   style={{
-                    background: `${nextUnlock.branch.color}11`,
+                    background: `${nextUnlock.branch.color}0D`,
                     border: `1px solid ${nextUnlock.branch.color}33`,
                   }}
                 >
@@ -499,18 +464,18 @@ export default function SkillsPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
                       style={{ background: `${nextUnlock.branch.color}22`, color: nextUnlock.branch.color }}
                     >
                       <DynamicIcon name={nextUnlock.node.icon} size={20} />
                     </div>
                     <div>
-                      <div className="font-semibold text-sm" style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}>
+                      <div className="font-bold text-sm text-[#232019]">
                         {nextUnlock.node.name}
                       </div>
-                      <div className="text-xs" style={{ color: '#9B99B8' }}>
+                      <div className="text-xs text-[#6E6A61]">
                         Need {nextUnlock.branch.label}{' '}
-                        <span style={{ color: nextUnlock.branch.color, fontFamily: 'Oxanium, sans-serif' }}>
+                        <span className="font-bold" style={{ color: nextUnlock.branch.color }}>
                           {nextUnlock.node.req_stat}
                         </span>{' '}
                         (you: {nextUnlock.sv})

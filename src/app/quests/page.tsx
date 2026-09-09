@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Plus, CheckCircle2, Pencil, Trash2, Loader2,
   Dumbbell, Brain, Wind, Heart, Coins, Mic2,
-  AlertTriangle, PartyPopper, ClipboardList, Zap,
+  AlertTriangle, PartyPopper, Zap,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Sidebar from '@/components/layout/Sidebar'
@@ -20,8 +20,8 @@ const CATEGORIES: Record<string, { label: string; icon: React.ComponentType<{ si
   str:  { label: 'Strength',     icon: Dumbbell, color: '#EF4444' },
   int:  { label: 'Intelligence', icon: Brain,    color: '#3B82F6' },
   wis:  { label: 'Wisdom',       icon: Wind,     color: '#8B5CF6' },
-  vit:  { label: 'Vitality',     icon: Heart,    color: '#22C55E' },
-  gold: { label: 'Wealth',       icon: Coins,    color: '#F59E0B' },
+  vit:  { label: 'Vitality',     icon: Heart,    color: '#10B981' },
+  gold: { label: 'Wealth',       icon: Coins,    color: '#D97706' },
   cha:  { label: 'Charisma',     icon: Mic2,     color: '#EC4899' },
 }
 
@@ -32,10 +32,10 @@ const DIFFICULTY_LABELS: Record<string, string> = {
   legendary: 'Legendary',
 }
 const DIFFICULTY_COLORS: Record<string, string> = {
-  easy: '#22C55E',
-  medium: '#F59E0B',
-  hard: '#EF4444',
-  legendary: '#7C3AED',
+  easy: '#059669',
+  medium: '#D97706',
+  hard: '#DC2626',
+  legendary: '#5B57F0',
 }
 
 interface Habit {
@@ -60,46 +60,42 @@ function DeleteDialog({ isOpen, habitName, onCancel, onConfirm }: DeleteDialogPr
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="w-full max-w-sm rounded-2xl p-6"
-            style={{ background: '#13131F', border: '1px solid #EF444444' }}
+            className="w-full max-w-sm rounded-2xl p-6 bg-white border border-[#EAE6DD] shadow-xl"
+            style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
           >
             <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3"
-              style={{ background: '#EF444415', border: '1px solid #EF444433' }}
+              className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3 bg-[#FEE2E2] text-[#DC2626]"
             >
-              <AlertTriangle size={22} style={{ color: '#EF4444' }} />
+              <AlertTriangle size={22} />
             </div>
             <h3
-              className="text-lg font-bold mb-2"
-              style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
+              className="text-lg font-bold mb-1 text-[#232019]"
             >
               Abandon this Quest?
             </h3>
-            <p className="text-sm mb-1" style={{ color: '#9B99B8' }}>
+            <p className="text-sm font-semibold mb-1 text-[#6E6A61]">
               &ldquo;{habitName}&rdquo;
             </p>
-            <p className="text-sm mb-6" style={{ color: '#5C5A7A' }}>
-              Your streak and completion history will be lost.
+            <p className="text-xs mb-6 text-[#8A857A]">
+              Your streak and completion history will be archived.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={onCancel}
-                className="flex-1 py-2.5 rounded-xl text-sm font-medium"
-                style={{ background: '#1E1E35', color: '#9B99B8' }}
+                className="flex-1 py-2.5 rounded-xl text-xs font-bold bg-[#FAF8F5] border border-[#EAE6DD] text-[#6E6A61] hover:bg-[#F0ECE1]"
               >
                 Cancel
               </button>
               <button
                 onClick={onConfirm}
-                className="flex-1 py-2.5 rounded-xl text-sm font-semibold"
-                style={{ background: '#EF444422', color: '#EF4444', border: '1px solid #EF444444' }}
+                className="flex-1 py-2.5 rounded-xl text-xs font-bold bg-[#DC2626] text-white hover:bg-[#B91C1C] shadow-sm"
               >
-                Delete Quest
+                Abandon Quest
               </button>
             </div>
           </motion.div>
@@ -120,27 +116,25 @@ interface QuestCardProps {
 function QuestCard({ habit, isCompleted, onComplete, onEdit, onDelete }: QuestCardProps) {
   const cat = CATEGORIES[habit.stat_category] ?? CATEGORIES.str
   const CatIcon = cat.icon
-  const diffColor = DIFFICULTY_COLORS[habit.difficulty] ?? '#9B99B8'
+  const diffColor = DIFFICULTY_COLORS[habit.difficulty] ?? '#8A857A'
   const diffLabel = DIFFICULTY_LABELS[habit.difficulty] ?? habit.difficulty
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      exit={{ opacity: 0, scale: 0.94 }}
       transition={{ duration: 0.2 }}
-      className="rounded-xl p-4 flex items-start gap-4 transition-all duration-200 group"
-      style={{
-        background: isCompleted ? '#0F1A0F' : '#13131F',
-        border: `1px solid ${isCompleted ? '#22C55E33' : '#1E1E35'}`,
-        opacity: isCompleted ? 0.75 : 1,
-      }}
+      className={`rounded-2xl p-4 flex items-start gap-4 transition-all duration-200 border bg-white shadow-sm ${
+        isCompleted ? 'border-[#A7F3D0] bg-[#ECFDF5]/50' : 'border-[#EAE6DD]'
+      }`}
+      style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
     >
       {/* Icon */}
       <div
         className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-        style={{ background: `${cat.color}20`, border: `1px solid ${cat.color}44`, color: cat.color }}
+        style={{ backgroundColor: `${cat.color}15`, border: `1px solid ${cat.color}30`, color: cat.color }}
       >
         {habit.emoji ? habit.emoji : <CatIcon size={22} />}
       </div>
@@ -149,31 +143,31 @@ function QuestCard({ habit, isCompleted, onComplete, onEdit, onDelete }: QuestCa
       <div className="flex-1 min-w-0">
         <h3
           className="font-bold text-sm mb-0.5 truncate flex items-center gap-1.5"
-          style={{ fontFamily: 'Oxanium, sans-serif', color: isCompleted ? '#22C55E' : '#F1F0FF' }}
+          style={{ color: isCompleted ? '#059669' : '#232019' }}
         >
-          {isCompleted && <CheckCircle2 size={14} className="flex-shrink-0" style={{ color: '#22C55E' }} />}
-          <span className="truncate">{habit.name}</span>
+          {isCompleted && <CheckCircle2 size={15} className="flex-shrink-0 text-emerald-600" />}
+          <span className={`truncate ${isCompleted ? 'line-through opacity-75' : ''}`}>{habit.name}</span>
         </h3>
         {habit.description && (
-          <p className="text-xs mb-2 line-clamp-1" style={{ color: '#5C5A7A' }}>
+          <p className="text-xs mb-2 line-clamp-1 text-[#8A857A]">
             {habit.description}
           </p>
         )}
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5 mt-1">
           <span
-            className="text-xs px-2 py-0.5 rounded-full font-medium"
-            style={{ background: `${diffColor}22`, color: diffColor }}
+            className="text-[11px] px-2 py-0.5 rounded-md font-bold"
+            style={{ backgroundColor: `${diffColor}15`, color: diffColor }}
           >
             {diffLabel}
           </span>
           <span
-            className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
-            style={{ background: `${cat.color}15`, color: cat.color }}
+            className="text-[11px] px-2 py-0.5 rounded-md font-medium flex items-center gap-1"
+            style={{ backgroundColor: '#FAF8F5', color: '#6E6A61', border: '1px solid #EAE6DD' }}
           >
             <CatIcon size={11} /> {cat.label}
           </span>
-          <span className="text-xs font-bold flex items-center gap-1" style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
-            <Zap size={11} /> {habit.xp_reward} XP
+          <span className="text-[11px] font-bold flex items-center gap-0.5 px-2 py-0.5 rounded-md bg-[#EDECFD] text-[#5B57F0]">
+            <Zap size={11} className="fill-current" /> +{habit.xp_reward} XP
           </span>
         </div>
       </div>
@@ -184,58 +178,27 @@ function QuestCard({ habit, isCompleted, onComplete, onEdit, onDelete }: QuestCa
           onClick={() => onComplete(habit.id)}
           disabled={isCompleted}
           title={isCompleted ? 'Already completed!' : 'Complete quest'}
-          className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-150"
-          style={{
-            background: isCompleted ? '#22C55E22' : '#22C55E15',
-            color: isCompleted ? '#22C55E' : '#5C5A7A',
-            border: `1px solid ${isCompleted ? '#22C55E44' : 'transparent'}`,
-          }}
-          onMouseEnter={(e) => {
-            if (!isCompleted) {
-              e.currentTarget.style.background = '#22C55E22'
-              e.currentTarget.style.color = '#22C55E'
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isCompleted) {
-              e.currentTarget.style.background = '#22C55E15'
-              e.currentTarget.style.color = '#5C5A7A'
-            }
-          }}
+          className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
+            isCompleted
+              ? 'bg-emerald-600 text-white shadow-sm'
+              : 'bg-white border border-[#D6D3FA] text-[#5B57F0] hover:bg-[#EDECFD]'
+          }`}
         >
-          <CheckCircle2 size={16} />
+          <CheckCircle2 size={17} />
         </button>
         <button
           onClick={() => onEdit(habit)}
           title="Edit quest"
-          className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-150"
-          style={{ color: '#5C5A7A' }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#1E1E35'
-            e.currentTarget.style.color = '#9F67FF'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.color = '#5C5A7A'
-          }}
+          className="w-9 h-9 rounded-xl flex items-center justify-center transition-all text-[#8A857A] hover:bg-[#FAF8F5] hover:text-[#232019]"
         >
-          <Pencil size={14} />
+          <Pencil size={15} />
         </button>
         <button
           onClick={() => onDelete(habit)}
           title="Delete quest"
-          className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-150"
-          style={{ color: '#5C5A7A' }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#EF444415'
-            e.currentTarget.style.color = '#EF4444'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent'
-            e.currentTarget.style.color = '#5C5A7A'
-          }}
+          className="w-9 h-9 rounded-xl flex items-center justify-center transition-all text-[#8A857A] hover:bg-[#FEE2E2] hover:text-[#DC2626]"
         >
-          <Trash2 size={14} />
+          <Trash2 size={15} />
         </button>
       </div>
     </motion.div>
@@ -341,10 +304,10 @@ export default function QuestsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
+      <div className="flex items-center justify-center min-h-screen bg-[#FBFAF7]">
         <div className="text-center">
-          <Loader2 size={40} className="animate-spin mb-4 mx-auto" style={{ color: '#7C3AED' }} />
-          <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
+          <Loader2 size={36} className="animate-spin mb-3 mx-auto text-[#5B57F0]" />
+          <div className="text-sm font-semibold text-[#6E6A61]">
             Loading quests...
           </div>
         </div>
@@ -353,7 +316,7 @@ export default function QuestsPage() {
   }
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <Sidebar
         userAvatar={profile?.avatar_emoji}
         userName={profile?.display_name ?? 'Adventurer'}
@@ -363,42 +326,26 @@ export default function QuestsPage() {
 
       <main className="flex-1 overflow-y-auto p-6 xl:p-8" style={{ marginLeft: 240 }}>
         <div className="max-w-5xl mx-auto">
+          
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-7">
             <div>
-              <h1
-                className="text-3xl font-bold mb-1 flex items-center gap-2.5"
-                style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-              >
-                <Zap size={28} className="text-amber-400" />
-                <span>Quest Manager</span>
+              <h1 className="text-2xl lg:text-3xl font-extrabold mb-1 flex items-center gap-2.5 text-[#232019]">
+                <Zap size={26} className="text-[#D97706] fill-current" />
+                <span>Quest Ledger</span>
               </h1>
-              <p style={{ color: '#9B99B8' }}>
-                <span style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}>
-                  {habits.length}
-                </span>{' '}
-                active quests •{' '}
-                <span style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
-                  {habits.reduce((s, h) => s + h.xp_reward, 0)} XP
-                </span>{' '}
-                available today
+              <p className="text-sm font-medium text-[#8A857A]">
+                <span className="font-bold text-[#5B57F0]">{habits.length}</span> active quests •{' '}
+                <span className="font-bold text-[#D97706]">{habits.reduce((s, h) => s + h.xp_reward, 0)} XP</span> available today
               </p>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+            <button
               onClick={() => { setEditingHabit(null); setIsModalOpen(true) }}
-              className="flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm whitespace-nowrap"
-              style={{
-                background: '#7C3AED',
-                color: '#F1F0FF',
-                fontFamily: 'Oxanium, sans-serif',
-                boxShadow: '0 0 20px #7C3AED44',
-              }}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-[#5B57F0] hover:bg-[#4F46E5] shadow-sm transition-all whitespace-nowrap"
             >
-              <Plus size={18} />
-              + New Quest
-            </motion.button>
+              <Plus size={16} />
+              <span>Create New Quest</span>
+            </button>
           </div>
 
           {/* Tabs */}
@@ -407,13 +354,11 @@ export default function QuestsPage() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className="px-5 py-2.5 rounded-xl text-sm font-semibold capitalize transition-all duration-200"
-                style={{
-                  background: activeTab === tab ? '#7C3AED' : '#13131F',
-                  color: activeTab === tab ? '#F1F0FF' : '#9B99B8',
-                  border: `1px solid ${activeTab === tab ? '#7C3AED' : '#1E1E35'}`,
-                  fontFamily: 'Oxanium, sans-serif',
-                }}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                  activeTab === tab
+                    ? 'bg-[#EDECFD] text-[#5B57F0] border-[#D6D3FA] shadow-sm'
+                    : 'bg-white text-[#6E6A61] border-[#EAE6DD] hover:bg-[#FAF8F5]'
+                }`}
               >
                 {tab === 'active' ? `Active Quests (${activeHabits.length})` : `Completed Today (${completedHabits.length})`}
               </button>
@@ -425,71 +370,58 @@ export default function QuestsPage() {
             {activeTab === 'active' ? (
               <motion.div
                 key="active"
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
                 {activeHabits.length === 0 ? (
-                  <div
-                    className="text-center py-16 rounded-2xl"
-                    style={{ background: '#13131F', border: '1px solid #1E1E35' }}
-                  >
-                    <div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                      style={{ background: '#22C55E15', border: '1px solid #22C55E33' }}
-                    >
-                      <PartyPopper size={28} style={{ color: '#22C55E' }} />
+                  <div className="text-center py-16 rounded-2xl bg-white border border-[#EAE6DD] shadow-sm">
+                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 bg-[#ECFDF5] text-emerald-600">
+                      <PartyPopper size={28} />
                     </div>
-                    <h3
-                      className="text-lg font-bold mb-2"
-                      style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-                    >
+                    <h3 className="text-lg font-bold mb-1 text-[#232019]">
                       All Quests Complete!
                     </h3>
-                    <p className="text-sm" style={{ color: '#5C5A7A' }}>
-                      Legendary performance. Come back tomorrow for new quests!
+                    <p className="text-xs text-[#8A857A] mb-4">
+                      You&apos;ve cleared today&apos;s quest list. Enjoy your hero streak!
                     </p>
+                    <button
+                      onClick={() => { setEditingHabit(null); setIsModalOpen(true) }}
+                      className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#5B57F0] hover:bg-[#4F46E5] shadow-sm"
+                    >
+                      + Add Another Quest
+                    </button>
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {Object.entries(grouped).map(([catKey, catHabits]) => {
-                      const cat = CATEGORIES[catKey]
+                    {Object.entries(grouped).map(([catKey, categoryHabits]) => {
+                      const cat = CATEGORIES[catKey] ?? CATEGORIES.str
+                      const CatIcon = cat.icon
                       return (
                         <div key={catKey}>
-                          {/* Category Header */}
-                          <div className="flex items-center gap-3 mb-3">
+                          <div className="flex items-center gap-2 mb-3">
                             <div
-                              className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                              style={{ background: `${cat.color}20`, border: `1px solid ${cat.color}44`, color: cat.color }}
+                              className="w-6 h-6 rounded-lg flex items-center justify-center text-xs"
+                              style={{ backgroundColor: `${cat.color}20`, color: cat.color }}
                             >
-                              <cat.icon size={16} />
+                              <CatIcon size={13} />
                             </div>
-                            <h2
-                              className="font-bold text-sm uppercase tracking-wider"
-                              style={{ fontFamily: 'Oxanium, sans-serif', color: cat.color }}
-                            >
-                              {cat.label}
+                            <h2 className="text-xs font-bold uppercase tracking-wider text-[#8A857A]">
+                              {cat.label} ({categoryHabits.length})
                             </h2>
-                            <div className="flex-1 h-px" style={{ background: `${cat.color}22` }} />
-                            <span className="text-xs" style={{ color: '#5C5A7A' }}>
-                              {catHabits.length} quest{catHabits.length !== 1 ? 's' : ''}
-                            </span>
                           </div>
-
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <AnimatePresence mode="popLayout">
-                              {catHabits.map((habit) => (
-                                <QuestCard
-                                  key={habit.id}
-                                  habit={habit}
-                                  isCompleted={allCompleted.includes(habit.id)}
-                                  onComplete={handleComplete}
-                                  onEdit={(h) => { setEditingHabit(h); setIsModalOpen(true) }}
-                                  onDelete={setDeleteTarget}
-                                />
-                              ))}
-                            </AnimatePresence>
+                            {categoryHabits.map((habit) => (
+                              <QuestCard
+                                key={habit.id}
+                                habit={habit}
+                                isCompleted={false}
+                                onComplete={handleComplete}
+                                onEdit={(h) => { setEditingHabit(h); setIsModalOpen(true) }}
+                                onDelete={(h) => setDeleteTarget(h)}
+                              />
+                            ))}
                           </div>
                         </div>
                       )
@@ -500,79 +432,27 @@ export default function QuestsPage() {
             ) : (
               <motion.div
                 key="completed"
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
                 {completedHabits.length === 0 ? (
-                  <div
-                    className="text-center py-16 rounded-2xl"
-                    style={{ background: '#13131F', border: '1px solid #1E1E35' }}
-                  >
-                    <div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                      style={{ background: '#1E1E35' }}
-                    >
-                      <ClipboardList size={28} style={{ color: '#5C5A7A' }} />
-                    </div>
-                    <h3
-                      className="text-lg font-bold mb-2"
-                      style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
-                    >
-                      No completions yet today
-                    </h3>
-                    <p className="text-sm" style={{ color: '#5C5A7A' }}>
-                      Go complete some quests and see them here!
-                    </p>
+                  <div className="text-center py-16 rounded-2xl bg-white border border-[#EAE6DD] shadow-sm">
+                    <p className="text-sm font-semibold text-[#8A857A]">No quests completed yet today.</p>
                   </div>
                 ) : (
-                  <div>
-                    {/* XP Summary Card */}
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-5 rounded-2xl mb-5 flex items-center justify-between"
-                      style={{
-                        background: 'linear-gradient(135deg, #7C3AED22, #22C55E22)',
-                        border: '1px solid #22C55E44',
-                      }}
-                    >
-                      <div>
-                        <div className="text-sm font-medium mb-0.5" style={{ color: '#9B99B8' }}>
-                          XP Earned Today
-                        </div>
-                        <div
-                          className="text-3xl font-bold flex items-center gap-2"
-                          style={{ fontFamily: 'Oxanium, sans-serif', color: '#22C55E' }}
-                        >
-                          <Zap size={28} style={{ color: '#22C55E' }} />
-                          {completedHabits.reduce((s, h) => s + h.xp_reward, 0)} XP
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <div
-                          className="text-4xl font-bold"
-                          style={{ fontFamily: 'Oxanium, sans-serif', color: '#F59E0B' }}
-                        >
-                          {completedHabits.length}
-                        </div>
-                        <div className="text-xs" style={{ color: '#5C5A7A' }}>quests done</div>
-                      </div>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {completedHabits.map((habit) => (
-                        <QuestCard
-                          key={habit.id}
-                          habit={habit}
-                          isCompleted
-                          onComplete={handleComplete}
-                          onEdit={(h) => { setEditingHabit(h); setIsModalOpen(true) }}
-                          onDelete={setDeleteTarget}
-                        />
-                      ))}
-                    </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {completedHabits.map((habit) => (
+                      <QuestCard
+                        key={habit.id}
+                        habit={habit}
+                        isCompleted={true}
+                        onComplete={handleComplete}
+                        onEdit={(h) => { setEditingHabit(h); setIsModalOpen(true) }}
+                        onDelete={(h) => setDeleteTarget(h)}
+                      />
+                    ))}
                   </div>
                 )}
               </motion.div>
@@ -581,29 +461,20 @@ export default function QuestsPage() {
         </div>
       </main>
 
-      {/* Add / Edit Modal */}
       <QuestModal
         isOpen={isModalOpen}
-        editMode={!!editingHabit}
-        initialData={
-          editingHabit
-            ? {
-                name: editingHabit.name,
-                description: editingHabit.description ?? '',
-                stat_category: editingHabit.stat_category,
-                difficulty: editingHabit.difficulty,
-                xp_reward: editingHabit.xp_reward,
-                emoji: editingHabit.emoji,
-                frequency: 'daily',
-                custom_days: [],
-              }
-            : undefined
-        }
         onClose={() => { setIsModalOpen(false); setEditingHabit(null) }}
         onSubmit={editingHabit ? handleEditQuest : handleAddQuest}
+        initialData={editingHabit ? {
+          name: editingHabit.name,
+          description: editingHabit.description ?? '',
+          difficulty: editingHabit.difficulty,
+          xp_reward: editingHabit.xp_reward,
+          stat_category: editingHabit.stat_category,
+          emoji: editingHabit.emoji,
+        } : undefined}
       />
 
-      {/* Delete Confirmation */}
       <DeleteDialog
         isOpen={!!deleteTarget}
         habitName={deleteTarget?.name ?? ''}

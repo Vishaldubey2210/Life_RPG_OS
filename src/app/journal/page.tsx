@@ -182,21 +182,21 @@ ${recentEntries.join('\n\n')}`,
     : entries.filter((e) => e.entry_type === filterType)
 
   return (
-    <div className="flex min-h-screen bg-[#08080F]">
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <Sidebar />
 
       <main className="flex-1 md:ml-60 p-4 md:p-8 max-w-7xl mx-auto pb-24">
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-7">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400 font-display mb-1.5">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5B57F0] mb-1">
               <BookOpen size={14} />
-              <span>Chronicles & Reflections</span>
+              <span>Chronicles &amp; Reflections</span>
             </div>
-            <h1 className="text-3xl font-extrabold text-white font-display tracking-tight">
+            <h1 className="text-2xl lg:text-3xl font-extrabold text-[#232019] tracking-tight">
               Adventurer&apos;s Journal
             </h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <p className="text-sm font-medium text-[#8A857A] mt-0.5">
               Capture your mental state, calibrate daily learnings, and discover what fuels your stats.
             </p>
           </div>
@@ -205,7 +205,7 @@ ${recentEntries.join('\n\n')}`,
             <button
               onClick={handleGenerateAISummary}
               disabled={generatingAI}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 flex items-center gap-2 font-display transition-colors disabled:opacity-60"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold text-[#B45309] bg-[#FEF3C7] border border-[#FDE68A] hover:bg-[#FDE68A] flex items-center gap-2 transition-colors disabled:opacity-60 shadow-sm"
             >
               <Sparkles size={14} />
               <span>{generatingAI ? 'Analyzing...' : 'AI Weekly Review'}</span>
@@ -213,7 +213,7 @@ ${recentEntries.join('\n\n')}`,
 
             <button
               onClick={() => setShowNewEntry(true)}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-purple-600 hover:bg-purple-500 flex items-center gap-2 font-display transition-colors shadow-lg shadow-purple-900/40"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-[#5B57F0] hover:bg-[#4F46E5] flex items-center gap-2 transition-colors shadow-sm"
             >
               <Plus size={15} />
               <span>New Entry</span>
@@ -224,46 +224,46 @@ ${recentEntries.join('\n\n')}`,
         {/* AI Insight Box (if generated) */}
         {aiSummary && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-5 rounded-2xl border border-amber-500/40 bg-amber-500/10 text-amber-100 shadow-xl relative"
+            className="mb-7 p-5 rounded-2xl border border-[#FDE68A] bg-[#FEF3C7] text-[#92400E] shadow-sm relative"
           >
             <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2 font-bold font-display text-amber-400 text-sm">
+              <div className="flex items-center gap-2 font-bold text-[#B45309] text-sm">
                 <Sparkles size={16} />
                 <span>AI Coach Weekly Intelligence</span>
               </div>
               <button
                 onClick={() => setAiSummary(null)}
-                className="p-1 rounded-lg text-amber-400/80 hover:text-amber-200"
+                className="p-1 rounded-lg text-[#B45309] hover:bg-black/5"
               >
                 <X size={14} />
               </button>
             </div>
-            <div className="text-xs leading-relaxed whitespace-pre-line text-slate-200">
+            <div className="text-xs leading-relaxed whitespace-pre-line text-[#78350F]">
               {aiSummary}
             </div>
           </motion.div>
         )}
 
         {/* Monthly Calendar View */}
-        <div className="p-5 rounded-2xl border border-slate-800 bg-[#13131F] mb-8">
+        <div className="p-5 rounded-2xl border border-[#EAE6DD] bg-white mb-7 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2 font-bold font-display text-white text-sm">
-              <Calendar size={16} className="text-purple-400" />
+            <div className="flex items-center gap-2 font-bold text-[#232019] text-sm">
+              <Calendar size={16} className="text-[#5B57F0]" />
               <span>{format(currentMonth, 'MMMM yyyy')}</span>
             </div>
 
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)))}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800"
+                className="p-1.5 rounded-lg text-[#6E6A61] hover:text-[#232019] bg-[#FAF8F5] border border-[#EAE6DD]"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)))}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-800"
+                className="p-1.5 rounded-lg text-[#6E6A61] hover:text-[#232019] bg-[#FAF8F5] border border-[#EAE6DD]"
               >
                 <ChevronRight size={16} />
               </button>
@@ -273,7 +273,7 @@ ${recentEntries.join('\n\n')}`,
           {/* Days Grid */}
           <div className="grid grid-cols-7 gap-2 text-center">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-              <span key={d} className="text-[11px] font-bold text-slate-500 font-display">
+              <span key={d} className="text-[11px] font-bold text-[#8A857A]">
                 {d}
               </span>
             ))}
@@ -290,15 +290,15 @@ ${recentEntries.join('\n\n')}`,
                   onClick={() => setSelectedDate(day)}
                   className={`p-2 rounded-xl text-xs font-semibold flex flex-col items-center gap-1 transition-all ${
                     isSelected
-                      ? 'border-2 border-purple-500 bg-purple-500/20 text-white font-bold'
+                      ? 'border-2 border-[#5B57F0] bg-[#EDECFD] text-[#5B57F0] font-bold'
                       : hasEntries
-                      ? 'border border-green-500/30 bg-green-500/10 text-green-300'
-                      : 'border border-slate-800/80 bg-[#0F0F1A] text-slate-500'
+                      ? 'border border-[#A7F3D0] bg-[#ECFDF5] text-[#059669]'
+                      : 'border border-[#EAE6DD] bg-[#FAF8F5] text-[#8A857A] hover:bg-[#F0ECE1]'
                   }`}
                 >
                   <span>{format(day, 'd')}</span>
                   {hasEntries && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 shadow-sm shadow-green-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm" />
                   )}
                 </button>
               )
@@ -309,7 +309,7 @@ ${recentEntries.join('\n\n')}`,
         {/* Filter Pills */}
         <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            <span className="text-xs font-bold text-slate-400 flex items-center gap-1 mr-1">
+            <span className="text-xs font-bold text-[#8A857A] flex items-center gap-1 mr-1">
               <Filter size={12} /> Filter:
             </span>
             {[
@@ -321,10 +321,10 @@ ${recentEntries.join('\n\n')}`,
               <button
                 key={f.key}
                 onClick={() => setFilterType(f.key)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
                   filterType === f.key
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-slate-800/80 text-slate-400 hover:text-slate-200'
+                    ? 'bg-[#EDECFD] text-[#5B57F0] border-[#D6D3FA] shadow-sm'
+                    : 'bg-white text-[#6E6A61] border-[#EAE6DD] hover:bg-[#FAF8F5]'
                 }`}
               >
                 {f.label}
@@ -332,24 +332,24 @@ ${recentEntries.join('\n\n')}`,
             ))}
           </div>
 
-          <span className="text-xs text-slate-500 font-display">
+          <span className="text-xs font-semibold text-[#8A857A]">
             {filteredEntries.length} logged entries
           </span>
         </div>
 
         {/* Entries Stream */}
         {loading ? (
-          <div className="py-20 text-center text-slate-500 flex flex-col items-center gap-3">
-            <Loader2 size={24} className="animate-spin text-purple-500" />
-            <p className="text-xs">Loading journal chronicles...</p>
+          <div className="py-20 text-center text-[#8A857A] flex flex-col items-center gap-3">
+            <Loader2 size={24} className="animate-spin text-[#5B57F0]" />
+            <p className="text-xs font-medium">Loading journal chronicles...</p>
           </div>
         ) : filteredEntries.length === 0 ? (
-          <div className="p-12 text-center rounded-2xl border border-slate-800 bg-[#13131F]">
-            <BookOpen size={36} className="mx-auto text-slate-600 mb-3" />
-            <h3 className="text-base font-bold text-white font-display mb-1">
+          <div className="p-12 text-center rounded-2xl border border-[#EAE6DD] bg-white shadow-sm">
+            <BookOpen size={36} className="mx-auto text-[#8A857A] mb-3" />
+            <h3 className="text-base font-bold text-[#232019] mb-1">
               No entries logged yet
             </h3>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto mb-4">
+            <p className="text-xs text-[#8A857A] max-w-sm mx-auto mb-4">
               Reflect on completed quests or write your thoughts to fuel your AI Coach with personal insights.
             </p>
             <button

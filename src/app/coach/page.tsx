@@ -44,8 +44,7 @@ function TypingIndicator() {
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          className="w-2 h-2 rounded-full"
-          style={{ background: '#7C3AED' }}
+          className="w-2 h-2 rounded-full bg-[#5B57F0]"
           animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
           transition={{ duration: 0.8, delay: i * 0.15, repeat: Infinity }}
         />
@@ -70,25 +69,19 @@ function ChatBubble({ message, isLatest }: ChatBubbleProps) {
     >
       {!isUser && (
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-1"
-          style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
+          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-1 bg-purple-50 border border-purple-200 text-[#5B57F0] shadow-xs"
         >
           <Bot size={18} />
         </div>
       )}
       <div
-        className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+        className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
           isLatest && !isUser ? 'rounded-tl-sm' : ''
-        } ${isLatest && isUser ? 'rounded-tr-sm' : ''}`}
-        style={
+        } ${isLatest && isUser ? 'rounded-tr-sm' : ''} ${
           isUser
-            ? { background: '#7C3AED', color: '#F1F0FF' }
-            : {
-                background: '#1A1A2E',
-                color: '#C4C2D8',
-                borderLeft: '2px solid #7C3AED',
-              }
-        }
+            ? 'bg-[#5B57F0] text-white'
+            : 'bg-white text-[#232019] border border-[#EAE6DD] border-l-4 border-l-[#5B57F0]'
+        }`}
       >
         <p className="whitespace-pre-wrap">{message.content}</p>
       </div>
@@ -220,7 +213,7 @@ export default function CoachPage() {
   ]
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
       <Sidebar
         userAvatar={profile?.avatar_emoji}
         userName={profile?.display_name ?? 'Adventurer'}
@@ -230,34 +223,30 @@ export default function CoachPage() {
       <div className="flex-1 flex overflow-hidden" style={{ marginLeft: 240, height: '100vh' }}>
         {/* Left sidebar (desktop) */}
         <div
-          className="hidden lg:flex flex-col w-72 flex-shrink-0 overflow-y-auto p-5 gap-5 border-r"
-          style={{ borderColor: '#1E1E35', background: '#0A0A14' }}
+          className="hidden lg:flex flex-col w-72 flex-shrink-0 overflow-y-auto p-5 gap-5 border-r border-[#EAE6DD] bg-white"
         >
           {/* Stats card */}
           {!loading && (
             <div
-              className="rounded-2xl p-4"
-              style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+              className="rounded-2xl p-4 bg-[#FAF8F5] border border-[#EAE6DD] shadow-xs"
             >
               <div className="flex items-center gap-3 mb-4">
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-purple-50 border border-purple-200 text-[#5B57F0]"
                 >
                   {profile?.avatar_emoji ? (
                     <span className="text-xl">{profile.avatar_emoji}</span>
                   ) : (
-                    <Swords size={20} style={{ color: '#9F67FF' }} />
+                    <Swords size={20} className="text-[#5B57F0]" />
                   )}
                 </div>
                 <div>
                   <div
-                    className="font-bold text-sm"
-                    style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
+                    className="font-bold text-sm text-[#232019]"
                   >
                     {profile?.display_name}
                   </div>
-                  <div className="text-xs flex items-center gap-1.5" style={{ color: '#F59E0B' }}>
+                  <div className="text-xs flex items-center gap-1.5 font-semibold text-amber-600">
                     <span>Level {profile?.level}</span>
                     <span>·</span>
                     <span className="flex items-center gap-0.5"><Flame size={12} /> {profile?.streak ?? 0}d streak</span>
@@ -268,19 +257,18 @@ export default function CoachPage() {
                 {statEntries.map((s) => (
                   <div
                     key={s.label}
-                    className="rounded-lg p-2 text-center"
-                    style={{ background: '#0F0F1A' }}
+                    className="rounded-xl p-2 text-center bg-white border border-[#EAE6DD] shadow-2xs"
                   >
                     <div className="w-5 h-5 mx-auto mb-1 flex items-center justify-center" style={{ color: s.color }}>
                       <s.Icon size={14} />
                     </div>
                     <div
                       className="text-sm font-bold"
-                      style={{ fontFamily: 'Oxanium, sans-serif', color: s.color }}
+                      style={{ color: s.color }}
                     >
                       {s.val}
                     </div>
-                    <div className="text-xs" style={{ color: '#5C5A7A' }}>
+                    <div className="text-2xs font-semibold text-[#8A857A]">
                       {s.label}
                     </div>
                   </div>
@@ -292,8 +280,7 @@ export default function CoachPage() {
           {/* Suggested questions */}
           <div>
             <div
-              className="text-xs font-bold uppercase tracking-wider mb-3"
-              style={{ color: '#5C5A7A' }}
+              className="text-xs font-bold uppercase tracking-wider mb-3 text-[#8A857A]"
             >
               Suggested Questions
             </div>
@@ -303,22 +290,9 @@ export default function CoachPage() {
                   key={q.text}
                   onClick={() => sendMessage(q.text)}
                   disabled={isStreaming}
-                  className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 flex items-start gap-2.5"
-                  style={{
-                    background: '#13131F',
-                    color: '#9B99B8',
-                    border: '1px solid #1E1E35',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#7C3AED44'
-                    e.currentTarget.style.color = '#F1F0FF'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#1E1E35'
-                    e.currentTarget.style.color = '#9B99B8'
-                  }}
+                  className="w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 flex items-start gap-2.5 bg-white text-[#6E6A61] border border-[#EAE6DD] hover:border-[#5B57F0] hover:text-[#5B57F0] shadow-2xs cursor-pointer"
                 >
-                  <div className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#7C3AED' }}>
+                  <div className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#5B57F0]">
                     <q.Icon size={14} />
                   </div>
                   <span>{q.text}</span>
@@ -337,16 +311,7 @@ export default function CoachPage() {
                 },
               ])
             }
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-150 mt-auto"
-            style={{ color: '#5C5A7A', border: '1px solid #1E1E35' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#EF444411'
-              e.currentTarget.style.color = '#EF4444'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'transparent'
-              e.currentTarget.style.color = '#5C5A7A'
-            }}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 mt-auto text-[#8A857A] border border-[#EAE6DD] hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 cursor-pointer"
           >
             <Trash2 size={13} />
             Clear conversation
@@ -354,28 +319,25 @@ export default function CoachPage() {
         </div>
 
         {/* Main chat */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden bg-[#FBFAF7]">
           {/* Chat top bar */}
           <div
-            className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0"
-            style={{ borderColor: '#1E1E35', background: '#0A0A14' }}
+            className="flex items-center justify-between px-6 py-4 border-b border-[#EAE6DD] bg-white flex-shrink-0"
           >
             <div className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0 bg-purple-50 border border-purple-200 text-[#5B57F0]"
               >
                 <Bot size={20} />
               </div>
               <div>
                 <h1
-                  className="text-lg font-bold"
-                  style={{ fontFamily: 'Oxanium, sans-serif', color: '#F1F0FF' }}
+                  className="text-lg font-bold text-[#232019]"
                 >
                   AI Coach
                 </h1>
-                <p className="text-xs" style={{ color: '#5C5A7A' }}>
-                  {habits.length} active quests · powered by Claude
+                <p className="text-xs text-[#6E6A61]">
+                  {habits.length} active quests · tactical advisory
                 </p>
               </div>
             </div>
@@ -384,12 +346,7 @@ export default function CoachPage() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={generateWeeklyReport}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-              style={{
-                background: '#1A1A2E',
-                color: '#9F67FF',
-                border: '1px solid #7C3AED44',
-              }}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-purple-50 text-[#5B57F0] border border-purple-200 hover:bg-[#5B57F0] hover:text-white cursor-pointer shadow-xs"
             >
               <BarChart2 size={15} />
               Weekly Report
@@ -413,14 +370,12 @@ export default function CoachPage() {
                 style={{ maxWidth: '75%' }}
               >
                 <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
-                  style={{ background: '#7C3AED22', border: '1px solid #7C3AED44' }}
+                  className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0 bg-purple-50 border border-purple-200 text-[#5B57F0]"
                 >
-                  <Bot size={18} className="text-purple-400" />
+                  <Bot size={18} className="text-[#5B57F0]" />
                 </div>
                 <div
-                  className="rounded-2xl rounded-tl-sm"
-                  style={{ background: '#1A1A2E', borderLeft: '2px solid #7C3AED' }}
+                  className="rounded-2xl rounded-tl-sm bg-white border border-[#EAE6DD] border-l-4 border-l-[#5B57F0] shadow-sm"
                 >
                   <TypingIndicator />
                 </div>
@@ -431,12 +386,10 @@ export default function CoachPage() {
 
           {/* Input */}
           <div
-            className="px-6 py-4 border-t flex-shrink-0"
-            style={{ borderColor: '#1E1E35', background: '#0A0A14' }}
+            className="px-6 py-4 border-t border-[#EAE6DD] bg-white flex-shrink-0"
           >
             <div
-              className="flex items-end gap-3 rounded-2xl px-4 py-3 transition-all"
-              style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+              className="flex items-end gap-3 rounded-2xl px-4 py-3 bg-[#FAF8F5] border border-[#EAE6DD] transition-all focus-within:border-[#5B57F0] focus-within:bg-white focus-within:shadow-sm"
             >
               <textarea
                 ref={textareaRef}
@@ -445,31 +398,31 @@ export default function CoachPage() {
                 onKeyDown={handleKeyDown}
                 placeholder="Ask your coach anything… (Enter to send, Shift+Enter for new line)"
                 rows={1}
-                className="flex-1 bg-transparent outline-none resize-none text-sm"
-                style={{ color: '#F1F0FF', maxHeight: 120 }}
+                className="flex-1 bg-transparent outline-none resize-none text-sm text-[#232019] placeholder:text-[#8A857A]"
+                style={{ maxHeight: 120 }}
                 disabled={isStreaming}
               />
               {input.length > 200 && (
-                <span className="text-xs flex-shrink-0 mb-1" style={{ color: '#5C5A7A' }}>
+                <span className="text-xs flex-shrink-0 mb-1 text-[#8A857A]">
                   {input.length}
                 </span>
               )}
               <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => sendMessage()}
                 disabled={!input.trim() || isStreaming}
-                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all"
-                style={{
-                  background: input.trim() && !isStreaming ? '#7C3AED' : '#1E1E35',
-                  color: input.trim() && !isStreaming ? '#F1F0FF' : '#5C5A7A',
-                }}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
+                  input.trim() && !isStreaming
+                    ? 'bg-[#5B57F0] text-white shadow-sm cursor-pointer'
+                    : 'bg-[#EAE6DD] text-[#8A857A] cursor-not-allowed'
+                }`}
               >
                 <Send size={15} />
               </motion.button>
             </div>
-            <p className="text-xs text-center mt-2" style={{ color: '#2E2E50' }}>
-              AI Coach uses Claude claude-sonnet-4-6 · Responses reference your actual game data
+            <p className="text-xs text-center mt-2 text-[#8A857A]">
+              AI Coach provides tactical daily & weekly optimization for your character
             </p>
           </div>
         </div>

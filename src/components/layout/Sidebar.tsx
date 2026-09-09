@@ -12,7 +12,7 @@ import {
   Bot,
   LogOut,
   Settings,
-  Swords,
+  Leaf,
   UserCircle2,
   BookOpen,
   Timer,
@@ -89,11 +89,11 @@ export default function Sidebar({
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
-              background: 'linear-gradient(135deg, #5B57F0 0%, #4338CA 100%)',
-              boxShadow: '0 4px 12px rgba(91, 87, 240, 0.28)',
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.28)',
             }}
           >
-            <Swords size={18} color="#FFFFFF" />
+            <Leaf size={18} color="#FFFFFF" />
           </div>
           <div>
             <span
@@ -178,7 +178,7 @@ export default function Sidebar({
             {userAvatar && isEmoji(userAvatar) ? (
               <span className="text-lg leading-none">{userAvatar}</span>
             ) : (
-              <Swords size={18} color="#5B57F0" />
+              <Leaf size={18} color="#10B981" />
             )}
           </div>
           <div className="flex-1 min-w-0">

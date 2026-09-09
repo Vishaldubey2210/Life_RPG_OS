@@ -57,30 +57,29 @@ function weekProgress(): number {
 }
 
 function getRankStyle(rank: number): { bg: string; color: string; content: React.ReactNode } {
-  if (rank === 1) return { bg: '#F59E0B22', color: '#F59E0B', content: <Crown size={18} /> }
-  if (rank === 2) return { bg: '#9CA3AF22', color: '#9CA3AF', content: <Medal size={18} /> }
-  if (rank === 3) return { bg: '#B45309AA', color: '#B45309', content: <Medal size={18} /> }
-  if (rank <= 10) return { bg: '#7C3AED22', color: '#9F67FF', content: `#${rank}` }
-  return { bg: '#1E1E35', color: '#9B99B8', content: `#${rank}` }
+  if (rank === 1) return { bg: '#FEF3C7', color: '#D97706', content: <Crown size={18} /> }
+  if (rank === 2) return { bg: '#F3F4F6', color: '#4B5563', content: <Medal size={18} /> }
+  if (rank === 3) return { bg: '#FFEDD5', color: '#C2410C', content: <Medal size={18} /> }
+  if (rank <= 10) return { bg: '#EDECFD', color: '#5B57F0', content: `#${rank}` }
+  return { bg: '#FAF8F5', color: '#8A857A', content: `#${rank}` }
 }
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
 function LeaderboardSkeleton() {
   return (
-    <div className="space-y-2 animate-pulse">
+    <div className="space-y-2.5 animate-pulse">
       {[...Array(8)].map((_, i) => (
         <div
           key={i}
-          className="flex items-center gap-4 p-4 rounded-xl"
-          style={{ background: '#13131F', opacity: 1 - i * 0.08 }}
+          className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#EAE6DD]"
         >
-          <div className="w-10 h-10 rounded-xl" style={{ background: '#1E1E35' }} />
+          <div className="w-10 h-10 rounded-xl bg-[#FAF8F5]" />
           <div className="flex-1 space-y-2">
-            <div className="h-4 rounded w-32" style={{ background: '#1E1E35' }} />
-            <div className="h-3 rounded w-20" style={{ background: '#1E1E35' }} />
+            <div className="h-4 rounded w-32 bg-[#FAF8F5]" />
+            <div className="h-3 rounded w-20 bg-[#FAF8F5]" />
           </div>
-          <div className="w-16 h-4 rounded" style={{ background: '#1E1E35' }} />
+          <div className="w-16 h-4 rounded bg-[#FAF8F5]" />
         </div>
       ))}
     </div>
@@ -100,11 +99,11 @@ function Podium({ entries }: { entries: LeaderboardEntry[] }) {
 
   const heights = ['80px', '110px', '60px']
   const icons = [
-    <Medal key="silver" size={24} style={{ color: '#9CA3AF' }} />,
-    <Crown key="gold" size={28} style={{ color: '#F59E0B' }} />,
-    <Medal key="bronze" size={22} style={{ color: '#B45309' }} />,
+    <Medal key="silver" size={24} className="text-slate-400" />,
+    <Crown key="gold" size={28} className="text-amber-500" />,
+    <Medal key="bronze" size={22} className="text-amber-700" />,
   ]
-  const glows = ['#9CA3AF', '#F59E0B', '#B45309']
+  const colors = ['#64748B', '#D97706', '#C2410C']
   const rankNums = [2, 1, 3]
 
   return (
@@ -123,37 +122,28 @@ function Podium({ entries }: { entries: LeaderboardEntry[] }) {
             {/* Crown & Avatar */}
             <div className="mb-2 flex items-center justify-center">{icons[i]}</div>
             <div
-              className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 ${isFirst ? 'w-14 h-14' : ''}`}
+              className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 bg-white border border-[#EAE6DD] shadow-sm ${isFirst ? 'w-14 h-14 ring-2 ring-amber-400/30 shadow-md' : ''}`}
               style={{
-                background: `${glows[i]}15`,
-                border: `1px solid ${glows[i]}33`,
-                color: glows[i],
-                filter: isFirst ? `drop-shadow(0 0 12px ${glows[i]}88)` : undefined,
+                color: colors[i],
               }}
             >
               <DynamicIcon name={entry.avatar_emoji} size={isFirst ? 30 : 24} />
             </div>
             <div
-              className="text-xs font-semibold truncate w-full text-center mb-1"
-              style={{ color: '#F1F0FF', fontFamily: 'Oxanium, sans-serif' }}
+              className="text-xs font-bold truncate w-full text-center mb-1 text-[#232019]"
             >
               {entry.display_name}
             </div>
-            <div className="text-xs mb-2 flex items-center gap-1 font-bold" style={{ color: glows[i], fontFamily: 'Oxanium, sans-serif' }}>
+            <div className="text-xs mb-2 flex items-center gap-1 font-bold" style={{ color: colors[i] }}>
               <Zap size={11} /> {entry.xp_earned} XP
             </div>
 
             {/* Podium platform */}
             <div
-              className="w-full rounded-t-xl flex items-center justify-center font-bold text-2xl"
+              className="w-full rounded-t-2xl flex items-center justify-center font-extrabold text-2xl bg-white border border-[#EAE6DD] shadow-xs"
               style={{
                 height: heights[i],
-                background: `linear-gradient(180deg, ${glows[i]}33, ${glows[i]}11)`,
-                border: `1px solid ${glows[i]}44`,
-                borderBottom: 'none',
-                fontFamily: 'Oxanium, sans-serif',
-                color: glows[i],
-                boxShadow: isFirst ? `0 0 30px ${glows[i]}33` : undefined,
+                color: colors[i],
               }}
             >
               #{rankNums[i]}
@@ -184,17 +174,16 @@ function LeaderboardRow({
       initial={{ opacity: 0, x: -12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: Math.min(entry.rank * 0.04, 0.4) }}
-      className="flex items-center gap-4 p-4 rounded-xl transition-all duration-200"
-      style={{
-        background: isCurrentUser ? '#7C3AED22' : '#13131F',
-        border: `1px solid ${isCurrentUser ? '#7C3AED44' : '#1E1E35'}`,
-        boxShadow: isCurrentUser ? '0 0 20px #7C3AED11' : 'none',
-      }}
+      className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 shadow-xs border ${
+        isCurrentUser
+          ? 'bg-purple-50/70 border-[#5B57F0]/40 ring-2 ring-[#5B57F0]/10'
+          : 'bg-white border-[#EAE6DD] hover:bg-[#FAF8F5]'
+      }`}
     >
       {/* Rank Badge */}
       <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0"
-        style={{ background: bg, color, fontFamily: 'Oxanium, sans-serif', fontSize: entry.rank > 9 ? 11 : 14 }}
+        className="w-10 h-10 rounded-xl flex items-center justify-center font-bold flex-shrink-0 shadow-2xs border border-[#EAE6DD]/50"
+        style={{ background: bg, color, fontSize: entry.rank > 9 ? 12 : 14 }}
       >
         {content}
       </div>
@@ -202,39 +191,37 @@ function LeaderboardRow({
       {/* Avatar + Name */}
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: '#7C3AED15', border: '1px solid #7C3AED33', color: '#9F67FF' }}
+          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-purple-50 border border-purple-200 text-[#5B57F0] shadow-2xs"
         >
           <DynamicIcon name={entry.avatar_emoji} size={20} />
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold truncate" style={{ color: '#F1F0FF' }}>
+            <span className="text-sm font-bold text-[#232019] truncate">
               {entry.display_name}
             </span>
             {isCurrentUser && (
               <span
-                className="text-xs px-1.5 py-0.5 rounded flex-shrink-0"
-                style={{ background: '#7C3AED33', color: '#9F67FF', fontFamily: 'Oxanium, sans-serif' }}
+                className="text-2xs px-1.5 py-0.5 rounded-md font-bold bg-[#EDECFD] text-[#5B57F0] flex-shrink-0"
               >
                 You
               </span>
             )}
           </div>
-          <div className="text-xs" style={{ color: '#9B99B8' }}>Level {entry.level}</div>
+          <div className="text-xs text-[#6E6A61]">Level {entry.level}</div>
         </div>
       </div>
 
       {/* XP Bar + Number */}
       <div className="hidden md:flex flex-col gap-1 min-w-[120px]">
-        <div className="flex justify-between text-xs mb-0.5">
-          <span style={{ color: '#9B99B8' }}>XP</span>
-          <span style={{ color: '#9F67FF', fontFamily: 'Oxanium, sans-serif' }}>{entry.xp_earned}</span>
+        <div className="flex justify-between text-xs mb-0.5 font-semibold">
+          <span className="text-[#8A857A]">XP</span>
+          <span className="text-[#5B57F0]">{entry.xp_earned}</span>
         </div>
-        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
+        <div className="h-1.5 rounded-full overflow-hidden bg-[#FAF8F5] border border-[#EAE6DD]">
           <motion.div
-            className="h-full rounded-full"
-            style={{ background: 'linear-gradient(90deg, #7C3AED, #9F67FF)', width: `${pct}%` }}
+            className="h-full rounded-full bg-gradient-to-r from-[#5B57F0] to-[#8B5CF6]"
+            style={{ width: `${pct}%` }}
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
             transition={{ duration: 0.6 }}
@@ -244,19 +231,19 @@ function LeaderboardRow({
 
       {/* Quests */}
       <div className="hidden sm:block text-center min-w-[60px]">
-        <div className="text-sm font-bold" style={{ color: '#22C55E', fontFamily: 'Oxanium, sans-serif' }}>
+        <div className="text-sm font-bold text-emerald-600">
           {entry.quests_completed}
         </div>
-        <div className="text-xs" style={{ color: '#5C5A7A' }}>quests</div>
+        <div className="text-2xs text-[#8A857A]">quests</div>
       </div>
 
       {/* Streak */}
       <div className="text-center min-w-[50px] flex-shrink-0">
-        <div className="text-sm font-bold flex items-center justify-center gap-1" style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}>
-          <Flame size={13} style={{ color: '#F59E0B' }} />
+        <div className="text-sm font-bold flex items-center justify-center gap-1 text-amber-600">
+          <Flame size={13} className="text-amber-500" />
           <span>{entry.streak}</span>
         </div>
-        <div className="text-xs" style={{ color: '#5C5A7A' }}>streak</div>
+        <div className="text-2xs text-[#8A857A]">streak</div>
       </div>
     </motion.div>
   )
@@ -487,14 +474,14 @@ export default function LeaderboardPage() {
   const pageLoading = profileLoading || loading
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? 'swords'}
+        userAvatar={profile?.avatar_emoji ?? 'leaf'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
       <TopNav
-        userAvatar={profile?.avatar_emoji ?? 'swords'}
+        userAvatar={profile?.avatar_emoji ?? 'leaf'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -506,47 +493,37 @@ export default function LeaderboardPage() {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold mb-1 font-display flex items-center gap-3" style={{ color: '#F1F0FF' }}>
+            <h1 className="text-3xl font-bold mb-1 flex items-center gap-3 text-[#232019]">
               <span>Leaderboard</span>
-              <Trophy className="w-8 h-8 text-amber-400 inline" />
+              <Trophy className="w-8 h-8 text-amber-500 inline" />
             </h1>
-            <p style={{ color: '#9B99B8' }}>See how you rank against other adventurers this week</p>
+            <p className="text-sm text-[#6E6A61]">See how you rank against other adventurers this week</p>
           </div>
 
           {/* Season Banner */}
           <motion.div
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-5 rounded-2xl mb-6 relative overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, #1A0A0A, #1A1025, #0A1A1A)',
-              border: '1px solid #F59E0B33',
-            }}
+            className="p-5 rounded-2xl mb-6 relative overflow-hidden bg-gradient-to-r from-amber-50/80 via-orange-50/50 to-purple-50/50 border border-amber-200 shadow-sm"
           >
-            <div
-              className="absolute top-0 right-0 w-48 h-48 rounded-full opacity-5 blur-3xl pointer-events-none"
-              style={{ background: '#F59E0B' }}
-            />
             <div className="relative flex flex-col md:flex-row md:items-center gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
-                  <Swords size={16} style={{ color: '#F59E0B' }} />
+                  <Swords size={16} className="text-amber-600" />
                   <span
-                    className="text-xs font-bold"
-                    style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}
+                    className="text-xs font-bold text-amber-700 uppercase tracking-wider"
                   >
                     SEASON {CURRENT_SEASON.number}: {CURRENT_SEASON.name.toUpperCase()}
                   </span>
                 </div>
-                <div className="text-sm mb-2" style={{ color: '#9B99B8' }}>
+                <div className="text-sm mb-2 text-[#6E6A61]">
                   Top 3 players this season win exclusive rewards
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {CURRENT_SEASON.rewards.map(r => (
                     <span
                       key={r}
-                      className="text-xs px-2 py-1 rounded-full"
-                      style={{ background: '#F59E0B22', color: '#F59E0B' }}
+                      className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-amber-100 text-amber-800 border border-amber-200"
                     >
                       {r}
                     </span>
@@ -555,24 +532,22 @@ export default function LeaderboardPage() {
               </div>
 
               <div className="flex flex-col items-center gap-1 flex-shrink-0">
-                <div className="flex items-center gap-2 text-sm" style={{ color: '#9B99B8' }}>
+                <div className="flex items-center gap-2 text-xs font-medium text-[#6E6A61]">
                   <Clock size={14} />
                   <span>Season ends in</span>
                 </div>
                 <div
-                  className="text-3xl font-bold"
-                  style={{ color: '#F59E0B', fontFamily: 'Oxanium, sans-serif' }}
+                  className="text-3xl font-extrabold text-amber-600"
                 >
                   {daysLeft}
                 </div>
-                <div className="text-xs" style={{ color: '#5C5A7A' }}>days remaining</div>
+                <div className="text-2xs text-[#8A857A]">days remaining</div>
 
                 {/* Season progress */}
-                <div className="w-32 h-1.5 rounded-full overflow-hidden mt-1" style={{ background: '#1E1E35' }}>
+                <div className="w-32 h-1.5 rounded-full overflow-hidden mt-1 bg-white border border-amber-200">
                   <div
-                    className="h-full rounded-full"
+                    className="h-full rounded-full bg-gradient-to-r from-amber-500 to-rose-500"
                     style={{
-                      background: 'linear-gradient(90deg, #F59E0B, #EF4444)',
                       width: `${weekProgress()}%`,
                     }}
                   />
@@ -591,13 +566,11 @@ export default function LeaderboardPage() {
               <button
                 key={key}
                 onClick={() => setTab(key as 'global' | 'friends' | 'guild')}
-                className="px-5 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
-                style={{
-                  background: tab === key ? '#7C3AED' : '#13131F',
-                  color: tab === key ? '#fff' : '#9B99B8',
-                  border: `1px solid ${tab === key ? '#7C3AED' : '#1E1E35'}`,
-                  fontFamily: 'Oxanium, sans-serif',
-                }}
+                className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-2xs border ${
+                  tab === key
+                    ? 'bg-[#5B57F0] text-white border-[#5B57F0]'
+                    : 'bg-white text-[#6E6A61] border-[#EAE6DD] hover:bg-[#FAF8F5]'
+                }`}
               >
                 <TabIcon size={16} />
                 <span>{label}</span>
@@ -636,16 +609,10 @@ export default function LeaderboardPage() {
                     {/* Sticky current user (if not in top 50) */}
                     {!userInTop50 && currentUserEntry && (
                       <div
-                        className="mt-4 rounded-xl overflow-hidden"
-                        style={{ border: '2px solid #7C3AED44' }}
+                        className="mt-4 rounded-2xl overflow-hidden border-2 border-[#5B57F0]/40 shadow-sm"
                       >
                         <div
-                          className="text-xs px-4 py-1.5 font-semibold"
-                          style={{
-                            background: '#7C3AED22',
-                            color: '#9F67FF',
-                            fontFamily: 'Oxanium, sans-serif',
-                          }}
+                          className="text-xs px-4 py-1.5 font-bold bg-[#EDECFD] text-[#5B57F0]"
                         >
                           Your Position
                         </div>
@@ -660,12 +627,12 @@ export default function LeaderboardPage() {
                     {globalEntries.length === 0 && (
                       <div className="text-center py-16">
                         <div className="flex justify-center mb-4">
-                          <Trophy className="w-12 h-12 text-slate-600" />
+                          <Trophy className="w-12 h-12 text-[#8A857A]" />
                         </div>
-                        <h3 className="font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
+                        <h3 className="font-bold mb-1 text-[#232019]">
                           No rankings yet
                         </h3>
-                        <p className="text-sm" style={{ color: '#9B99B8' }}>
+                        <p className="text-sm text-[#6E6A61]">
                           Complete some quests to appear on the leaderboard!
                         </p>
                       </div>
@@ -687,23 +654,17 @@ export default function LeaderboardPage() {
                 ) : friendEntries.length === 0 ? (
                   <div className="text-center py-16">
                     <div className="flex justify-center mb-4">
-                      <Users className="w-12 h-12 text-slate-600" />
+                      <Users className="w-12 h-12 text-[#8A857A]" />
                     </div>
-                    <h3 className="font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>
+                    <h3 className="font-bold mb-2 text-[#232019]">
                       No friends to compete with yet
                     </h3>
-                    <p className="text-sm mb-6" style={{ color: '#9B99B8' }}>
+                    <p className="text-sm mb-6 text-[#6E6A61]">
                       Join or create a party to compete with friends
                     </p>
                     <Link
                       href="/party"
-                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all"
-                      style={{
-                        background: '#7C3AED',
-                        color: '#fff',
-                        fontFamily: 'Oxanium, sans-serif',
-                        boxShadow: '0 0 20px #7C3AED44',
-                      }}
+                      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all bg-[#5B57F0] text-white hover:bg-[#4F46E5] shadow-xs cursor-pointer"
                     >
                       <Users size={16} />
                       <span>Go to Party</span>
@@ -740,12 +701,11 @@ export default function LeaderboardPage() {
                     <button
                       key={key}
                       onClick={() => setGuildSubTab(key as 'guilds' | 'my_guild')}
-                      className="px-4 py-1.5 rounded-lg text-sm font-medium transition-all"
-                      style={{
-                        background: guildSubTab === key ? '#1E1E35' : 'transparent',
-                        color: guildSubTab === key ? '#F1F0FF' : '#9B99B8',
-                        border: `1px solid ${guildSubTab === key ? '#2E2E50' : 'transparent'}`,
-                      }}
+                      className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                        guildSubTab === key
+                          ? 'bg-purple-50 text-[#5B57F0] border border-purple-200'
+                          : 'text-[#6E6A61] hover:bg-[#FAF8F5]'
+                      }`}
                     >
                       {label}
                     </button>
@@ -759,9 +719,9 @@ export default function LeaderboardPage() {
                     {guilds.length === 0 ? (
                       <div className="text-center py-12">
                         <div className="flex justify-center mb-4">
-                          <Shield className="w-12 h-12 text-slate-600" />
+                          <Shield className="w-12 h-12 text-[#8A857A]" />
                         </div>
-                        <p className="text-sm" style={{ color: '#9B99B8' }}>No guilds yet. Create one in the party page!</p>
+                        <p className="text-sm text-[#6E6A61]">No guilds yet. Create one in the party page!</p>
                       </div>
                     ) : (
                       guilds.map((guild, i) => (
@@ -770,41 +730,37 @@ export default function LeaderboardPage() {
                           initial={{ opacity: 0, x: -12 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className="flex items-center gap-4 p-4 rounded-xl"
-                          style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+                          className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#EAE6DD] shadow-xs"
                         >
                           <div
                             className="w-10 h-10 rounded-xl flex items-center justify-center font-bold"
                             style={{
-                              background: i === 0 ? '#F59E0B22' : i === 1 ? '#9CA3AF22' : '#1E1E35',
-                              color: i === 0 ? '#F59E0B' : i === 1 ? '#9CA3AF' : '#9B99B8',
-                              fontFamily: 'Oxanium, sans-serif',
+                              background: i === 0 ? '#FEF3C7' : i === 1 ? '#F3F4F6' : '#FAF8F5',
+                              color: i === 0 ? '#D97706' : i === 1 ? '#4B5563' : '#8A857A',
                             }}
                           >
                             #{i + 1}
                           </div>
                           <div
-                            className="w-9 h-9 rounded-xl flex items-center justify-center"
-                            style={{ background: '#7C3AED15', border: '1px solid #7C3AED33', color: '#9F67FF' }}
+                            className="w-9 h-9 rounded-xl flex items-center justify-center bg-purple-50 border border-purple-200 text-[#5B57F0]"
                           >
                             <DynamicIcon name={guild.emoji || 'shield'} size={18} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="font-semibold truncate" style={{ color: '#F1F0FF' }}>
+                            <div className="font-bold text-[#232019] truncate">
                               {guild.name}
                             </div>
-                            <div className="text-xs" style={{ color: '#9B99B8' }}>
+                            <div className="text-xs text-[#6E6A61]">
                               {guild.member_count} members
                             </div>
                           </div>
                           <div className="text-right">
                             <div
-                              className="font-bold text-sm flex items-center justify-end gap-1"
-                              style={{ color: '#9F67FF', fontFamily: 'Oxanium, sans-serif' }}
+                              className="font-bold text-sm flex items-center justify-end gap-1 text-[#5B57F0]"
                             >
                               <Zap size={12} /> {guild.total_xp}
                             </div>
-                            <div className="text-xs" style={{ color: '#5C5A7A' }}>Total XP</div>
+                            <div className="text-2xs text-[#8A857A]">Total XP</div>
                           </div>
                         </motion.div>
                       ))
@@ -815,13 +771,13 @@ export default function LeaderboardPage() {
                     {myGuildEntries.length === 0 ? (
                       <div className="text-center py-12">
                         <div className="flex justify-center mb-4">
-                          <Shield className="w-12 h-12 text-slate-600" />
+                          <Shield className="w-12 h-12 text-[#8A857A]" />
                         </div>
-                        <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
+                        <p className="text-sm mb-4 text-[#6E6A61]">
                           You&apos;re not in a guild yet.
                         </p>
-                        <Flame size={16} style={{ color: '#EF4444', display: 'inline' }} />
-                        <span className="text-sm ml-1" style={{ color: '#5C5A7A' }}>
+                        <Flame size={16} className="text-rose-500 inline" />
+                        <span className="text-sm ml-1 text-[#8A857A]">
                           Guild system coming soon — ask the party leader to create one!
                         </span>
                       </div>

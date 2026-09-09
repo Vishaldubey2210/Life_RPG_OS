@@ -445,20 +445,20 @@ export default function TemplatesPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#08080F]">
-      <Sidebar />
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
+      <Sidebar userAvatar={profile?.avatar_emoji ?? 'leaf'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
 
       <main className="flex-1 md:ml-60 p-4 md:p-8 max-w-7xl mx-auto pb-24">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400 font-display mb-2">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5B57F0] mb-2">
             <Package size={14} />
             <span>Habit Marketplace</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-white font-display tracking-tight">
+          <h1 className="text-3xl font-extrabold text-[#232019] tracking-tight">
             Curated Quest Packs
           </h1>
-          <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+          <p className="text-sm text-[#6E6A61] mt-1 max-w-2xl">
             Battle-tested habit systems designed for peak performance, stoic balance, and accelerated character growth. Install with one click.
           </p>
         </div>
@@ -471,13 +471,11 @@ export default function TemplatesPage() {
               <button
                 key={tab.key}
                 onClick={() => setSelectedCategory(tab.key)}
-                className="px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 font-display"
-                style={{
-                  background: active ? '#7C3AED' : '#13131F',
-                  color: active ? '#fff' : '#9B99B8',
-                  border: `1px solid ${active ? '#7C3AED' : '#1E1E35'}`,
-                  boxShadow: active ? '0 0 15px rgba(124,58,237,0.3)' : 'none',
-                }}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-2xs border ${
+                  active
+                    ? 'bg-[#5B57F0] text-white border-[#5B57F0]'
+                    : 'bg-white text-[#6E6A61] border-[#EAE6DD] hover:bg-[#FAF8F5]'
+                }`}
               >
                 {tab.label}
               </button>
@@ -496,25 +494,15 @@ export default function TemplatesPage() {
                 key={pack.id}
                 id={pack.id}
                 whileHover={{ y: -4, transition: { duration: 0.15 } }}
-                className="rounded-2xl border p-5 flex flex-col justify-between relative overflow-hidden transition-all duration-200"
-                style={{
-                  background: '#13131F',
-                  borderColor: '#1E1E35',
-                }}
+                className="rounded-2xl border border-[#EAE6DD] p-5 flex flex-col justify-between relative overflow-hidden transition-all duration-200 bg-white shadow-sm hover:shadow-md"
               >
-                {/* Glow pill */}
-                <div
-                  className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl pointer-events-none opacity-15"
-                  style={{ background: pack.color }}
-                />
-
                 <div>
                   <div className="flex items-start justify-between mb-3">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-2xs"
                       style={{
-                        background: `${pack.color}18`,
-                        border: `1px solid ${pack.color}33`,
+                        background: `${pack.color}15`,
+                        border: `1.5px solid ${pack.color}33`,
                         color: pack.color,
                       }}
                     >
@@ -523,49 +511,48 @@ export default function TemplatesPage() {
 
                     <button
                       onClick={() => handleShare(pack)}
-                      className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                      className="p-2 rounded-lg text-[#8A857A] hover:text-[#232019] hover:bg-[#FAF8F5] transition-colors cursor-pointer"
                       title="Share pack"
                     >
                       <Share2 size={16} />
                     </button>
                   </div>
 
-                  <h3 className="text-lg font-bold text-white font-display mb-1.5">
+                  <h3 className="text-lg font-bold text-[#232019] mb-1.5">
                     {pack.name}
                   </h3>
-                  <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">
+                  <p className="text-xs text-[#6E6A61] line-clamp-2 mb-4 leading-relaxed">
                     {pack.description}
                   </p>
 
                   <div className="flex items-center gap-2 mb-4 flex-wrap">
-                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20 font-display flex items-center gap-1">
-                      <Zap size={11} /> {totalXP} XP/day
+                    <span className="text-2xs font-bold px-2 py-0.5 rounded-md bg-purple-50 text-[#5B57F0] border border-purple-200 flex items-center gap-1">
+                      <Zap size={10} /> {totalXP} XP/day
                     </span>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-slate-800 text-slate-300">
+                    <span className="text-2xs font-semibold px-2 py-0.5 rounded-md bg-[#FAF8F5] border border-[#EAE6DD] text-[#6E6A61]">
                       {pack.habits.length} Quests
                     </span>
-                    <span className="text-xs font-medium px-2 py-0.5 rounded-md bg-slate-800 text-slate-400">
+                    <span className="text-2xs font-semibold px-2 py-0.5 rounded-md bg-[#FAF8F5] border border-[#EAE6DD] text-[#8A857A]">
                       {pack.downloads} uses
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800/80 flex items-center gap-2">
+                <div className="pt-4 border-t border-[#EAE6DD] flex items-center gap-2">
                   <button
                     onClick={() => setActivePack(pack)}
-                    className="flex-1 py-2.5 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-white transition-colors"
+                    className="flex-1 py-2.5 rounded-xl text-xs font-semibold bg-[#FAF8F5] border border-[#EAE6DD] hover:bg-[#EAE6DD]/50 text-[#232019] transition-colors cursor-pointer"
                   >
                     View Quests
                   </button>
                   <button
                     onClick={() => handleInstallPack(pack)}
                     disabled={isInstalled}
-                    className="flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all font-display"
-                    style={{
-                      background: isInstalled ? '#22C55E22' : '#7C3AED',
-                      color: isInstalled ? '#22C55E' : '#fff',
-                      border: isInstalled ? '1px solid #22C55E44' : 'none',
-                    }}
+                    className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs ${
+                      isInstalled
+                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 cursor-default'
+                        : 'bg-[#5B57F0] text-white hover:bg-[#4F46E5] cursor-pointer'
+                    }`}
                   >
                     {isInstalled ? (
                       <>
@@ -586,19 +573,19 @@ export default function TemplatesPage() {
         {/* Pack Details Modal */}
         <AnimatePresence>
           {activePack && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="w-full max-w-xl rounded-2xl border border-slate-700 bg-[#13131F] p-6 shadow-2xl max-h-[85vh] flex flex-col"
+                className="w-full max-w-xl rounded-3xl border border-[#EAE6DD] bg-white p-6 shadow-2xl max-h-[85vh] flex flex-col"
               >
-                <div className="flex items-start justify-between pb-4 border-b border-slate-800">
+                <div className="flex items-start justify-between pb-4 border-b border-[#EAE6DD]">
                   <div className="flex items-center gap-3">
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center"
                       style={{
-                        background: `${activePack.color}18`,
+                        background: `${activePack.color}15`,
                         border: `1px solid ${activePack.color}33`,
                         color: activePack.color,
                       }}
@@ -606,24 +593,24 @@ export default function TemplatesPage() {
                       <DynamicIcon name={activePack.emoji} size={22} />
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-white font-display">
+                      <h2 className="text-xl font-bold text-[#232019]">
                         {activePack.name}
                       </h2>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-[#6E6A61] mt-0.5">
                         {activePack.description}
                       </p>
                     </div>
                   </div>
                   <button
                     onClick={() => setActivePack(null)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                    className="p-1.5 rounded-lg text-[#8A857A] hover:text-[#232019] hover:bg-[#FAF8F5] cursor-pointer"
                   >
                     <X size={18} />
                   </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto py-4 space-y-3">
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 font-display">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#8A857A]">
                     Included Daily Quests ({activePack.habits.length})
                   </p>
                   {activePack.habits.map((habit, idx) => {
@@ -631,18 +618,18 @@ export default function TemplatesPage() {
                     return (
                       <div
                         key={idx}
-                        className="p-3.5 rounded-xl border border-slate-800 bg-[#0F0F1A] flex items-center justify-between gap-3"
+                        className="p-3.5 rounded-xl border border-[#EAE6DD] bg-[#FAF8F5] flex items-center justify-between gap-3 shadow-2xs"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center flex-shrink-0">
+                          <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#5B57F0] flex items-center justify-center flex-shrink-0">
                             <StatIcon size={16} />
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-white truncate">
+                            <p className="text-sm font-bold text-[#232019] truncate">
                               {habit.name}
                             </p>
-                            <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
-                              <span className="capitalize px-1.5 py-0.2 rounded bg-slate-800 text-slate-300">
+                            <div className="flex items-center gap-2 mt-1 text-[11px] text-[#6E6A61]">
+                              <span className="capitalize px-1.5 py-0.5 rounded bg-white border border-[#EAE6DD] text-[#232019] font-medium">
                                 {habit.difficulty}
                               </span>
                               {habit.duration > 0 && (
@@ -651,7 +638,7 @@ export default function TemplatesPage() {
                                 </span>
                               )}
                               {habit.scheduled_time && (
-                                <span className="text-amber-400">
+                                <span className="text-amber-600 font-semibold">
                                   @{habit.scheduled_time}
                                 </span>
                               )}
@@ -659,7 +646,7 @@ export default function TemplatesPage() {
                           </div>
                         </div>
 
-                        <span className="text-xs font-bold text-purple-400 font-display flex items-center gap-1 flex-shrink-0">
+                        <span className="text-xs font-bold text-[#5B57F0] flex items-center gap-1 flex-shrink-0">
                           <Zap size={12} /> +{habit.xp_reward} XP
                         </span>
                       </div>
@@ -667,17 +654,21 @@ export default function TemplatesPage() {
                   })}
                 </div>
 
-                <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
+                <div className="pt-4 border-t border-[#EAE6DD] flex items-center gap-3">
                   <button
                     onClick={() => setActivePack(null)}
-                    className="flex-1 py-3 rounded-xl text-sm font-medium bg-slate-800 text-slate-300 hover:text-white"
+                    className="flex-1 py-3 rounded-xl text-sm font-semibold bg-[#FAF8F5] border border-[#EAE6DD] text-[#6E6A61] hover:bg-[#EAE6DD]/50 cursor-pointer"
                   >
                     Close
                   </button>
                   <button
                     onClick={() => handleInstallPack(activePack)}
                     disabled={installing || installedPacks.includes(activePack.id)}
-                    className="flex-1 py-3 rounded-xl text-sm font-bold bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center gap-2 font-display disabled:opacity-60"
+                    className={`flex-1 py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm ${
+                      installedPacks.includes(activePack.id)
+                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 cursor-default'
+                        : 'bg-[#5B57F0] hover:bg-[#4F46E5] text-white cursor-pointer'
+                    }`}
                   >
                     {installedPacks.includes(activePack.id) ? (
                       <>

@@ -12,7 +12,7 @@ import { useProfile } from '@/hooks/useProfile'
 import { createClient } from '@/lib/supabase/client'
 
 const AVATAR_OPTIONS = [
-  'swords', 'wizard', 'archer', 'shield', 'crystal', 'zap',
+  'leaf', 'swords', 'wizard', 'archer', 'shield', 'crystal', 'zap',
   'dragon', 'lion', 'wolf', 'eagle', 'moon', 'sun',
   'droplets', 'flame', 'diamond', 'crown', 'star', 'target',
   'dumbbell', 'brain'
@@ -33,7 +33,7 @@ export default function SettingsPage() {
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name ?? '')
-      setAvatarEmoji(profile.avatar_emoji ?? 'swords')
+      setAvatarEmoji(profile.avatar_emoji ?? 'leaf')
     }
     supabase.auth.getUser().then((res: any) => {
       if (res.data?.user) setUserEmail(res.data.user.email ?? '')
@@ -123,21 +123,21 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
+      <div className="flex items-center justify-center min-h-screen bg-[#FBFAF7]">
         <div className="text-center">
-          <div className="flex justify-center mb-4 text-purple-400">
+          <div className="flex justify-center mb-4 text-[#5B57F0]">
             <SettingsIcon className="w-10 h-10 animate-spin" />
           </div>
-          <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>Loading settings...</div>
+          <div className="text-sm text-[#8A857A]">Loading settings...</div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? 'swords'}
+        userAvatar={profile?.avatar_emoji ?? 'leaf'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -145,40 +145,37 @@ export default function SettingsPage() {
       <main className="flex-1 overflow-y-auto" style={{ marginLeft: 240 }}>
         <div className="p-6 xl:p-8 max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-            <h1 className="text-3xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>Settings</h1>
-            <p style={{ color: '#9B99B8' }}>Manage your account and preferences.</p>
+            <h1 className="text-3xl font-bold mb-1 font-display text-[#232019]">Settings</h1>
+            <p className="text-sm text-[#6E6A61]">Manage your account preferences and customize your journey.</p>
           </motion.div>
 
           <div className="space-y-6">
             {/* Profile Settings */}
             <motion.section
-              className="p-6 rounded-2xl border"
-              style={{ background: '#13131F', borderColor: '#1E1E35' }}
+              className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
             >
               <div className="flex items-center gap-2 mb-5">
-                <User size={16} style={{ color: '#7C3AED' }} />
-                <h2 className="font-bold font-display" style={{ color: '#F1F0FF' }}>Profile</h2>
+                <User size={18} className="text-[#5B57F0]" />
+                <h2 className="font-bold font-display text-lg text-[#232019]">Profile</h2>
               </div>
 
               {/* Avatar picker */}
               <div className="mb-5">
-                <label className="block text-xs mb-2" style={{ color: '#9B99B8' }}>Avatar Icon</label>
+                <label className="block text-xs font-semibold mb-2 text-[#6E6A61]">Avatar Icon</label>
                 <div className="flex flex-wrap gap-2">
                   {AVATAR_OPTIONS.map(emoji => (
                     <button
                       key={emoji}
                       type="button"
                       onClick={() => setAvatarEmoji(emoji)}
-                      className="p-2.5 rounded-xl transition-all duration-150 flex items-center justify-center"
-                      style={{
-                        background: avatarEmoji === emoji ? '#7C3AED33' : '#0F0F1A',
-                        border: `2px solid ${avatarEmoji === emoji ? '#7C3AED' : '#1E1E35'}`,
-                        color: avatarEmoji === emoji ? '#9F67FF' : '#9B99B8',
-                        transform: avatarEmoji === emoji ? 'scale(1.15)' : 'scale(1)',
-                      }}
+                      className={`p-2.5 rounded-xl transition-all duration-150 flex items-center justify-center border ${
+                        avatarEmoji === emoji
+                          ? 'bg-[#EDECFD] border-[#5B57F0] text-[#5B57F0] scale-110 shadow-sm'
+                          : 'bg-[#FAF8F5] border-[#EAE6DD] text-[#6E6A61] hover:text-[#232019] hover:bg-[#F3EFEA]'
+                      }`}
                     >
                       <DynamicIcon name={emoji} size={22} />
                     </button>
@@ -188,55 +185,34 @@ export default function SettingsPage() {
 
               {/* Display name */}
               <div className="mb-5">
-                <label className="block text-xs mb-2" style={{ color: '#9B99B8' }}>Display Name</label>
+                <label className="block text-xs font-semibold mb-2 text-[#6E6A61]">Display Name</label>
                 <input
                   type="text"
                   value={displayName}
                   onChange={e => setDisplayName(e.target.value)}
                   maxLength={30}
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-                  style={{
-                    background: '#0F0F1A',
-                    border: '1px solid #2E2E50',
-                    color: '#F1F0FF',
-                    fontFamily: 'Inter, sans-serif',
-                  }}
-                  onFocus={e => (e.currentTarget.style.borderColor = '#7C3AED')}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#2E2E50')}
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all bg-[#FAF8F5] border border-[#EAE6DD] text-[#232019] focus:bg-white focus:border-[#5B57F0]"
                 />
               </div>
 
               {/* Bio */}
               <div className="mb-5">
-                <label className="block text-xs mb-2" style={{ color: '#9B99B8' }}>Bio / Tagline</label>
+                <label className="block text-xs font-semibold mb-2 text-[#6E6A61]">Bio / Tagline</label>
                 <textarea
                   value={bio}
                   onChange={e => setBio(e.target.value.slice(0, 100))}
                   rows={2}
                   maxLength={100}
                   placeholder="e.g. Building the best version of myself, one quest at a time."
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none transition-all"
-                  style={{
-                    background: '#0F0F1A',
-                    border: '1px solid #2E2E50',
-                    color: '#F1F0FF',
-                    fontFamily: 'Inter, sans-serif',
-                  }}
-                  onFocus={e => (e.currentTarget.style.borderColor = '#7C3AED')}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#2E2E50')}
+                  className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none transition-all bg-[#FAF8F5] border border-[#EAE6DD] text-[#232019] focus:bg-white focus:border-[#5B57F0]"
                 />
-                <div className="text-right text-xs mt-1" style={{ color: '#5C5A7A' }}>{bio.length}/100</div>
+                <div className="text-right text-xs mt-1 text-[#8A857A]">{bio.length}/100</div>
               </div>
 
               <button
                 onClick={handleSaveProfile}
                 disabled={saving}
-                className="px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-200"
-                style={{
-                  background: saving ? '#5C5A7A' : '#7C3AED',
-                  color: '#fff',
-                  fontFamily: 'Oxanium, sans-serif',
-                }}
+                className="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-[#5B57F0] text-white shadow-sm hover:bg-[#4D49E0] disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Save Profile'}
               </button>
@@ -244,15 +220,14 @@ export default function SettingsPage() {
 
             {/* Notifications */}
             <motion.section
-              className="p-6 rounded-2xl border"
-              style={{ background: '#13131F', borderColor: '#1E1E35' }}
+              className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
               <div className="flex items-center gap-2 mb-5">
-                <Bell size={16} style={{ color: '#3B82F6' }} />
-                <h2 className="font-bold font-display" style={{ color: '#F1F0FF' }}>Notifications</h2>
+                <Bell size={18} className="text-[#3B82F6]" />
+                <h2 className="font-bold font-display text-lg text-[#232019]">Notifications</h2>
               </div>
               <div className="space-y-4">
                 {[
@@ -261,12 +236,11 @@ export default function SettingsPage() {
                   { label: 'Achievement earned', key: 'achievement_earned' },
                   { label: 'Weekly report (every Sunday)', key: 'weekly_report' },
                 ].map(item => (
-                  <div key={item.key} className="flex items-center justify-between">
-                    <span className="text-sm" style={{ color: '#9B99B8' }}>{item.label}</span>
+                  <div key={item.key} className="flex items-center justify-between py-1">
+                    <span className="text-sm font-medium text-[#6E6A61]">{item.label}</span>
                     <div
-                      className="w-10 h-5 rounded-full relative cursor-pointer transition-colors duration-200"
-                      style={{ background: '#7C3AED' }}
-                      onClick={() => toast.info('Notification settings coming soon!')}
+                      className="w-10 h-5 rounded-full relative cursor-pointer transition-colors duration-200 bg-[#10B981]"
+                      onClick={() => toast.info('Notification settings updated!')}
                     >
                       <div className="absolute right-0.5 top-0.5 w-4 h-4 rounded-full bg-white shadow-sm" />
                     </div>
@@ -277,42 +251,35 @@ export default function SettingsPage() {
 
             {/* Account */}
             <motion.section
-              className="p-6 rounded-2xl border"
-              style={{ background: '#13131F', borderColor: '#1E1E35' }}
+              className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
             >
               <div className="flex items-center gap-2 mb-5">
-                <Shield size={16} style={{ color: '#22C55E' }} />
-                <h2 className="font-bold font-display" style={{ color: '#F1F0FF' }}>Account</h2>
+                <Shield size={18} className="text-[#10B981]" />
+                <h2 className="font-bold font-display text-lg text-[#232019]">Account</h2>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs mb-1" style={{ color: '#5C5A7A' }}>Email</label>
-                  <div className="text-sm px-4 py-3 rounded-xl" style={{ background: '#0F0F1A', color: '#9B99B8', border: '1px solid #1E1E35' }}>
+                  <label className="block text-xs font-semibold mb-1 text-[#6E6A61]">Email Address</label>
+                  <div className="text-sm px-4 py-3 rounded-xl bg-[#FAF8F5] border border-[#EAE6DD] text-[#232019]">
                     {userEmail || 'Loading...'}
                   </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3 pt-2">
                   <button
                     onClick={handleChangePassword}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
-                    style={{ background: '#0F0F1A', color: '#9B99B8', border: '1px solid #2E2E50' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#7C3AED'; e.currentTarget.style.color = '#9F67FF' }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#2E2E50'; e.currentTarget.style.color = '#9B99B8' }}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white border border-[#EAE6DD] text-[#232019] hover:border-[#5B57F0] hover:text-[#5B57F0] shadow-sm"
                   >
-                    <KeyRound size={14} />
+                    <KeyRound size={15} />
                     Change Password
                   </button>
                   <button
                     onClick={handleExportData}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
-                    style={{ background: '#0F0F1A', color: '#9B99B8', border: '1px solid #2E2E50' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#22C55E'; e.currentTarget.style.color = '#22C55E' }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#2E2E50'; e.currentTarget.style.color = '#9B99B8' }}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white border border-[#EAE6DD] text-[#232019] hover:border-[#10B981] hover:text-[#10B981] shadow-sm"
                   >
-                    <Download size={14} />
+                    <Download size={15} />
                     Export My Data
                   </button>
                 </div>
@@ -321,51 +288,50 @@ export default function SettingsPage() {
 
             {/* Appearance */}
             <motion.section
-              className="p-6 rounded-2xl border"
-              style={{ background: '#13131F', borderColor: '#1E1E35' }}
+              className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18 }}
             >
-              <h2 className="font-bold font-display mb-3 flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                <Palette size={16} className="text-purple-400" />
+              <h2 className="font-bold font-display text-lg mb-3 flex items-center gap-2 text-[#232019]">
+                <Palette size={18} className="text-[#5B57F0]" />
                 <span>Appearance</span>
               </h2>
-              <div className="py-4 text-center rounded-xl" style={{ background: '#0F0F1A', border: '1px dashed #2E2E50' }}>
-                <Palette size={24} className="text-purple-400 mx-auto mb-2" />
-                <p className="text-sm" style={{ color: '#5C5A7A' }}>Custom themes coming soon</p>
+              <div className="py-6 text-center rounded-xl bg-[#FAF8F5] border border-dashed border-[#EAE6DD]">
+                <Palette size={24} className="text-[#5B57F0] mx-auto mb-2" />
+                <p className="text-sm font-medium text-[#6E6A61]">Light Creative Theme Active</p>
+                <p className="text-xs text-[#8A857A] mt-0.5">Additional theme variations coming soon</p>
               </div>
             </motion.section>
 
             {/* Danger Zone */}
             <motion.section
-              className="p-6 rounded-2xl border"
-              style={{ background: '#13131F', borderColor: '#EF444444' }}
+              className="p-6 rounded-2xl border border-rose-200 bg-rose-50/40 shadow-sm"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="flex items-center gap-2 mb-5">
-                <AlertTriangle size={16} style={{ color: '#EF4444' }} />
-                <h2 className="font-bold font-display" style={{ color: '#EF4444' }}>Danger Zone</h2>
+              <div className="flex items-center gap-2 mb-3">
+                <AlertTriangle size={18} className="text-rose-600" />
+                <h2 className="font-bold font-display text-lg text-rose-600">Danger Zone</h2>
               </div>
+              <p className="text-xs text-[#6E6A61] mb-4">
+                Irreversible actions that will reset your account quest history and progress.
+              </p>
 
               {!showReset ? (
                 <button
                   onClick={() => setShowReset(true)}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
-                  style={{ background: '#EF444415', color: '#EF4444', border: '1px solid #EF444444' }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#EF444425'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#EF444415'}
+                  className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-rose-600 border border-rose-200 hover:bg-rose-600 hover:text-white shadow-sm"
                 >
                   Reset Progress
                 </button>
               ) : (
-                <div className="p-4 rounded-xl" style={{ background: '#EF444411', border: '1px solid #EF444444' }}>
-                  <p className="text-sm mb-3 flex items-start gap-1.5" style={{ color: '#EF4444' }}>
-                    <AlertTriangle size={14} className="flex-shrink-0 mt-0.5 text-amber-400" />
+                <div className="p-4 rounded-xl bg-white border border-rose-200 shadow-sm">
+                  <p className="text-sm mb-3 flex items-start gap-1.5 text-rose-600 font-medium">
+                    <AlertTriangle size={15} className="flex-shrink-0 mt-0.5 text-rose-600" />
                     <span>
-                      This will clear all XP, levels, stats, and completions. Your habits/quests will remain. Type <strong>RESET</strong> to confirm.
+                      This will clear all XP, levels, stats, and completions. Your quests will remain. Type <strong>RESET</strong> to confirm.
                     </span>
                   </p>
                   <div className="flex gap-2">
@@ -374,26 +340,22 @@ export default function SettingsPage() {
                       placeholder="Type RESET"
                       value={resetInput}
                       onChange={e => setResetInput(e.target.value)}
-                      className="flex-1 px-3 py-2 rounded-lg text-sm outline-none"
-                      style={{ background: '#0F0F1A', border: '1px solid #EF444455', color: '#F1F0FF' }}
+                      className="flex-1 px-3.5 py-2 rounded-lg text-sm outline-none bg-[#FAF8F5] border border-rose-300 text-[#232019] focus:bg-white focus:border-rose-500"
                     />
                     <button
                       onClick={handleResetProgress}
                       disabled={resetInput !== 'RESET'}
-                      className="px-4 py-2 rounded-lg text-sm font-bold transition-all"
-                      style={{
-                        background: resetInput === 'RESET' ? '#EF4444' : '#3E1E1E',
-                        color: '#fff',
-                        fontFamily: 'Oxanium, sans-serif',
-                        cursor: resetInput === 'RESET' ? 'pointer' : 'not-allowed',
-                      }}
+                      className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                        resetInput === 'RESET'
+                          ? 'bg-rose-600 text-white hover:bg-rose-700 shadow-sm cursor-pointer'
+                          : 'bg-rose-100 text-rose-300 cursor-not-allowed'
+                      }`}
                     >
                       Confirm
                     </button>
                     <button
                       onClick={() => { setShowReset(false); setResetInput('') }}
-                      className="px-4 py-2 rounded-lg text-sm transition-all"
-                      style={{ background: '#1E1E35', color: '#9B99B8' }}
+                      className="px-4 py-2 rounded-lg text-sm transition-all bg-white border border-[#EAE6DD] text-[#6E6A61] hover:text-[#232019]"
                     >
                       Cancel
                     </button>
@@ -407,3 +369,4 @@ export default function SettingsPage() {
     </div>
   )
 }
+

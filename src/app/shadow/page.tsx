@@ -51,14 +51,74 @@ export default function ShadowPage() {
   const shadowTotal = Object.values(snapshot?.daily_completions ?? {}).reduce((sum, count) => sum + count, 0)
   const delta = currentTotal - shadowTotal
 
-  return <div className="flex min-h-screen bg-[#08080F]"><Sidebar /><main className="mx-auto w-full max-w-5xl flex-1 p-4 pb-24 md:ml-60 md:p-8">
-    <div className="mb-8"><div className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-purple-400 font-display"><Swords size={14} /> Weekly Rivalry</div><h1 className="text-3xl font-extrabold text-white font-display">Shadow Clone</h1><p className="mt-2 text-sm text-slate-400">Race against the adventurer you were last week.</p></div>
-    {loading ? <div className="rounded-2xl border border-slate-800 bg-[#13131F] p-10 text-center text-sm text-slate-400">Summoning your shadow…</div> : !snapshot ? <div className="rounded-2xl border border-purple-500/20 bg-[#13131F] p-10 text-center"><BarChart3 className="mx-auto mb-3 text-purple-400" size={32} /><h2 className="font-bold text-white font-display">Your shadow is forming</h2><p className="mx-auto mt-2 max-w-md text-sm text-slate-400">Complete this week’s quests. Your first comparison unlocks after the Sunday snapshot.</p></div> : <>
-      <section className="mb-6 grid gap-4 md:grid-cols-3"><ScoreCard label="You this week" value={`${currentTotal} quests`} color="text-green-400" /><ScoreCard label="Shadow last week" value={`${shadowTotal} quests`} color="text-purple-400" /><ScoreCard label={delta >= 0 ? 'You are ahead' : 'Shadow leads'} value={`${delta >= 0 ? '+' : ''}${delta} quests`} color={delta >= 0 ? 'text-amber-400' : 'text-red-400'} /></section>
-      <section className="rounded-2xl border border-slate-800 bg-[#13131F] p-5"><h2 className="mb-6 flex items-center gap-2 text-sm font-bold text-white font-display"><Crown size={16} className="text-amber-400" /> Daily battle</h2><div className="grid grid-cols-7 gap-2">{dates.map((date) => { const key = date.toISOString().slice(0, 10); const shadowKey = new Date(date.getTime() - 7 * 86400000).toISOString().slice(0, 10); const current = today[key] ?? 0; const past = snapshot.daily_completions[shadowKey] ?? 0; const won = current >= past; return <div key={key} className="rounded-xl bg-[#0F0F1A] p-2 text-center"><div className="text-[10px] text-slate-500">{date.toLocaleDateString(undefined, { weekday: 'short' })}</div><div className={`mt-2 text-lg font-black font-display ${won ? 'text-green-400' : 'text-purple-400'}`}>{current}</div><div className="text-[10px] text-slate-500">vs {past}</div></div> })}</div></section>
-      <p className="mt-5 flex items-center justify-center gap-2 text-sm text-slate-400">{delta >= 0 ? <TrendingUp className="text-green-400" size={16} /> : <TrendingDown className="text-red-400" size={16} />}{delta >= 0 ? 'Keep the lead—every completed quest widens the gap.' : 'One quest at a time. Your shadow can still be defeated.'}</p>
-    </>}
-  </main></div>
+  return (
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
+      <Sidebar userAvatar={profile?.avatar_emoji ?? 'leaf'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
+      <main className="mx-auto w-full max-w-5xl flex-1 p-4 pb-24 md:ml-60 md:p-8">
+        <div className="mb-8">
+          <div className="mb-1.5 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#5B57F0]">
+            <Swords size={14} /> Weekly Rivalry
+          </div>
+          <h1 className="text-3xl font-extrabold text-[#232019]">Shadow Clone</h1>
+          <p className="mt-1 text-sm text-[#6E6A61]">Race against the adventurer you were last week.</p>
+        </div>
+
+        {loading ? (
+          <div className="rounded-2xl border border-[#EAE6DD] bg-white p-10 text-center text-sm text-[#8A857A] shadow-sm">
+            Summoning your shadow…
+          </div>
+        ) : !snapshot ? (
+          <div className="rounded-2xl border border-[#EAE6DD] bg-white p-10 text-center shadow-sm">
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 bg-purple-50 border border-purple-200 text-[#5B57F0]">
+              <BarChart3 size={28} />
+            </div>
+            <h2 className="font-bold text-[#232019] text-lg">Your shadow is forming</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-[#6E6A61]">Complete this week’s quests. Your first comparison unlocks after the Sunday snapshot.</p>
+          </div>
+        ) : (
+          <>
+            <section className="mb-6 grid gap-4 md:grid-cols-3">
+              <ScoreCard label="You this week" value={`${currentTotal} quests`} color="text-emerald-600" />
+              <ScoreCard label="Shadow last week" value={`${shadowTotal} quests`} color="text-[#5B57F0]" />
+              <ScoreCard label={delta >= 0 ? 'You are ahead' : 'Shadow leads'} value={`${delta >= 0 ? '+' : ''}${delta} quests`} color={delta >= 0 ? 'text-amber-600' : 'text-rose-600'} />
+            </section>
+            <section className="rounded-2xl border border-[#EAE6DD] bg-white p-6 shadow-sm">
+              <h2 className="mb-6 flex items-center gap-2 text-sm font-bold text-[#232019]">
+                <Crown size={16} className="text-amber-500" /> Daily battle
+              </h2>
+              <div className="grid grid-cols-7 gap-2.5">
+                {dates.map((date) => {
+                  const key = date.toISOString().slice(0, 10)
+                  const shadowKey = new Date(date.getTime() - 7 * 86400000).toISOString().slice(0, 10)
+                  const current = today[key] ?? 0
+                  const past = snapshot.daily_completions[shadowKey] ?? 0
+                  const won = current >= past
+                  return (
+                    <div key={key} className="rounded-xl bg-[#FAF8F5] border border-[#EAE6DD] p-3 text-center shadow-2xs">
+                      <div className="text-2xs font-semibold text-[#8A857A]">{date.toLocaleDateString(undefined, { weekday: 'short' })}</div>
+                      <div className={`mt-2 text-lg font-black ${won ? 'text-emerald-600' : 'text-[#5B57F0]'}`}>{current}</div>
+                      <div className="text-2xs text-[#8A857A] mt-0.5">vs {past}</div>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+            <p className="mt-5 flex items-center justify-center gap-2 text-sm text-[#6E6A61] font-medium">
+              {delta >= 0 ? <TrendingUp className="text-emerald-600" size={16} /> : <TrendingDown className="text-rose-600" size={16} />}
+              {delta >= 0 ? 'Keep the lead—every completed quest widens the gap.' : 'One quest at a time. Your shadow can still be defeated.'}
+            </p>
+          </>
+        )}
+      </main>
+    </div>
+  )
 }
 
-function ScoreCard({ label, value, color }: { label: string; value: string; color: string }) { return <div className="rounded-2xl border border-slate-800 bg-[#13131F] p-5"><div className="text-xs font-semibold text-slate-400">{label}</div><div className={`mt-2 text-2xl font-black font-display ${color}`}>{value}</div></div> }
+function ScoreCard({ label, value, color }: { label: string; value: string; color: string }) {
+  return (
+    <div className="rounded-2xl border border-[#EAE6DD] bg-white p-5 shadow-sm">
+      <div className="text-xs font-semibold text-[#8A857A]">{label}</div>
+      <div className={`mt-2 text-2xl font-black ${color}`}>{value}</div>
+    </div>
+  )
+}

@@ -29,13 +29,13 @@ export const resetPasswordEmail = ({
         <!-- Main Container Card -->
         <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 560px; background-color: #FFFFFF; border-radius: 24px; border: 1px solid #E6E2D8; box-shadow: 0 12px 40px rgba(43, 40, 35, 0.07); overflow: hidden;">
           
-          <!-- Header with RPG Emblem -->
+          <!-- Header with Green Leaf Emblem -->
           <tr>
             <td style="padding: 40px 40px 24px 40px; text-align: center; background: linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 100%); border-bottom: 1px solid #EFECE6;">
               <table role="presentation" align="center" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td style="width: 52px; height: 52px; background: linear-gradient(135deg, #5B57F0 0%, #4338CA 100%); border-radius: 16px; text-align: center; vertical-align: middle; color: #FFFFFF; font-size: 24px; box-shadow: 0 8px 20px rgba(91, 87, 240, 0.35);">
-                    ⚔️
+                  <td style="width: 52px; height: 52px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 16px; text-align: center; vertical-align: middle; color: #FFFFFF; font-size: 24px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);">
+                    🍃
                   </td>
                 </tr>
               </table>

@@ -75,12 +75,13 @@ interface InsightItem {
 }
 
 const TOOLTIP_STYLE = {
-  background: '#1A1A2E',
-  border: '1px solid #2E2E50',
-  borderRadius: 8,
-  color: '#F1F0FF',
-  fontFamily: 'Inter, sans-serif',
+  background: '#FFFFFF',
+  border: '1px solid #EAE6DD',
+  borderRadius: 12,
+  color: '#232019',
+  fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
   fontSize: 12,
+  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
 }
 
 // GitHub-style heatmap component
@@ -101,11 +102,11 @@ function ConsistencyHeatmap({ data }: { data: { date: string; pct: number }[] })
   }
 
   function getColor(pct: number) {
-    if (pct === 0) return '#1E1E35'
-    if (pct < 0.4) return '#3B1F6B'
-    if (pct < 0.7) return '#5B21B6'
-    if (pct < 1.0) return '#7C3AED'
-    return '#9F67FF'
+    if (pct === 0) return '#FAF8F5'
+    if (pct < 0.4) return '#EDE9FE'
+    if (pct < 0.7) return '#C4B5FD'
+    if (pct < 1.0) return '#8B5CF6'
+    return '#5B57F0'
   }
 
   const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
@@ -116,7 +117,7 @@ function ConsistencyHeatmap({ data }: { data: { date: string; pct: number }[] })
         <div style={{ width: 16 }} />
         <div className="flex gap-1 flex-1">
           {Array.from({ length: weeks }).map((_, w) => (
-            <div key={w} className="flex-1 text-center text-xs" style={{ color: '#5C5A7A' }} />
+            <div key={w} className="flex-1 text-center text-xs text-[#8A857A]" />
           ))}
         </div>
       </div>
@@ -124,7 +125,7 @@ function ConsistencyHeatmap({ data }: { data: { date: string; pct: number }[] })
         {/* Day labels */}
         <div className="flex flex-col gap-1" style={{ width: 16 }}>
           {DAYS.map((d, i) => (
-            <div key={i} className="text-xs flex items-center justify-center" style={{ color: '#5C5A7A', height: 14 }}>{d}</div>
+            <div key={i} className="text-2xs text-[#8A857A] flex items-center justify-center font-semibold" style={{ height: 14 }}>{d}</div>
           ))}
         </div>
         {/* Grid */}
@@ -141,7 +142,7 @@ function ConsistencyHeatmap({ data }: { data: { date: string; pct: number }[] })
                     style={{
                       background: getColor(cell.pct),
                       height: 14,
-                      border: cell.date === today.toISOString().split('T')[0] ? '1px solid #9F67FF' : '1px solid transparent',
+                      border: cell.date === today.toISOString().split('T')[0] ? '1.5px solid #5B57F0' : '1px solid #EAE6DD',
                     }}
                     title={`${cell.date} — ${Math.round(cell.pct * 100)}% complete`}
                     initial={{ opacity: 0 }}
@@ -156,10 +157,10 @@ function ConsistencyHeatmap({ data }: { data: { date: string; pct: number }[] })
         </div>
       </div>
       {/* Legend */}
-      <div className="flex items-center gap-2 mt-3 text-xs" style={{ color: '#5C5A7A' }}>
+      <div className="flex items-center gap-2 mt-3 text-xs text-[#8A857A]">
         <span>Less</span>
-        {['#1E1E35', '#3B1F6B', '#5B21B6', '#7C3AED', '#9F67FF'].map(c => (
-          <div key={c} className="rounded-sm" style={{ width: 12, height: 12, background: c }} />
+        {['#FAF8F5', '#EDE9FE', '#C4B5FD', '#8B5CF6', '#5B57F0'].map(c => (
+          <div key={c} className="rounded-sm border border-[#EAE6DD]" style={{ width: 12, height: 12, background: c }} />
         ))}
         <span>More</span>
       </div>
@@ -168,9 +169,9 @@ function ConsistencyHeatmap({ data }: { data: { date: string; pct: number }[] })
 }
 
 const INSIGHT_CONFIG = {
-  strength:    { icon: Dumbbell, label: 'Strength',    border: '#22C55E', bg: '#22C55E10' },
-  warning:     { icon: AlertTriangle, label: 'Warning',     border: '#F59E0B', bg: '#F59E0B10' },
-  opportunity: { icon: Target, label: 'Opportunity', border: '#7C3AED', bg: '#7C3AED10' },
+  strength:    { icon: Dumbbell, label: 'Strength',    border: '#10B981', bg: '#ECFDF5' },
+  warning:     { icon: AlertTriangle, label: 'Warning',     border: '#F59E0B', bg: '#FFFBEB' },
+  opportunity: { icon: Target, label: 'Opportunity', border: '#5B57F0', bg: '#F5F3FF' },
 }
 
 export default function AnalyticsPage() {
@@ -248,121 +249,128 @@ export default function AnalyticsPage() {
           setHeatmapData(heatEntries)
         }
 
-        // Quest by category
+        // Quest distribution by category
         if (allCompletionsRes.data) {
-          const catCount: Record<string, number> = {}
-          allCompletionsRes.data.forEach((c: { habits?: { stat_category?: string } | null }) => {
-            const cat = (c.habits as { stat_category?: string } | null)?.stat_category ?? 'other'
-            catCount[cat] = (catCount[cat] ?? 0) + 1
+          const counts: Record<string, number> = {}
+          allCompletionsRes.data.forEach((c: { habits?: { stat_category?: string } | { stat_category?: string }[] }) => {
+            const cat = (Array.isArray(c.habits) ? c.habits[0]?.stat_category : c.habits?.stat_category) ?? 'other'
+            counts[cat] = (counts[cat] ?? 0) + 1
           })
-          setQuestsByCategory(Object.entries(catCount).map(([name, value]) => ({
-            name: name.toUpperCase(),
-            value,
-            color: CATEGORY_COLORS[name] ?? '#5C5A7A',
-          })))
+          setQuestsByCategory(
+            Object.entries(counts).map(([k, v]) => ({
+              name: STAT_META[k as StatKey]?.label ?? k.toUpperCase(),
+              value: v,
+              color: CATEGORY_COLORS[k] ?? '#6B7280',
+            }))
+          )
         }
       } finally {
         setDataLoading(false)
       }
     }
-    if (!loading) fetchData()
-  }, [profile?.id, loading, timeRange, getDaysBack])
+    fetchData()
+  }, [profile?.id, timeRange, getDaysBack, supabase])
 
-  // Fetch AI insights
+  // AI insights generator
   useEffect(() => {
-    async function fetchInsights() {
-      if (!profile?.id) return
+    async function loadInsights() {
+      if (!profile || !stats) return
       setInsightsLoading(true)
-      try {
-        const resp = await fetch('/api/analytics/insights')
-        if (resp.ok) {
-          const data = await resp.json()
-          if (Array.isArray(data)) setInsights(data)
-        }
-      } catch { /* fail silently */ }
-      finally { setInsightsLoading(false) }
+
+      const statEntries = Object.entries(stats).filter(([k]) => k in STAT_META) as [StatKey, number][]
+      statEntries.sort((a, b) => b[1] - a[1])
+
+      const strongest = statEntries[0]
+      const weakest = statEntries[statEntries.length - 1]
+
+      const generated: InsightItem[] = []
+
+      if (strongest) {
+        generated.push({
+          type: 'strength',
+          title: `${STAT_META[strongest[0]].label} is your highest stat (${strongest[1]} pts)`,
+          body: `You consistently conquer ${STAT_META[strongest[0]].label}-related habits. This is your core character superpower.`,
+          action: `Consider taking on higher-tier ${STAT_META[strongest[0]].label} quests to accelerate leveling.`,
+        })
+      }
+
+      if (weakest && weakest[1] < (strongest?.[1] ?? 1) * 0.5) {
+        generated.push({
+          type: 'warning',
+          title: `${STAT_META[weakest[0]].label} needs attention (${weakest[1]} pts)`,
+          body: `Your ${STAT_META[weakest[0]].label} is lagging behind other stats. Balanced heroes level up 2x faster.`,
+          action: `Add at least 1 easy ${STAT_META[weakest[0]].label} habit to your daily roster.`,
+        })
+      }
+
+      if ((profile.streak ?? 0) >= 3) {
+        generated.push({
+          type: 'opportunity',
+          title: `${profile.streak}-day streak momentum!`,
+          body: `You have built solid neural pathway momentum. The critical milestone is day 21.`,
+          action: `Keep your current daily routine locked in for the next 7 days.`,
+        })
+      } else {
+        generated.push({
+          type: 'opportunity',
+          title: 'Prime time to start a new streak',
+          body: `Consistency beats intensity every single time. 1 quest done daily > 5 done erratically.`,
+          action: `Commit to just 1 easy quest today to ignite your streak counter.`,
+        })
+      }
+
+      setInsights(generated.slice(0, 3))
+      setInsightsLoading(false)
     }
-    if (!loading) fetchInsights()
-  }, [profile?.id, loading])
+    loadInsights()
+  }, [profile, stats])
 
-  const xpThisWeek = xpHistory
-    .filter(d => {
-      const date = new Date(d.date)
-      const weekAgo = new Date()
-      weekAgo.setDate(weekAgo.getDate() - 7)
-      return date >= weekAgo
-    })
-    .reduce((s, d) => s + d.xp, 0)
+  const totalQuests = questsByCategory.reduce((sum, x) => sum + x.value, 0)
+  const xpThisWeek = xpHistory.slice(-7).reduce((sum, x) => sum + x.xp, 0)
+  const questsThisWeek = xpHistory.slice(-7).reduce((sum, x) => sum + x.quests, 0)
 
-  const questsThisWeek = xpHistory.filter(d => {
-    const date = new Date(d.date)
-    const weekAgo = new Date()
-    weekAgo.setDate(weekAgo.getDate() - 7)
-    return date >= weekAgo
-  }).reduce((s, d) => s + d.quests, 0)
+  // Balance radar data
+  const radarData = (Object.keys(STAT_META) as StatKey[]).map(s => ({
+    stat: STAT_META[s].label,
+    value: (stats as any)?.[s] ?? 0,
+    fullMark: 100,
+  }))
 
-  const totalQuests = questsByCategory.reduce((s, c) => s + c.value, 0)
-
-  // Radar data
-  const radarData = stats ? [
-    { stat: 'STR', value: stats.str, fullMark: 100 },
-    { stat: 'INT', value: stats.int, fullMark: 100 },
-    { stat: 'WIS', value: stats.wis, fullMark: 100 },
-    { stat: 'VIT', value: stats.vit, fullMark: 100 },
-    { stat: 'GOLD', value: stats.gold, fullMark: 100 },
-    { stat: 'CHA', value: stats.cha, fullMark: 100 },
-  ] : []
-
-  const statValues = stats ? [stats.str, stats.int, stats.wis, stats.vit, stats.gold, stats.cha] : []
-  const strongestStat = statValues.length > 0 ? Object.keys(STAT_META)[statValues.indexOf(Math.max(...statValues))] : 'str'
-  const weakestStat = statValues.length > 0 ? Object.keys(STAT_META)[statValues.indexOf(Math.min(...statValues))] : 'cha'
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: '#08080F' }}>
-        <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 mx-auto mb-4 animate-pulse">
-            <BarChart3 size={28} />
-          </div>
-          <div className="text-sm" style={{ color: '#5C5A7A', fontFamily: 'Oxanium, sans-serif' }}>
-            Compiling your legend...
-          </div>
-        </div>
-      </div>
-    )
-  }
+  const statValues = Object.entries(stats ?? {}).filter(([k]) => k in STAT_META) as [StatKey, number][]
+  statValues.sort((a, b) => b[1] - a[1])
+  const strongestStat = statValues[0]?.[0] ?? 'str'
+  const weakestStat = statValues[statValues.length - 1]?.[0] ?? 'int'
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
       <Sidebar
-        userAvatar={profile?.avatar_emoji}
+        userAvatar={profile?.avatar_emoji ?? 'leaf'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
 
-      <main className="flex-1 overflow-y-auto" style={{ marginLeft: 240 }}>
-        <div className="p-6 xl:p-8 max-w-7xl mx-auto">
+      <main className="flex-1 overflow-y-auto p-6 xl:p-8" style={{ marginLeft: 240 }}>
+        <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
             <div>
-              <h1 className="text-3xl font-bold mb-1 font-display flex items-center gap-2.5" style={{ color: '#F1F0FF' }}>
-                <BarChart3 size={28} className="text-purple-400" />
+              <h1 className="text-3xl font-bold mb-1 flex items-center gap-2 text-[#232019]">
+                <BarChart3 size={28} className="text-[#5B57F0]" />
                 <span>Analytics</span>
               </h1>
-              <p style={{ color: '#9B99B8' }}>Your growth, visualized.</p>
+              <p className="text-sm text-[#6E6A61]">Your growth, visualized.</p>
             </div>
             {/* Time filter */}
-            <div className="flex gap-1 p-1 rounded-xl" style={{ background: '#13131F', border: '1px solid #1E1E35' }}>
+            <div className="flex gap-1 p-1 rounded-xl bg-white border border-[#EAE6DD] shadow-2xs">
               {(['7d', '30d', '90d', 'all'] as TimeRange[]).map(t => (
                 <button
                   key={t}
                   onClick={() => setTimeRange(t)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200"
-                  style={{
-                    background: timeRange === t ? '#7C3AED' : 'transparent',
-                    color: timeRange === t ? '#fff' : '#9B99B8',
-                    fontFamily: 'Oxanium, sans-serif',
-                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                    timeRange === t
+                      ? 'bg-[#5B57F0] text-white shadow-2xs'
+                      : 'text-[#6E6A61] hover:bg-[#FAF8F5]'
+                  }`}
                 >
                   {t === 'all' ? 'All' : t === '7d' ? '7 Days' : t === '30d' ? '30 Days' : '90 Days'}
                 </button>
@@ -377,60 +385,59 @@ export default function AnalyticsPage() {
             animate={{ opacity: 1, y: 0 }}
           >
             {/* Total XP */}
-            <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#F59E0B22' }}>
-              <div className="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center mb-2">
+            <div className="p-5 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-2">
                 <Zap size={18} />
               </div>
-              <div className="text-2xl font-bold mb-1 font-display" style={{ color: '#F59E0B' }}>
+              <div className="text-2xl font-bold mb-1 text-amber-600">
                 <AnimatedNumber value={profile?.xp ?? 0} />
               </div>
-              <div className="text-xs mb-1" style={{ color: '#5C5A7A' }}>Total XP</div>
+              <div className="text-xs mb-1 text-[#8A857A]">Total XP</div>
               {xpThisWeek > 0 && (
-                <div className="text-xs" style={{ color: '#22C55E' }}>+{xpThisWeek} this week</div>
+                <div className="text-xs font-semibold text-emerald-600">+{xpThisWeek} this week</div>
               )}
             </div>
 
             {/* Level */}
-            <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#7C3AED22' }}>
-              <div className="w-8 h-8 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center mb-2">
+            <div className="p-5 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-purple-50 text-[#5B57F0] flex items-center justify-center mb-2">
                 <Star size={18} />
               </div>
-              <div className="text-2xl font-bold mb-1 font-display" style={{ color: '#7C3AED' }}>
+              <div className="text-2xl font-bold mb-1 text-[#5B57F0]">
                 <AnimatedNumber value={profile?.level ?? 1} />
               </div>
-              <div className="text-xs mb-1" style={{ color: '#5C5A7A' }}>Current Level</div>
-              <div className="text-xs" style={{ color: '#9B99B8' }}>
+              <div className="text-xs mb-1 text-[#8A857A]">Current Level</div>
+              <div className="text-xs text-[#6E6A61]">
                 {(profile?.xp_to_next ?? 100) - (profile?.xp ?? 0)} XP to Lv {(profile?.level ?? 1) + 1}
               </div>
             </div>
 
             {/* Quest completion rate */}
-            <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#22C55E22' }}>
-              <div className="w-8 h-8 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-2">
+            <div className="p-5 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2">
                 <CheckCircle2 size={18} />
               </div>
               <div
-                className="text-2xl font-bold mb-1 font-display"
-                style={{ color: questsThisWeek > 0 ? '#22C55E' : '#5C5A7A' }}
+                className={`text-2xl font-bold mb-1 ${questsThisWeek > 0 ? 'text-emerald-600' : 'text-[#8A857A]'}`}
               >
                 {questsThisWeek}
               </div>
-              <div className="text-xs mb-1" style={{ color: '#5C5A7A' }}>Quests This Week</div>
-              <div className="text-xs" style={{ color: '#9B99B8' }}>
+              <div className="text-xs mb-1 text-[#8A857A]">Quests This Week</div>
+              <div className="text-xs text-[#6E6A61]">
                 {totalQuests} total completed
               </div>
             </div>
 
             {/* Best streak */}
-            <div className="p-5 rounded-2xl border" style={{ background: '#13131F', borderColor: '#F59E0B22' }}>
-              <div className="w-8 h-8 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center mb-2">
+            <div className="p-5 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-2">
                 <Flame size={18} />
               </div>
-              <div className="text-2xl font-bold mb-1 font-display" style={{ color: '#F59E0B' }}>
+              <div className="text-2xl font-bold mb-1 text-amber-600">
                 <AnimatedNumber value={profile?.streak ?? 0} suffix="d" />
               </div>
-              <div className="text-xs mb-1" style={{ color: '#5C5A7A' }}>Current Streak</div>
-              <div className="text-xs flex items-center gap-1" style={{ color: '#9B99B8' }}>
+              <div className="text-xs mb-1 text-[#8A857A]">Current Streak</div>
+              <div className="text-xs flex items-center gap-1 text-[#6E6A61]">
                 <Flame size={12} className="text-amber-500" /> Keep it alive!
               </div>
             </div>
@@ -439,7 +446,7 @@ export default function AnalyticsPage() {
           {dataLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="h-72 rounded-2xl animate-pulse" style={{ background: '#13131F' }} />
+                <div key={i} className="h-72 rounded-2xl animate-pulse bg-white border border-[#EAE6DD]" />
               ))}
             </div>
           ) : (
@@ -448,14 +455,13 @@ export default function AnalyticsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 {/* Chart 1: XP over time */}
                 <motion.div
-                  className="p-6 rounded-2xl border"
-                  style={{ background: '#13131F', borderColor: '#1E1E35' }}
+                  className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.1 }}
                 >
-                  <h2 className="text-base font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                    <Zap size={16} className="text-amber-400" />
+                  <h2 className="text-base font-bold mb-4 flex items-center gap-2 text-[#232019]">
+                    <Zap size={16} className="text-amber-500" />
                     <span>XP Over Time</span>
                   </h2>
                   {xpHistory.length > 0 ? (
@@ -463,22 +469,22 @@ export default function AnalyticsPage() {
                       <AreaChart data={xpHistory}>
                         <defs>
                           <linearGradient id="xpGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#7C3AED" stopOpacity={0.4} />
-                            <stop offset="95%" stopColor="#7C3AED" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#5B57F0" stopOpacity={0.25} />
+                            <stop offset="95%" stopColor="#5B57F0" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1E1E35" />
-                        <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#5C5A7A' }} tickFormatter={v => v.slice(5)} />
-                        <YAxis tick={{ fontSize: 10, fill: '#5C5A7A' }} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#EAE6DD" />
+                        <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#8A857A' }} tickFormatter={v => v.slice(5)} />
+                        <YAxis tick={{ fontSize: 10, fill: '#8A857A' }} />
                         <Tooltip
                           contentStyle={TOOLTIP_STYLE}
                           formatter={(v: any) => [`${v} XP`, 'XP earned']}
                         />
-                        <Area type="monotone" dataKey="xp" stroke="#7C3AED" fill="url(#xpGradient)" strokeWidth={2} dot={false} animationDuration={1000} />
+                        <Area type="monotone" dataKey="xp" stroke="#5B57F0" fill="url(#xpGradient)" strokeWidth={2} dot={false} animationDuration={1000} />
                       </AreaChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-48 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
+                    <div className="h-48 flex items-center justify-center text-sm text-[#8A857A]">
                       Complete quests to see XP history
                     </div>
                   )}
@@ -486,26 +492,25 @@ export default function AnalyticsPage() {
 
                 {/* Chart 2: Stat radar */}
                 <motion.div
-                  className="p-6 rounded-2xl border"
-                  style={{ background: '#13131F', borderColor: '#1E1E35' }}
+                  className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.15 }}
                 >
-                  <h2 className="text-base font-bold mb-1 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                    <Activity size={16} className="text-purple-400" />
+                  <h2 className="text-base font-bold mb-1 flex items-center gap-2 text-[#232019]">
+                    <Activity size={16} className="text-[#5B57F0]" />
                     <span>Your Life Balance</span>
                   </h2>
-                  <p className="text-xs mb-3" style={{ color: '#5C5A7A' }}>
+                  <p className="text-xs mb-3 text-[#6E6A61]">
                     Strongest: <span style={{ color: STAT_META[strongestStat as StatKey]?.color }}>{STAT_META[strongestStat as StatKey]?.label}</span>
                     {' · '}
                     Weakest: <span style={{ color: STAT_META[weakestStat as StatKey]?.color }}>{STAT_META[weakestStat as StatKey]?.label}</span>
                   </p>
                   <ResponsiveContainer width="100%" height={200}>
                     <RadarChart data={radarData}>
-                      <PolarGrid stroke="#1E1E35" />
-                      <PolarAngleAxis dataKey="stat" tick={{ fontSize: 11, fill: '#9B99B8' }} />
-                      <Radar name="Stats" dataKey="value" stroke="#F59E0B" fill="#7C3AED" fillOpacity={0.4} strokeWidth={2} animationDuration={1000} />
+                      <PolarGrid stroke="#EAE6DD" />
+                      <PolarAngleAxis dataKey="stat" tick={{ fontSize: 11, fill: '#6E6A61' }} />
+                      <Radar name="Stats" dataKey="value" stroke="#5B57F0" fill="#5B57F0" fillOpacity={0.25} strokeWidth={2} animationDuration={1000} />
                     </RadarChart>
                   </ResponsiveContainer>
                 </motion.div>
@@ -513,14 +518,13 @@ export default function AnalyticsPage() {
 
               {/* Chart 3: Heatmap */}
               <motion.div
-                className="p-6 rounded-2xl border mb-6"
-                style={{ background: '#13131F', borderColor: '#1E1E35' }}
+                className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm mb-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-base font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                  <Calendar size={16} className="text-blue-400" />
+                <h2 className="text-base font-bold mb-4 flex items-center gap-2 text-[#232019]">
+                  <Calendar size={16} className="text-blue-500" />
                   <span>Your Consistency Map</span>
                 </h2>
                 <ConsistencyHeatmap data={heatmapData} />
@@ -530,15 +534,14 @@ export default function AnalyticsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 {/* Chart 4: Stat growth */}
                 <motion.div
-                  className="p-6 rounded-2xl border"
-                  style={{ background: '#13131F', borderColor: '#1E1E35' }}
+                  className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.25 }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-base font-bold font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                      <TrendingUp size={16} className="text-emerald-400" />
+                    <h2 className="text-base font-bold flex items-center gap-2 text-[#232019]">
+                      <TrendingUp size={16} className="text-emerald-600" />
                       <span>Stat Growth Over Time</span>
                     </h2>
                   </div>
@@ -550,12 +553,11 @@ export default function AnalyticsPage() {
                         <button
                           key={s}
                           onClick={() => setActiveStat(s)}
-                          className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                          className="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
                           style={{
-                            background: activeStat === s ? STAT_META[s].color + '33' : '#0F0F1A',
-                            color: activeStat === s ? STAT_META[s].color : '#5C5A7A',
-                            border: `1px solid ${activeStat === s ? STAT_META[s].color + '66' : '#1E1E35'}`,
-                            fontFamily: 'Oxanium, sans-serif',
+                            background: activeStat === s ? STAT_META[s].color + '15' : '#FAF8F5',
+                            color: activeStat === s ? STAT_META[s].color : '#6E6A61',
+                            border: `1px solid ${activeStat === s ? STAT_META[s].color + '55' : '#EAE6DD'}`,
                           }}
                         >
                           <StatIcon size={12} /> {STAT_META[s].label}
@@ -568,13 +570,13 @@ export default function AnalyticsPage() {
                       <AreaChart data={snapshots}>
                         <defs>
                           <linearGradient id={`statGrad-${activeStat}`} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={STAT_META[activeStat].color} stopOpacity={0.4} />
+                            <stop offset="5%" stopColor={STAT_META[activeStat].color} stopOpacity={0.3} />
                             <stop offset="95%" stopColor={STAT_META[activeStat].color} stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1E1E35" />
-                        <XAxis dataKey="snapshot_date" tick={{ fontSize: 10, fill: '#5C5A7A' }} tickFormatter={v => v.slice(5)} />
-                        <YAxis tick={{ fontSize: 10, fill: '#5C5A7A' }} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#EAE6DD" />
+                        <XAxis dataKey="snapshot_date" tick={{ fontSize: 10, fill: '#8A857A' }} tickFormatter={v => v.slice(5)} />
+                        <YAxis tick={{ fontSize: 10, fill: '#8A857A' }} />
                         <Tooltip contentStyle={TOOLTIP_STYLE} />
                         <Area
                           type="monotone"
@@ -588,7 +590,7 @@ export default function AnalyticsPage() {
                       </AreaChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-40 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
+                    <div className="h-40 flex items-center justify-center text-sm text-[#8A857A]">
                       Complete quests to track stat growth
                     </div>
                   )}
@@ -596,17 +598,16 @@ export default function AnalyticsPage() {
 
                 {/* Chart 5: Quest distribution pie */}
                 <motion.div
-                  className="p-6 rounded-2xl border"
-                  style={{ background: '#13131F', borderColor: '#1E1E35' }}
+                  className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <h2 className="text-base font-bold mb-1 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                    <Target size={16} className="text-pink-400" />
+                  <h2 className="text-base font-bold mb-1 flex items-center gap-2 text-[#232019]">
+                    <Target size={16} className="text-pink-500" />
                     <span>What You Focus On Most</span>
                   </h2>
-                  <p className="text-xs mb-4" style={{ color: '#5C5A7A' }}>{totalQuests} total quests</p>
+                  <p className="text-xs mb-4 text-[#8A857A]">{totalQuests} total quests</p>
                   {questsByCategory.length > 0 ? (
                     <ResponsiveContainer width="100%" height={200}>
                       <PieChart>
@@ -625,12 +626,12 @@ export default function AnalyticsPage() {
                         </Pie>
                         <Tooltip contentStyle={TOOLTIP_STYLE} />
                         <Legend
-                          formatter={(value) => <span style={{ color: '#9B99B8', fontSize: 11 }}>{value}</span>}
+                          formatter={(value) => <span style={{ color: '#6E6A61', fontSize: 11 }}>{value}</span>}
                         />
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-48 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
+                    <div className="h-48 flex items-center justify-center text-sm text-[#8A857A]">
                       Complete quests to see distribution
                     </div>
                   )}
@@ -639,22 +640,21 @@ export default function AnalyticsPage() {
 
               {/* Chart 6: Daily XP bars */}
               <motion.div
-                className="p-6 rounded-2xl border mb-8"
-                style={{ background: '#13131F', borderColor: '#1E1E35' }}
+                className="p-6 rounded-2xl border border-[#EAE6DD] bg-white shadow-sm mb-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.35 }}
               >
-                <h2 className="text-base font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                  <Zap size={16} className="text-amber-400" />
+                <h2 className="text-base font-bold mb-4 flex items-center gap-2 text-[#232019]">
+                  <Zap size={16} className="text-amber-500" />
                   <span>Daily XP — Last 14 Days</span>
                 </h2>
                 {xpHistory.length > 0 ? (
                   <ResponsiveContainer width="100%" height={160}>
                     <BarChart data={xpHistory.slice(-14)}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1E1E35" />
-                      <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#5C5A7A' }} tickFormatter={v => v.slice(5)} />
-                      <YAxis tick={{ fontSize: 10, fill: '#5C5A7A' }} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#EAE6DD" />
+                      <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#8A857A' }} tickFormatter={v => v.slice(5)} />
+                      <YAxis tick={{ fontSize: 10, fill: '#8A857A' }} />
                       <Tooltip
                         contentStyle={TOOLTIP_STYLE}
                         formatter={(v: any, _name: any, props: any) => [
@@ -665,13 +665,13 @@ export default function AnalyticsPage() {
                       <Bar dataKey="xp" radius={[4, 4, 0, 0]} animationDuration={800}>
                         {xpHistory.slice(-14).map((entry, i) => {
                           const isThisWeek = new Date(entry.date) >= (() => { const d = new Date(); d.setDate(d.getDate() - 7); return d })()
-                          return <Cell key={i} fill={isThisWeek ? '#7C3AED' : '#3E3E5A'} />
+                          return <Cell key={i} fill={isThisWeek ? '#5B57F0' : '#D6D3FA'} />
                         })}
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="h-40 flex items-center justify-center text-sm" style={{ color: '#5C5A7A' }}>
+                  <div className="h-40 flex items-center justify-center text-sm text-[#8A857A]">
                     No XP data yet — start completing quests!
                   </div>
                 )}
@@ -679,15 +679,15 @@ export default function AnalyticsPage() {
 
               {/* AI Insights */}
               <div>
-                <h2 className="text-lg font-bold mb-4 font-display flex items-center gap-2" style={{ color: '#F1F0FF' }}>
-                  <Bot size={20} className="text-purple-400" />
+                <h2 className="text-lg font-bold mb-4 flex items-center gap-2 text-[#232019]">
+                  <Bot size={20} className="text-[#5B57F0]" />
                   <span>Your Insights</span>
                 </h2>
                 {insightsLoading ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="p-5 rounded-2xl border animate-pulse" style={{ background: '#13131F', borderColor: '#1E1E35', height: 160 }}>
-                        <div className="text-xs mb-2" style={{ color: '#5C5A7A' }}>Analyzing your data...</div>
+                      <div key={i} className="p-5 rounded-2xl border border-[#EAE6DD] bg-white animate-pulse" style={{ height: 160 }}>
+                        <div className="text-xs mb-2 text-[#8A857A]">Analyzing your data...</div>
                       </div>
                     ))}
                   </div>
@@ -699,30 +699,30 @@ export default function AnalyticsPage() {
                       return (
                         <motion.div
                           key={i}
-                          className="p-5 rounded-2xl border"
+                          className="p-5 rounded-2xl border shadow-xs"
                           style={{
                             background: cfg.bg,
-                            borderColor: cfg.border + '55',
+                            borderColor: cfg.border + '44',
                           }}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.1 }}
                         >
                           <div className="flex items-center gap-2 mb-3">
-                            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${cfg.border}22`, color: cfg.border }}>
+                            <div className="w-7 h-7 rounded-lg flex items-center justify-center shadow-2xs" style={{ background: `${cfg.border}20`, color: cfg.border }}>
                               <InsightIcon size={16} />
                             </div>
-                            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: cfg.border, fontFamily: 'Oxanium, sans-serif' }}>
+                            <span className="text-2xs font-bold uppercase tracking-wider" style={{ color: cfg.border }}>
                               {cfg.label}
                             </span>
                           </div>
-                          <div className="font-bold text-sm mb-2 font-display" style={{ color: '#F1F0FF' }}>
+                          <div className="font-bold text-sm mb-2 text-[#232019]">
                             {insight.title}
                           </div>
-                          <p className="text-xs mb-3" style={{ color: '#9B99B8' }}>
+                          <p className="text-xs mb-3 text-[#6E6A61]">
                             {insight.body}
                           </p>
-                          <div className="text-xs font-semibold" style={{ color: cfg.border }}>
+                          <div className="text-xs font-bold" style={{ color: cfg.border }}>
                             → {insight.action}
                           </div>
                         </motion.div>
@@ -730,14 +730,14 @@ export default function AnalyticsPage() {
                     })}
                   </div>
                 ) : (
-                  <div className="p-6 rounded-2xl border text-center" style={{ background: '#13131F', borderColor: '#1E1E35' }}>
-                    <div className="w-12 h-12 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 mx-auto mb-2">
+                  <div className="p-6 rounded-2xl border border-[#EAE6DD] bg-white text-center shadow-sm">
+                    <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center text-[#5B57F0] mx-auto mb-2">
                       <Bot size={24} />
                     </div>
-                    <p className="text-sm" style={{ color: '#5C5A7A' }}>
+                    <p className="text-sm text-[#8A857A]">
                       Complete more quests to unlock AI insights about your journey.
                     </p>
-                    <Link href="/quests" className="inline-block mt-3 text-xs px-4 py-2 rounded-xl" style={{ background: '#7C3AED22', color: '#9F67FF' }}>
+                    <Link href="/quests" className="inline-block mt-3 text-xs font-semibold px-4 py-2 rounded-xl bg-[#EDECFD] text-[#5B57F0]">
                       Go to Quests →
                     </Link>
                   </div>

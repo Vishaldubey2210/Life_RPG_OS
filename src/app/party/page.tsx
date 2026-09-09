@@ -93,19 +93,19 @@ const REACTIONS = ['flame', 'dumbbell', 'party_popper', 'zap', 'crown']
 
 function SkeletonCard() {
   return (
-    <div className="p-4 rounded-2xl animate-pulse" style={{ background: '#13131F', border: '1px solid #1E1E35' }}>
-      <div className="h-16 rounded-xl mb-3" style={{ background: '#1E1E35' }} />
-      <div className="h-4 rounded w-2/3 mb-2" style={{ background: '#1E1E35' }} />
-      <div className="h-3 rounded w-1/2" style={{ background: '#1E1E35' }} />
+    <div className="p-4 rounded-2xl animate-pulse bg-white border border-[#EAE6DD] shadow-xs">
+      <div className="h-16 rounded-xl mb-3 bg-[#FAF8F5]" />
+      <div className="h-4 rounded w-2/3 mb-2 bg-[#FAF8F5]" />
+      <div className="h-3 rounded w-1/2 bg-[#FAF8F5]" />
     </div>
   )
 }
 
 function HPBar({ hp, hpMax }: { hp: number; hpMax: number }) {
   const pct = Math.max(0, Math.min(100, (hp / (hpMax || 100)) * 100))
-  const color = pct > 60 ? '#22C55E' : pct > 30 ? '#F59E0B' : '#EF4444'
+  const color = pct > 60 ? '#10B981' : pct > 30 ? '#F59E0B' : '#EF4444'
   return (
-    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
+    <div className="h-1.5 rounded-full overflow-hidden bg-[#FAF8F5] border border-[#EAE6DD]">
       <motion.div
         className="h-full rounded-full"
         style={{ background: color, width: `${pct}%` }}
@@ -136,51 +136,49 @@ function MemberCard({
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-4 rounded-2xl relative overflow-hidden"
-      style={{
-        background: '#13131F',
-        border: `1px solid ${active ? '#22C55E44' : isMe ? '#7C3AED44' : '#1E1E35'}`,
-        boxShadow: active ? '0 0 20px #22C55E11' : isMe ? '0 0 20px #7C3AED11' : 'none',
-      }}
+      className={`p-4 rounded-2xl relative overflow-hidden bg-white border shadow-xs ${
+        active
+          ? 'border-emerald-300 ring-2 ring-emerald-500/10'
+          : isMe
+          ? 'border-[#5B57F0]/40 ring-2 ring-[#5B57F0]/10'
+          : 'border-[#EAE6DD]'
+      }`}
     >
       {active && (
         <div
-          className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full font-semibold flex items-center gap-1"
-          style={{ background: '#22C55E22', color: '#22C55E', fontFamily: 'Oxanium, sans-serif' }}
+          className="absolute top-2.5 right-2.5 text-2xs px-2 py-0.5 rounded-full font-bold flex items-center gap-1 bg-emerald-50 text-emerald-600 border border-emerald-200"
         >
-          <Zap size={11} /> Active
+          <Zap size={10} /> Active
         </div>
       )}
 
       {/* Avatar + Name */}
       <div className="flex items-center gap-3 mb-3">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: '#7C3AED15', border: '1px solid #7C3AED33', color: '#9F67FF' }}
+          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-purple-50 border border-purple-200 text-[#5B57F0] shadow-2xs"
         >
-          <DynamicIcon name={member.profile?.avatar_emoji ?? 'swords'} size={22} />
+          <DynamicIcon name={member.profile?.avatar_emoji ?? 'swords'} size={20} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-sm font-semibold truncate" style={{ color: '#F1F0FF' }}>
+            <span className="text-sm font-bold text-[#232019] truncate">
               {member.profile?.display_name ?? 'Unknown'}
             </span>
             {isMe && (
               <span
-                className="text-xs px-1.5 py-0.5 rounded"
-                style={{ background: '#7C3AED33', color: '#9F67FF', fontFamily: 'Oxanium, sans-serif' }}
+                className="text-2xs px-1.5 py-0.5 rounded-md font-bold bg-[#EDECFD] text-[#5B57F0]"
               >
                 You
               </span>
             )}
             {member.role === 'leader' && (
-              <Crown size={12} style={{ color: '#F59E0B' }} />
+              <Crown size={13} className="text-amber-500" />
             )}
           </div>
-          <div className="flex items-center gap-2 mt-0.5 text-xs" style={{ color: '#9B99B8' }}>
+          <div className="flex items-center gap-2 mt-0.5 text-xs text-[#6E6A61]">
             <span>Lv.{member.profile?.level ?? 1}</span>
             <span>•</span>
-            <span className="flex items-center gap-1" style={{ color: '#F59E0B' }}>
+            <span className="flex items-center gap-1 font-semibold text-amber-600">
               <Flame size={12} /> {member.profile?.streak ?? 0}
             </span>
           </div>
@@ -189,17 +187,17 @@ function MemberCard({
 
       {/* Quest progress */}
       <div className="mb-2">
-        <div className="flex justify-between text-xs mb-1" style={{ color: '#9B99B8' }}>
+        <div className="flex justify-between text-xs mb-1 text-[#6E6A61]">
           <span>Quests Today</span>
-          <span style={{ color: questPct >= 100 ? '#22C55E' : '#F1F0FF' }}>
+          <span className={`font-semibold ${questPct >= 100 ? 'text-emerald-600' : 'text-[#232019]'}`}>
             {member.quests_done_today}/{member.quests_total}
           </span>
         </div>
-        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
+        <div className="h-1.5 rounded-full overflow-hidden bg-[#FAF8F5] border border-[#EAE6DD]">
           <motion.div
             className="h-full rounded-full"
             style={{
-              background: questPct >= 100 ? '#22C55E' : 'linear-gradient(90deg, #7C3AED, #9F67FF)',
+              background: questPct >= 100 ? '#10B981' : 'linear-gradient(90deg, #5B57F0, #8B5CF6)',
               width: `${questPct}%`,
             }}
             animate={{ width: `${questPct}%` }}
@@ -213,23 +211,14 @@ function MemberCard({
 
       {/* Reaction buttons (only for others) */}
       {!isMe && (
-        <div className="flex gap-1 mt-3 flex-wrap">
+        <div className="flex gap-1.5 mt-3 flex-wrap">
           {REACTIONS.map(emoji => (
             <button
               key={emoji}
               onClick={() => onReact(member.user_id, emoji)}
-              className="p-1.5 rounded-lg transition-all duration-200 text-slate-400 hover:text-white flex items-center justify-center"
-              style={{ background: '#1E1E35' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#2E2E50'
-                e.currentTarget.style.transform = 'scale(1.15)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#1E1E35'
-                e.currentTarget.style.transform = 'scale(1)'
-              }}
+              className="p-1.5 rounded-lg transition-all text-[#6E6A61] hover:text-[#5B57F0] hover:bg-purple-50 flex items-center justify-center bg-[#FAF8F5] border border-[#EAE6DD] hover:border-[#5B57F0]/30 shadow-2xs cursor-pointer"
             >
-              <DynamicIcon name={emoji} size={15} />
+              <DynamicIcon name={emoji} size={14} />
             </button>
           ))}
         </div>
@@ -244,9 +233,9 @@ function ActivityFeed({ events }: { events: ActivityEvent[] }) {
       {events.length === 0 ? (
         <div className="text-center py-8">
           <div className="flex justify-center mb-2">
-            <Scroll className="w-8 h-8 text-slate-600" />
+            <Scroll className="w-8 h-8 text-[#8A857A]" />
           </div>
-          <div className="text-sm" style={{ color: '#5C5A7A' }}>No party activity yet</div>
+          <div className="text-sm text-[#8A857A]">No party activity yet</div>
         </div>
       ) : (
         events.map((ev, i) => (
@@ -255,27 +244,25 @@ function ActivityFeed({ events }: { events: ActivityEvent[] }) {
             initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.04 }}
-            className="flex items-center gap-3 p-3 rounded-xl"
+            className="flex items-center gap-3 p-3 rounded-xl bg-[#FAF8F5] border border-[#EAE6DD] shadow-2xs"
             style={{
-              background: '#0F0F1A',
-              borderLeft: `3px solid ${ev.border_color}`,
+              borderLeft: `3px solid ${ev.border_color || '#5B57F0'}`,
             }}
           >
             <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: '#7C3AED15', color: '#9F67FF' }}
+              className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 bg-purple-50 text-[#5B57F0]"
             >
-              <DynamicIcon name={ev.user_avatar} size={16} />
+              <DynamicIcon name={ev.user_avatar} size={15} />
             </div>
             <div className="flex-1 min-w-0">
-              <span className="text-xs font-semibold" style={{ color: '#F1F0FF' }}>
+              <span className="text-xs font-bold text-[#232019]">
                 {ev.user_name}
               </span>
-              <span className="text-xs ml-1" style={{ color: '#9B99B8' }}>
+              <span className="text-xs ml-1.5 text-[#6E6A61]">
                 {ev.message}
               </span>
             </div>
-            <span className="text-xs flex-shrink-0" style={{ color: '#5C5A7A' }}>
+            <span className="text-2xs text-[#8A857A] flex-shrink-0">
               {timeAgo(ev.timestamp)}
             </span>
           </motion.div>
@@ -383,35 +370,32 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
           transition={{ repeat: Infinity, duration: 3 }}
           className="flex justify-center mb-4"
         >
-          <div className="w-20 h-20 rounded-3xl flex items-center justify-center bg-purple-500/15 border border-purple-500/30 text-purple-400">
-            <Users size={40} />
+          <div className="w-20 h-20 rounded-3xl flex items-center justify-center bg-purple-50 border border-purple-200 text-[#5B57F0] shadow-sm">
+            <Users size={38} />
           </div>
         </motion.div>
-        <h2 className="text-2xl font-bold mb-2 font-display" style={{ color: '#F1F0FF' }}>
+        <h2 className="text-2xl font-bold mb-2 text-[#232019]">
           Adventure is better with others
         </h2>
-        <p style={{ color: '#9B99B8' }}>Create a party or join with an invite code</p>
+        <p className="text-sm text-[#6E6A61]">Create a party or join with an invite code</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
         {/* Create Card */}
         <motion.div
           whileHover={{ scale: 1.02 }}
-          className="p-6 rounded-2xl cursor-pointer"
-          style={{
-            background: '#13131F',
-            border: `2px solid ${mode === 'create' ? '#7C3AED' : '#1E1E35'}`,
-          }}
+          className={`p-6 rounded-2xl cursor-pointer bg-white border shadow-sm transition-all ${
+            mode === 'create' ? 'border-[#5B57F0] ring-2 ring-[#5B57F0]/10' : 'border-[#EAE6DD]'
+          }`}
           onClick={() => setMode(mode === 'create' ? 'idle' : 'create')}
         >
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center mb-3"
-            style={{ background: '#7C3AED22', color: '#9F67FF' }}
+            className="w-12 h-12 rounded-xl flex items-center justify-center mb-3 bg-purple-50 border border-purple-200 text-[#5B57F0]"
           >
             <Swords size={24} />
           </div>
-          <h3 className="font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>Start a Party</h3>
-          <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
+          <h3 className="font-bold mb-1 text-[#232019]">Start a Party</h3>
+          <p className="text-sm mb-4 text-[#6E6A61]">
             Create a new party and invite your friends
           </p>
 
@@ -427,14 +411,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                   value={partyName}
                   onChange={(e) => setPartyName(e.target.value)}
                   placeholder="Party name..."
-                  className="w-full px-4 py-2.5 rounded-xl text-sm mb-3 outline-none"
-                  style={{
-                    background: '#0F0F1A',
-                    border: '1px solid #2E2E50',
-                    color: '#F1F0FF',
-                  }}
-                  onFocus={(e) => (e.target.style.borderColor = '#7C3AED')}
-                  onBlur={(e) => (e.target.style.borderColor = '#2E2E50')}
+                  className="w-full px-4 py-2.5 rounded-xl text-sm mb-3 outline-none bg-[#FAF8F5] border border-[#EAE6DD] text-[#232019] focus:border-[#5B57F0] focus:bg-white"
                 />
 
                 <div className="flex gap-2 mb-4">
@@ -446,11 +423,11 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                     <button
                       key={value}
                       onClick={() => setPartyType(value as 'friends' | 'couple' | 'family')}
-                      className="flex-1 text-xs py-1.5 rounded-lg font-medium transition-all"
-                      style={{
-                        background: partyType === value ? '#7C3AED' : '#1E1E35',
-                        color: partyType === value ? '#fff' : '#9B99B8',
-                      }}
+                      className={`flex-1 text-xs py-1.5 rounded-lg font-semibold transition-all border ${
+                        partyType === value
+                          ? 'bg-[#5B57F0] text-white border-[#5B57F0]'
+                          : 'bg-[#FAF8F5] text-[#6E6A61] border-[#EAE6DD]'
+                      }`}
                     >
                       {label}
                     </button>
@@ -460,15 +437,9 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                 <button
                   onClick={handleCreate}
                   disabled={loading}
-                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
-                  style={{
-                    background: loading ? '#5C5A7A' : '#7C3AED',
-                    color: '#fff',
-                    fontFamily: 'Oxanium, sans-serif',
-                    boxShadow: loading ? 'none' : '0 0 20px #7C3AED44',
-                  }}
+                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-[#5B57F0] text-white hover:bg-[#4F46E5] shadow-sm cursor-pointer"
                 >
-                  <Swords size={16} />
+                  <Plus size={16} />
                   <span>{loading ? 'Creating...' : 'Create Party'}</span>
                 </button>
               </motion.div>
@@ -476,10 +447,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
           </AnimatePresence>
 
           {mode !== 'create' && (
-            <div
-              className="flex items-center gap-1 text-xs font-semibold"
-              style={{ color: '#7C3AED', fontFamily: 'Oxanium, sans-serif' }}
-            >
+            <div className="flex items-center gap-1 text-xs font-bold text-[#5B57F0]">
               <Plus size={14} /> Create
             </div>
           )}
@@ -488,21 +456,18 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
         {/* Join Card */}
         <motion.div
           whileHover={{ scale: 1.02 }}
-          className="p-6 rounded-2xl cursor-pointer"
-          style={{
-            background: '#13131F',
-            border: `2px solid ${mode === 'join' ? '#22C55E' : '#1E1E35'}`,
-          }}
+          className={`p-6 rounded-2xl cursor-pointer bg-white border shadow-sm transition-all ${
+            mode === 'join' ? 'border-emerald-500 ring-2 ring-emerald-500/10' : 'border-[#EAE6DD]'
+          }`}
           onClick={() => setMode(mode === 'join' ? 'idle' : 'join')}
         >
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center mb-3"
-            style={{ background: '#22C55E22', color: '#22C55E' }}
+            className="w-12 h-12 rounded-xl flex items-center justify-center mb-3 bg-emerald-50 border border-emerald-200 text-emerald-600"
           >
             <LinkIcon size={24} />
           </div>
-          <h3 className="font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>Join with Code</h3>
-          <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
+          <h3 className="font-bold mb-1 text-[#232019]">Join with Code</h3>
+          <p className="text-sm mb-4 text-[#6E6A61]">
             Enter an 8-character invite code to join
           </p>
 
@@ -519,28 +484,16 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                   placeholder="ABC12345"
                   maxLength={8}
-                  className="w-full px-4 py-2.5 rounded-xl text-sm mb-4 outline-none text-center tracking-widest font-bold uppercase"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm mb-4 outline-none text-center tracking-widest font-bold uppercase bg-[#FAF8F5] border border-[#EAE6DD] text-[#232019] focus:border-emerald-500 focus:bg-white"
                   style={{
-                    background: '#0F0F1A',
-                    border: '1px solid #2E2E50',
-                    color: '#F1F0FF',
-                    fontFamily: 'Oxanium, sans-serif',
                     letterSpacing: '0.3em',
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = '#22C55E')}
-                  onBlur={(e) => (e.target.style.borderColor = '#2E2E50')}
                 />
 
                 <button
                   onClick={handleJoin}
                   disabled={loading}
-                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
-                  style={{
-                    background: loading ? '#5C5A7A' : '#22C55E',
-                    color: loading ? '#fff' : '#08080F',
-                    fontFamily: 'Oxanium, sans-serif',
-                    boxShadow: loading ? 'none' : '0 0 20px #22C55E44',
-                  }}
+                  className="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm cursor-pointer"
                 >
                   <LinkIcon size={16} />
                   <span>{loading ? 'Joining...' : 'Join Party'}</span>
@@ -550,10 +503,7 @@ function NoPartyScreen({ onCreated }: { onCreated: () => void }) {
           </AnimatePresence>
 
           {mode !== 'join' && (
-            <div
-              className="flex items-center gap-1 text-xs font-semibold"
-              style={{ color: '#22C55E', fontFamily: 'Oxanium, sans-serif' }}
-            >
+            <div className="flex items-center gap-1 text-xs font-bold text-emerald-600">
               <LinkIcon size={14} /> Join
             </div>
           )}
@@ -599,21 +549,20 @@ function ShareQuestModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="w-full max-w-sm rounded-2xl p-6"
-        style={{ background: '#13131F', border: '1px solid #2E2E50' }}
+        className="w-full max-w-sm rounded-3xl p-6 bg-white border border-[#EAE6DD] shadow-2xl"
       >
         <div className="flex items-center gap-2 mb-1">
-          <Users size={20} className="text-purple-400" />
-          <h3 className="font-bold text-lg font-display" style={{ color: '#F1F0FF' }}>
+          <Users size={20} className="text-[#5B57F0]" />
+          <h3 className="font-bold text-lg text-[#232019]">
             Share a Quest
           </h3>
         </div>
-        <p className="text-sm mb-4" style={{ color: '#9B99B8' }}>
+        <p className="text-sm mb-4 text-[#6E6A61]">
           Shared quests appear in all members&apos; quest lists.
         </p>
 
@@ -622,20 +571,18 @@ function ShareQuestModal({
             <button
               key={h.id}
               onClick={() => setSelected(h.id)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all"
-              style={{
-                background: selected === h.id ? '#7C3AED22' : '#0F0F1A',
-                border: `1px solid ${selected === h.id ? '#7C3AED' : '#1E1E35'}`,
-                color: '#F1F0FF',
-              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all border cursor-pointer ${
+                selected === h.id
+                  ? 'bg-purple-50 border-[#5B57F0] text-[#5B57F0]'
+                  : 'bg-[#FAF8F5] border-[#EAE6DD] text-[#232019] hover:bg-white'
+              }`}
             >
               <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: '#7C3AED15', color: '#9F67FF' }}
+                className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 bg-white border border-[#EAE6DD] text-[#5B57F0]"
               >
-                <DynamicIcon name={h.emoji} size={18} />
+                <DynamicIcon name={h.emoji} size={16} />
               </div>
-              <span className="text-sm">{h.name}</span>
+              <span className="text-sm font-semibold">{h.name}</span>
             </button>
           ))}
         </div>
@@ -643,20 +590,18 @@ function ShareQuestModal({
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl text-sm transition-colors"
-            style={{ background: '#1E1E35', color: '#9B99B8' }}
+            className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-[#6E6A61] bg-[#FAF8F5] border border-[#EAE6DD] hover:bg-[#EAE6DD]/50 cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleShare}
             disabled={!selected || loading}
-            className="flex-1 py-2.5 rounded-xl text-sm font-bold transition-all"
-            style={{
-              background: selected && !loading ? '#7C3AED' : '#5C5A7A',
-              color: '#fff',
-              fontFamily: 'Oxanium, sans-serif',
-            }}
+            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              selected && !loading
+                ? 'bg-[#5B57F0] text-white shadow-sm cursor-pointer'
+                : 'bg-[#EAE6DD] text-[#8A857A] cursor-not-allowed'
+            }`}
           >
             {loading ? 'Sharing...' : 'Share Quest'}
           </button>
@@ -816,7 +761,7 @@ export default function PartyPage() {
             message: `completed ${h?.name ?? 'a quest'} +${h?.xp_reward ?? 0} XP`,
             xp: h?.xp_reward ?? 0,
             timestamp: c.completed_at,
-            border_color: '#22C55E',
+            border_color: '#10B981',
           }
         })
 
@@ -864,7 +809,7 @@ export default function PartyPage() {
             message: `completed ${habitData?.name ?? 'a quest'} +${habitData?.xp_reward ?? 0} XP`,
             xp: habitData?.xp_reward ?? 0,
             timestamp: completion.completed_at,
-            border_color: '#22C55E',
+            border_color: '#10B981',
           }
 
           setActivity(prev => [newEvent, ...prev].slice(0, 20))
@@ -887,7 +832,6 @@ export default function PartyPage() {
       })
       toast.success('Reaction sent!')
     } catch {
-      // If RPC doesn't exist yet, just show toast
       toast.success('Reaction sent to party member!')
     }
   }
@@ -911,12 +855,12 @@ export default function PartyPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen" style={{ background: '#08080F' }}>
-        <Sidebar userAvatar={profile?.avatar_emoji ?? 'swords'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
+      <div className="flex min-h-screen bg-[#FBFAF7]">
+        <Sidebar userAvatar={profile?.avatar_emoji ?? 'leaf'} userName={profile?.display_name ?? 'Adventurer'} userLevel={profile?.level ?? 1} />
         <main className="flex-1 p-6 pt-20" style={{ marginLeft: 240 }}>
           <div className="max-w-6xl mx-auto">
-            <div className="h-8 rounded w-48 mb-2 animate-pulse" style={{ background: '#13131F' }} />
-            <div className="h-4 rounded w-64 mb-8 animate-pulse" style={{ background: '#13131F' }} />
+            <div className="h-8 rounded w-48 mb-2 animate-pulse bg-white border border-[#EAE6DD]" />
+            <div className="h-4 rounded w-64 mb-8 animate-pulse bg-white border border-[#EAE6DD]" />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
             </div>
@@ -927,15 +871,15 @@ export default function PartyPage() {
   }
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#08080F' }}>
+    <div className="flex min-h-screen bg-[#FBFAF7] text-[#232019]">
       <Sidebar
-        userAvatar={profile?.avatar_emoji ?? 'swords'}
+        userAvatar={profile?.avatar_emoji ?? 'leaf'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
         completedToday={completions_today.length}
       />
       <TopNav
-        userAvatar={profile?.avatar_emoji ?? 'swords'}
+        userAvatar={profile?.avatar_emoji ?? 'leaf'}
         userName={profile?.display_name ?? 'Adventurer'}
         userLevel={profile?.level ?? 1}
       />
@@ -947,10 +891,10 @@ export default function PartyPage() {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-1 font-display" style={{ color: '#F1F0FF' }}>
+            <h1 className="text-3xl font-bold mb-1 text-[#232019]">
               Party System
             </h1>
-            <p style={{ color: '#9B99B8' }}>
+            <p className="text-sm text-[#6E6A61]">
               Team up, share quests, and conquer goals together.
             </p>
           </div>
@@ -964,43 +908,27 @@ export default function PartyPage() {
               <motion.div
                 initial={{ opacity: 0, y: -16 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-6 rounded-2xl relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(135deg, #13131F, #1A1025)',
-                  border: '1px solid #2E2E50',
-                  boxShadow: '0 0 40px #7C3AED11',
-                }}
+                className="p-6 rounded-2xl relative overflow-hidden bg-white border border-[#EAE6DD] shadow-sm"
               >
-                <div
-                  className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-5 blur-3xl pointer-events-none"
-                  style={{ background: '#7C3AED' }}
-                />
-
                 <div className="relative flex flex-col md:flex-row md:items-center gap-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: '#7C3AED22', border: '1px solid #7C3AED44', color: '#9F67FF' }}
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 bg-purple-50 border border-purple-200 text-[#5B57F0] shadow-2xs"
                     >
                       <DynamicIcon name={party.emoji} size={28} />
                     </div>
                     <div>
                       <div className="flex items-center gap-3 flex-wrap">
-                        <h2 className="text-xl font-bold font-display" style={{ color: '#F1F0FF' }}>
+                        <h2 className="text-xl font-bold text-[#232019]">
                           {party.name}
                         </h2>
                         <span
-                          className="text-xs px-2 py-1 rounded-full font-semibold"
-                          style={{
-                            background: '#7C3AED22',
-                            color: '#9F67FF',
-                            fontFamily: 'Oxanium, sans-serif',
-                          }}
+                          className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-[#EDECFD] text-[#5B57F0] border border-[#D6D3FA]"
                         >
                           {PARTY_TYPE_LABELS[party.party_type]}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 mt-1 text-sm" style={{ color: '#9B99B8' }}>
+                      <div className="flex items-center gap-2 mt-1 text-sm text-[#6E6A61]">
                         <Users size={14} />
                         <span>{members.length} / {party.max_members} members</span>
                       </div>
@@ -1010,32 +938,22 @@ export default function PartyPage() {
                   <div className="flex items-center gap-3 md:ml-auto flex-wrap">
                     {/* Invite Code */}
                     <div
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl"
-                      style={{ background: '#0F0F1A', border: '1px solid #2E2E50' }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FAF8F5] border border-[#EAE6DD]"
                     >
-                      <span className="text-xs" style={{ color: '#5C5A7A' }}>Code</span>
+                      <span className="text-xs text-[#8A857A]">Code</span>
                       <span
-                        className="text-sm font-bold tracking-widest"
-                        style={{ color: '#F1F0FF', fontFamily: 'Oxanium, sans-serif' }}
+                        className="text-sm font-bold tracking-widest text-[#232019]"
                       >
                         {party.invite_code}
                       </span>
-                      <button onClick={copyInviteCode} className="transition-all" style={{ color: codeCopied ? '#22C55E' : '#5C5A7A' }}>
-                        {codeCopied ? <Check size={14} /> : <Copy size={14} />}
+                      <button onClick={copyInviteCode} className="transition-all cursor-pointer text-[#8A857A] hover:text-[#5B57F0]">
+                        {codeCopied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
                       </button>
                     </div>
 
                     <button
                       onClick={sharePartyLink}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-                      style={{
-                        background: '#7C3AED',
-                        color: '#fff',
-                        fontFamily: 'Oxanium, sans-serif',
-                        boxShadow: '0 0 15px #7C3AED44',
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = '#6D28D9')}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = '#7C3AED')}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all bg-[#5B57F0] text-white hover:bg-[#4F46E5] shadow-xs cursor-pointer"
                     >
                       <Share2 size={14} />
                       Share
@@ -1054,13 +972,11 @@ export default function PartyPage() {
                   <button
                     key={key}
                     onClick={() => setActiveTab(key as typeof activeTab)}
-                    className="px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
-                    style={{
-                      background: activeTab === key ? '#7C3AED' : '#13131F',
-                      color: activeTab === key ? '#fff' : '#9B99B8',
-                      border: `1px solid ${activeTab === key ? '#7C3AED' : '#1E1E35'}`,
-                      fontFamily: 'Oxanium, sans-serif',
-                    }}
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-2xs border ${
+                      activeTab === key
+                        ? 'bg-[#5B57F0] text-white border-[#5B57F0]'
+                        : 'bg-white text-[#6E6A61] border-[#EAE6DD] hover:bg-[#FAF8F5]'
+                    }`}
                   >
                     <TabIcon size={15} />
                     <span>{label}</span>
@@ -1095,17 +1011,15 @@ export default function PartyPage() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
-                    className="p-6 rounded-2xl"
-                    style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+                    className="p-6 rounded-2xl bg-white border border-[#EAE6DD] shadow-sm"
                   >
                     <div className="flex items-center gap-2 mb-4">
-                      <Flame size={18} style={{ color: '#EF4444' }} />
-                      <h3 className="font-bold font-display" style={{ color: '#F1F0FF' }}>
+                      <Flame size={18} className="text-rose-500" />
+                      <h3 className="font-bold text-[#232019]">
                         Party Activity Feed
                       </h3>
                       <span
-                        className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
-                        style={{ background: '#22C55E22', color: '#22C55E' }}
+                        className="text-2xs px-2 py-0.5 rounded-full flex items-center gap-1 bg-emerald-50 text-emerald-600 font-semibold border border-emerald-200"
                       >
                         <Zap size={11} /> Live
                       </span>
@@ -1120,27 +1034,19 @@ export default function PartyPage() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
-                    className="p-6 rounded-2xl"
-                    style={{ background: '#13131F', border: '1px solid #1E1E35' }}
+                    className="p-6 rounded-2xl bg-white border border-[#EAE6DD] shadow-sm"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <Zap size={18} style={{ color: '#F59E0B' }} />
-                        <h3 className="font-bold font-display" style={{ color: '#F1F0FF' }}>
+                        <Zap size={18} className="text-amber-500" />
+                        <h3 className="font-bold text-[#232019]">
                           Shared Quests
                         </h3>
                       </div>
                       {party.created_by === profile?.id && (
                         <button
                           onClick={() => setShowShareModal(true)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all"
-                          style={{
-                            background: '#7C3AED',
-                            color: '#fff',
-                            fontFamily: 'Oxanium, sans-serif',
-                          }}
-                          onMouseEnter={(e) => (e.currentTarget.style.background = '#6D28D9')}
-                          onMouseLeave={(e) => (e.currentTarget.style.background = '#7C3AED')}
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all bg-[#5B57F0] text-white hover:bg-[#4F46E5] shadow-xs cursor-pointer"
                         >
                           <Plus size={14} />
                           Share a Quest
@@ -1151,13 +1057,12 @@ export default function PartyPage() {
                     <div className="text-center py-8">
                       <div className="flex justify-center mb-3">
                         <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center"
-                          style={{ background: '#7C3AED15', color: '#9F67FF' }}
+                          className="w-12 h-12 rounded-2xl flex items-center justify-center bg-purple-50 border border-purple-200 text-[#5B57F0]"
                         >
                           <Target size={24} />
                         </div>
                       </div>
-                      <p className="text-sm" style={{ color: '#9B99B8' }}>
+                      <p className="text-sm text-[#6E6A61] max-w-md mx-auto">
                         {party.created_by === profile?.id
                           ? 'Share one of your quests with your party. All members get 50% bonus XP when completed.'
                           : 'The party leader can share quests here. Check back soon!'}
@@ -1172,52 +1077,41 @@ export default function PartyPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="p-6 rounded-2xl relative overflow-hidden"
-                style={{
-                  background: 'linear-gradient(135deg, #1A0A0A, #13131F)',
-                  border: '1px solid #EF444433',
-                }}
+                className="p-6 rounded-2xl relative overflow-hidden bg-gradient-to-br from-rose-50/70 to-amber-50/50 border border-rose-200 shadow-sm"
               >
-                <div
-                  className="absolute top-0 right-0 w-48 h-48 rounded-full opacity-10 blur-3xl pointer-events-none"
-                  style={{ background: '#EF4444' }}
-                />
                 <div className="relative flex items-center justify-between flex-wrap gap-4">
                   <div className="flex items-center gap-4">
                     <div
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: '#EF444422', border: '1px solid #EF444444', color: '#EF4444' }}
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 bg-rose-100 border border-rose-200 text-rose-600 shadow-xs"
                     >
                       <Skull size={32} />
                     </div>
                     <div>
                       <div
-                        className="text-xs font-bold mb-1 flex items-center gap-1.5"
-                        style={{ color: '#EF4444', fontFamily: 'Oxanium, sans-serif' }}
+                        className="text-xs font-bold mb-1 flex items-center gap-1.5 text-rose-600 uppercase tracking-wider"
                       >
                         <Swords size={12} />
                         <span>PARTY BOSS</span>
                       </div>
-                      <div className="text-lg font-bold font-display" style={{ color: '#F1F0FF' }}>
+                      <div className="text-lg font-bold text-[#232019]">
                         Procrastination Demon
                       </div>
-                      <div className="text-sm mt-1" style={{ color: '#9B99B8' }}>
+                      <div className="text-sm mt-0.5 text-[#6E6A61]">
                         Defeat by completing all quests this week • Reward: 500 bonus XP each
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 min-w-[200px]">
-                    <div className="flex justify-between text-xs mb-1" style={{ color: '#9B99B8' }}>
+                    <div className="flex justify-between text-xs mb-1 text-[#6E6A61]">
                       <span>Party Progress</span>
-                      <span style={{ color: '#EF4444' }}>
+                      <span className="font-bold text-rose-600">
                         {members.reduce((a, m) => a + m.quests_done_today, 0)} / {members.reduce((a, m) => a + m.quests_total, 0)} quests
                       </span>
                     </div>
-                    <div className="h-3 rounded-full overflow-hidden" style={{ background: '#1E1E35' }}>
+                    <div className="h-3 rounded-full overflow-hidden bg-white border border-rose-200">
                       <motion.div
-                        className="h-full rounded-full"
+                        className="h-full rounded-full bg-gradient-to-r from-rose-500 to-amber-500"
                         style={{
-                          background: 'linear-gradient(90deg, #EF4444, #F59E0B)',
                           width: `${members.reduce((a, m) => a + m.quests_total, 0) > 0
                             ? (members.reduce((a, m) => a + m.quests_done_today, 0) / members.reduce((a, m) => a + m.quests_total, 0)) * 100
                             : 0}%`,
@@ -1239,31 +1133,24 @@ export default function PartyPage() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
-                  className="flex items-center justify-between p-5 rounded-2xl transition-all duration-200 cursor-pointer"
-                  style={{
-                    background: 'linear-gradient(135deg, #1A0A1F, #13131F)',
-                    border: '1px solid #EC489933',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#EC4899')}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#EC489933')}
+                  className="flex items-center justify-between p-5 rounded-2xl transition-all duration-200 cursor-pointer bg-gradient-to-br from-pink-50 to-purple-50 border border-pink-200 shadow-sm hover:border-pink-300"
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                      style={{ background: '#EC489922', border: '1px solid #EC489944', color: '#EC4899' }}
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 bg-pink-100 border border-pink-200 text-pink-600 shadow-2xs"
                     >
                       <HeartHandshake size={24} />
                     </div>
                     <div>
-                      <div className="font-bold font-display" style={{ color: '#F1F0FF' }}>
+                      <div className="font-bold text-[#232019]">
                         Couple Mode
                       </div>
-                      <div className="text-sm" style={{ color: '#9B99B8' }}>
+                      <div className="text-sm text-[#6E6A61]">
                         Link up with your partner for a shared dashboard & sync tracking
                       </div>
                     </div>
                   </div>
-                  <ChevronRight size={20} style={{ color: '#EC4899' }} />
+                  <ChevronRight size={20} className="text-pink-600" />
                 </motion.a>
               )}
             </div>
