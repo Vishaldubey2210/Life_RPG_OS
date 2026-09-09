@@ -40,11 +40,17 @@ export async function updateSession(request: NextRequest) {
   const isPublicRoute =
     pathname === '/' ||
     pathname.startsWith('/login') ||
+    pathname.startsWith('/reset-password') ||
     pathname.startsWith('/auth') ||
     pathname.startsWith('/about') ||
     pathname.startsWith('/blog') ||
     pathname.startsWith('/terms') ||
     pathname.startsWith('/privacy') ||
+    pathname.startsWith('/manifest') ||
+    pathname.startsWith('/robots') ||
+    pathname.startsWith('/sitemap') ||
+    pathname.startsWith('/api/auth') ||
+    pathname.startsWith('/api/email') ||
     pathname.startsWith('/api/health') ||
     pathname.startsWith('/api/cron') ||
     pathname.startsWith('/share')

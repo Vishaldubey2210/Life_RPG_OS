@@ -97,19 +97,38 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim() }),
-      })
+      let sentSuccess = false
+      let msg = `Password reset scroll dispatched to ${email.trim()}! Check your Inbox & Spam folder.`
 
-      const result = await res.json()
-      if (!res.ok || result.error) {
-        throw new Error(result.error || 'Failed to dispatch reset email.')
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim() }),
+        })
+
+        if (res.ok) {
+          const result = await res.json()
+          if (result.success) {
+            sentSuccess = true
+            if (result.message) msg = result.message
+          }
+        }
+      } catch {
+        // Fallback to client Supabase reset below
+      }
+
+      // If API route was skipped or returned fallback, execute client SDK reset
+      if (!sentSuccess) {
+        const appOrigin = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, '')
+        const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: `${appOrigin}/auth/callback?type=recovery&next=/reset-password`,
+        })
+        if (resetErr) throw resetErr
       }
 
       setResendCooldown(60)
-      setNotice(result.message || `Password reset scroll dispatched to ${email.trim()}! Check your Inbox & Spam folder.`)
+      setNotice(msg)
     } catch (err: unknown) {
       setError(friendlyAuthError(err))
     } finally {
