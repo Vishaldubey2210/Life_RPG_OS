@@ -1,10 +1,26 @@
+/**
+ * Ultra-Premium Password Reset Email Template for Life RPG OS
+ * Designed with Light Creative RPG aesthetics and full email client compatibility.
+ */
+
+export interface ResetPasswordEmailParams {
+  name?: string
+  resetUrl: string
+  expiryMinutes?: number
+}
+
+export const resetPasswordEmail = ({
+  name = 'Adventurer',
+  resetUrl,
+  expiryMinutes = 60,
+}: ResetPasswordEmailParams): string => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Activate Your Life RPG OS Account</title>
+  <title>Reset Your Password — Life RPG OS</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #F6F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #2B2823;">
   <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F6F4EE; padding: 40px 16px;">
@@ -39,28 +55,28 @@
               <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 18px;">
                 <tr>
                   <td style="background-color: #EDECFD; border-radius: 999px; padding: 5px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5B57F0;">
-                    ⚔️ Quest #1 &bull; Account Verification
+                    🔑 Security Protocol &bull; Password Reset
                   </td>
                 </tr>
               </table>
 
               <h2 style="margin: 0 0 12px 0; font-size: 21px; font-weight: 700; color: #2B2823; line-height: 1.35; letter-spacing: -0.02em;">
-                Welcome, Adventurer! Activate your character sheet.
+                Reset your passcode, ${name}
               </h2>
               
               <p style="margin: 0 0 22px 0; font-size: 15px; line-height: 1.65; color: #5C574E;">
-                Your journey in <strong style="color: #2B2823;">Life RPG OS</strong> begins now. Verify your email address to unlock your Level 1 character sheet, start tracking daily habits, and earn XP for your real-life achievements.
+                We received a request to reset the password for your <strong style="color: #2B2823;">Life RPG OS</strong> character account. Click the button below to choose a new password.
               </p>
 
-              <!-- Quest Objective Box -->
+              <!-- Quest / Notice Box -->
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 22px 0; background-color: #FAF8F5; border: 1px solid #E6E2D8; border-left: 4px solid #5B57F0; border-radius: 12px;">
                 <tr>
                   <td style="padding: 16px 18px;">
                     <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #5B57F0;">
-                      🎯 Active Objective:
+                      🛡️ Account Security
                     </p>
-                    <p style="margin: 0; font-size: 13.5px; font-weight: 600; line-height: 1.45; color: #2B2823;">
-                      Verify Email Address &amp; Claim +50 Starter XP
+                    <p style="margin: 0; font-size: 13.5px; line-height: 1.45; color: #5C574E;">
+                      This recovery link is single-use and will automatically expire in <strong style="color: #2B2823;">${expiryMinutes} minutes</strong>.
                     </p>
                   </td>
                 </tr>
@@ -70,15 +86,15 @@
               <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 32px 0 26px 0;">
                 <tr>
                   <td align="center">
-                    <a href="{{ .ConfirmationURL }}" target="_blank" style="display: inline-block; padding: 16px 44px; background: linear-gradient(135deg, #5B57F0 0%, #4F46E5 100%); color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 8px 24px rgba(91, 87, 240, 0.35); text-align: center; letter-spacing: -0.01em;">
-                      Verify &amp; Activate Account &rarr;
+                    <a href="${resetUrl}" target="_blank" style="display: inline-block; padding: 16px 44px; background: linear-gradient(135deg, #5B57F0 0%, #4F46E5 100%); color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 8px 24px rgba(91, 87, 240, 0.35); text-align: center; letter-spacing: -0.01em;">
+                      Reset Password &rarr;
                     </a>
                   </td>
                 </tr>
               </table>
 
               <p style="margin: 0 0 20px 0; font-size: 13px; color: #8A857A; text-align: center; line-height: 1.5;">
-                This activation link is valid for 24 hours. If you did not create this account, you can safely disregard this email.
+                If you did not request a password reset, you can safely disregard this email. Your character account remains fully protected.
               </p>
 
               <!-- Fallback Direct Link -->
@@ -89,8 +105,8 @@
                       Button not working? Copy and paste this URL into your browser:
                     </p>
                     <p style="margin: 0; font-size: 12px; line-height: 1.5; word-break: break-all;">
-                      <a href="{{ .ConfirmationURL }}" style="color: #5B57F0; text-decoration: underline;">
-                        {{ .ConfirmationURL }}
+                      <a href="${resetUrl}" style="color: #5B57F0; text-decoration: underline;">
+                        ${resetUrl}
                       </a>
                     </p>
                   </td>
@@ -109,7 +125,7 @@
                 Gamify your habits, conquer your goals, level up in real life.
               </p>
               <p style="margin: 0; font-size: 11px; color: #A8A399;">
-                &copy; Life RPG OS. All rights reserved. &bull; Adventure Awaits
+                &copy; Life RPG OS. All rights reserved. &bull; Secure Authentication System
               </p>
             </td>
           </tr>
@@ -120,3 +136,4 @@
   </table>
 </body>
 </html>
+`

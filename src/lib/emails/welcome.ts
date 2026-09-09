@@ -1,87 +1,105 @@
 /**
- * Premium Welcome Email Template for Life RPG OS
- * Light Creative Design System
+ * Ultra-Premium Welcome Email Template for Life RPG OS
+ * Light Creative Design System with high visual fidelity.
  */
 
-export const welcomeEmail = (name: string) => `
+export const welcomeEmail = (name: string = 'Adventurer'): string => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Welcome to Life RPG OS</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #F6F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #2B2823;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F6F4EE; padding: 32px 16px;">
+<body style="margin: 0; padding: 0; background-color: #F6F4EE; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; color: #2B2823;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F6F4EE; padding: 40px 16px;">
     <tr>
       <td align="center">
         <!-- Main Container Card -->
-        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 540px; background-color: #FFFFFF; border-radius: 20px; border: 1px solid #E6E2D8; box-shadow: 0 8px 30px rgba(43, 40, 35, 0.06); overflow: hidden;">
+        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 560px; background-color: #FFFFFF; border-radius: 24px; border: 1px solid #E6E2D8; box-shadow: 0 12px 40px rgba(43, 40, 35, 0.07); overflow: hidden;">
           
-          <!-- Header -->
+          <!-- Header with RPG Emblem -->
           <tr>
-            <td style="padding: 36px 36px 20px 36px; text-align: center; background-color: #FAF8F5; border-bottom: 1px solid #EFECE6;">
+            <td style="padding: 40px 40px 24px 40px; text-align: center; background: linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 100%); border-bottom: 1px solid #EFECE6;">
               <table role="presentation" align="center" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td style="width: 44px; height: 44px; background: #5B57F0; border-radius: 12px; text-align: center; vertical-align: middle; color: #FFFFFF; font-size: 20px; font-weight: bold; box-shadow: 0 4px 12px rgba(91, 87, 240, 0.3);">
+                  <td style="width: 52px; height: 52px; background: linear-gradient(135deg, #5B57F0 0%, #4338CA 100%); border-radius: 16px; text-align: center; vertical-align: middle; color: #FFFFFF; font-size: 24px; box-shadow: 0 8px 20px rgba(91, 87, 240, 0.35);">
                     ⚔️
                   </td>
                 </tr>
               </table>
-              <h1 style="margin: 14px 0 4px 0; font-size: 22px; font-weight: 800; color: #2B2823; letter-spacing: -0.02em;">
+              <h1 style="margin: 16px 0 4px 0; font-size: 24px; font-weight: 800; color: #2B2823; letter-spacing: -0.03em;">
                 Life RPG OS
               </h1>
-              <p style="margin: 0; font-size: 13px; color: #787368; font-weight: 500;">
-                Your Character Sheet is Live
+              <p style="margin: 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: #8A857A;">
+                Level Up Your Reality
               </p>
             </td>
           </tr>
 
           <!-- Body Content -->
           <tr>
-            <td style="padding: 36px 36px 28px 36px;">
-              <h2 style="margin: 0 0 14px 0; font-size: 20px; font-weight: 700; color: #2B2823; line-height: 1.3;">
+            <td style="padding: 36px 40px 32px 40px;">
+              <!-- Badge -->
+              <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 18px;">
+                <tr>
+                  <td style="background-color: #EDECFD; border-radius: 999px; padding: 5px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5B57F0;">
+                    🎉 Level 1 Unlocked &bull; Onboarding
+                  </td>
+                </tr>
+              </table>
+
+              <h2 style="margin: 0 0 12px 0; font-size: 21px; font-weight: 700; color: #2B2823; line-height: 1.35; letter-spacing: -0.02em;">
                 Welcome, ${name}! Your adventure begins now.
               </h2>
-              <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #5C574E;">
-                Your character has been created at <strong>Level 1</strong>. Your streak starts today. Every workout, study session, and completed habit will award XP, increase your stats, and level up your real life.
+              
+              <p style="margin: 0 0 22px 0; font-size: 15px; line-height: 1.65; color: #5C574E;">
+                Your character has been created at <strong style="color: #2B2823;">Level 1</strong>. Your streak starts today. Every workout, study session, and completed habit will award XP, increase your stats, and level up your real life.
               </p>
 
               <!-- Quest Highlight Box -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 24px 0; background-color: #EDECFD; border: 1px solid #D6D3FA; border-left: 4px solid #5B57F0; border-radius: 12px;">
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 22px 0; background-color: #FAF8F5; border: 1px solid #E6E2D8; border-left: 4px solid #5B57F0; border-radius: 12px;">
                 <tr>
-                  <td style="padding: 16px 20px;">
-                    <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #5B57F0;">
-                      First Starter Quest:
+                  <td style="padding: 16px 18px;">
+                    <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #5B57F0;">
+                      🎯 First Starter Quest:
                     </p>
-                    <p style="margin: 0; font-size: 14px; font-weight: 600; color: #2B2823; line-height: 1.4;">
+                    <p style="margin: 0; font-size: 13.5px; font-weight: 600; line-height: 1.45; color: #2B2823;">
                       Add 3 daily habits on your dashboard and check off your first completion today.
                     </p>
                   </td>
                 </tr>
               </table>
 
-              <!-- Big Clickable CTA Button -->
-              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 32px 0 24px 0;">
+              <!-- Big Primary CTA Button -->
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 32px 0 26px 0;">
                 <tr>
                   <td align="center">
-                    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard" target="_blank" style="display: inline-block; padding: 16px 38px; background-color: #5B57F0; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 6px 20px rgba(91, 87, 240, 0.35); text-align: center; letter-spacing: -0.01em;">
+                    <a href="${process.env.NEXT_PUBLIC_APP_URL ?? 'https://life-rpg-os-chi.vercel.app'}/dashboard" target="_blank" style="display: inline-block; padding: 16px 44px; background: linear-gradient(135deg, #5B57F0 0%, #4F46E5 100%); color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 999px; box-shadow: 0 8px 24px rgba(91, 87, 240, 0.35); text-align: center; letter-spacing: -0.01em;">
                       Enter the Realm &rarr;
                     </a>
                   </td>
                 </tr>
               </table>
+
+              <p style="margin: 0 0 20px 0; font-size: 13px; color: #8A857A; text-align: center; line-height: 1.5;">
+                Have questions or need assistance? Simply reply directly to this email.
+              </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="padding: 24px 36px; background-color: #FAF8F5; border-top: 1px solid #EFECE6; text-align: center;">
-              <p style="margin: 0 0 6px 0; font-size: 12px; color: #8A857A;">
-                Life RPG OS &bull; Level up your real life
+            <td style="padding: 26px 40px; background-color: #FAF8F5; border-top: 1px solid #EFECE6; text-align: center;">
+              <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 600; color: #2B2823;">
+                ⚔️ Life RPG OS
+              </p>
+              <p style="margin: 0 0 10px 0; font-size: 12px; color: #8A857A;">
+                Gamify your habits, conquer your goals, level up in real life.
               </p>
               <p style="margin: 0; font-size: 11px; color: #A8A399;">
-                Need help? Reply directly to this email.
+                &copy; Life RPG OS. All rights reserved. &bull; Level Up Your Life
               </p>
             </td>
           </tr>
