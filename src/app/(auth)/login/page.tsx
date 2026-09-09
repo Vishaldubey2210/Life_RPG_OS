@@ -107,9 +107,10 @@ export default function LoginPage() {
           body: JSON.stringify({ email: email.trim() }),
         })
 
-        if (res.ok) {
+        const contentType = res.headers.get('content-type') || ''
+        if (res.ok && contentType.includes('application/json')) {
           const result = await res.json()
-          if (result.success) {
+          if (result && result.success) {
             sentSuccess = true
             if (result.message) msg = result.message
           }
