@@ -97,14 +97,19 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      const appOrigin = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, '')
-      const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-        redirectTo: `${appOrigin}/auth/callback?type=recovery&next=/reset-password`,
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
       })
-      if (resetErr) throw resetErr
+
+      const result = await res.json()
+      if (!res.ok || result.error) {
+        throw new Error(result.error || 'Failed to dispatch reset email.')
+      }
 
       setResendCooldown(60)
-      setNotice(`Password reset scroll dispatched to ${email.trim()}! Check your Inbox & Spam folder.`)
+      setNotice(result.message || `Password reset scroll dispatched to ${email.trim()}! Check your Inbox & Spam folder.`)
     } catch (err: unknown) {
       setError(friendlyAuthError(err))
     } finally {
