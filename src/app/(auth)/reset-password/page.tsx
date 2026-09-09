@@ -39,29 +39,81 @@ export default function ResetPasswordPage() {
 
   // Verify auth session on mount
   useEffect(() => {
+    let isMounted = true
+
     async function checkAuthSession() {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (session) {
-          setHasValidSession(true)
-        } else {
-          // Listen for password recovery auth state change
-          const { data: authListener } = supabase.auth.onAuthStateChange((event: string, s: unknown) => {
-            if (event === 'PASSWORD_RECOVERY' || s) {
-              setHasValidSession(true)
+        // 1. Check if token was provided in URL hash (Supabase implicit recovery flow)
+        if (typeof window !== 'undefined' && window.location.hash) {
+          const hashParams = new URLSearchParams(window.location.hash.substring(1))
+          const accessToken = hashParams.get('access_token')
+          const refreshToken = hashParams.get('refresh_token')
+          const hashError = hashParams.get('error_description') || hashParams.get('error')
+
+          if (hashError) {
+            if (isMounted) {
+              setError(decodeURIComponent(hashError.replace(/\+/g, ' ')))
+              setHasValidSession(false)
+              setVerifyingSession(false)
             }
-          })
-          return () => {
-            authListener.subscription.unsubscribe()
+            return
+          }
+
+          if (accessToken && refreshToken) {
+            const { data, error: setSessionErr } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            })
+            if (!setSessionErr && data.session) {
+              if (isMounted) {
+                setHasValidSession(true)
+                setVerifyingSession(false)
+              }
+              return
+            }
           }
         }
+
+        // 2. Check existing session
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session && isMounted) {
+          setHasValidSession(true)
+          setVerifyingSession(false)
+          return
+        }
+
+        // 3. Listen for password recovery auth state change
+        const { data: authListener } = supabase.auth.onAuthStateChange((event: string, s: unknown) => {
+          if ((event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN' || s) && isMounted) {
+            setHasValidSession(true)
+            setVerifyingSession(false)
+          }
+        })
+
+        // Safety fallback timer to prevent infinite loading
+        const timer = setTimeout(() => {
+          if (isMounted) {
+            setVerifyingSession(false)
+          }
+        }, 3500)
+
+        return () => {
+          clearTimeout(timer)
+          authListener?.subscription?.unsubscribe()
+        }
       } catch {
-        setHasValidSession(false)
-      } finally {
-        setVerifyingSession(false)
+        if (isMounted) {
+          setHasValidSession(false)
+          setVerifyingSession(false)
+        }
       }
     }
+
     checkAuthSession()
+
+    return () => {
+      isMounted = false
+    }
   }, [supabase.auth])
 
   const strength = calculatePasswordStrength(password)

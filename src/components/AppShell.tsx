@@ -6,6 +6,7 @@ import { QueryProvider } from '@/providers/QueryProvider'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { FeedbackButton } from '@/components/feedback/FeedbackButton'
 import { logError } from '@/lib/errorLogger'
+import { AuthRecoveryListener } from '@/components/auth/AuthRecoveryListener'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -39,6 +40,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <AuthRecoveryListener />
       <QueryProvider>
         <ErrorBoundary>{children}</ErrorBoundary>
         <FeedbackButton />

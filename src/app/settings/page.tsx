@@ -61,7 +61,10 @@ export default function SettingsPage() {
 
   async function handleChangePassword() {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(userEmail)
+      const appOrigin = (typeof window !== 'undefined' ? window.location.origin : '').replace(/\/$/, '')
+      const { error } = await supabase.auth.resetPasswordForEmail(userEmail, {
+        redirectTo: `${appOrigin}/auth/callback?type=recovery&next=/reset-password`,
+      })
       if (error) throw error
       toast.success('Password reset email sent! Check your inbox.')
     } catch {
